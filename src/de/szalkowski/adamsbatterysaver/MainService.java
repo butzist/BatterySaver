@@ -166,15 +166,27 @@ public class MainService extends Service {
 		
 		WifiManager wifi = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
 		if(settings.getBoolean("wifi", true) && !wifi.isWifiEnabled()) {
+			Log.d(LOG, "enabling wifi");
 			wifi.setWifiEnabled(true);
+		}
+		if(wifi.isWifiEnabled()) {
+			Log.d(LOG, "wifi enabled");
 		}
 		
 		if(settings.getBoolean("data", true) && !isMobileDataEnabled()) {
+			Log.d(LOG, "enabling data");
 			setMobileDataEnabled(true);
 		}
+		if(isMobileDataEnabled()) {
+			Log.d(LOG, "data enabled");
+		}
 		
-		if(settings.getBoolean("sync", true)) {
+		if(settings.getBoolean("sync", true) && !ContentResolver.getMasterSyncAutomatically()) {
+			Log.d(LOG, "enabling sync");
 			ContentResolver.setMasterSyncAutomatically(true);
+		}
+		if(ContentResolver.getMasterSyncAutomatically()) {
+			Log.d(LOG, "sync enabled");
 		}
 	}
 	
@@ -183,17 +195,29 @@ public class MainService extends Service {
 
 		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
 		
-		if(settings.getBoolean("sync", true)) {
+		if(settings.getBoolean("sync", true) && ContentResolver.getMasterSyncAutomatically()) {
+			Log.d(LOG, "disabling sync");
 			ContentResolver.setMasterSyncAutomatically(false);
+		}
+		if(!ContentResolver.getMasterSyncAutomatically()) {
+			Log.d(LOG, "sync disabled");
 		}
 		
 		WifiManager wifi = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
 		if(settings.getBoolean("wifi", true) && wifi.isWifiEnabled()) {
+			Log.d(LOG, "disabling wifi");
 			wifi.setWifiEnabled(false);
+		}
+		if(!wifi.isWifiEnabled()) {
+			Log.d(LOG, "wifi disabled");
 		}
 		
 		if(settings.getBoolean("data", true) && isMobileDataEnabled()) {
+			Log.d(LOG, "disabling data");
 			setMobileDataEnabled(false);
+		}
+		if(!isMobileDataEnabled()) {
+			Log.d(LOG, "data disabled");
 		}
 	}
 
