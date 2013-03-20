@@ -341,7 +341,11 @@ public class MainService extends Service {
 			this.timeout_active = false;
 			
 			disableNetwork();
-			setWakeup();
+			if(isSleepingTime()) {
+				setMorningWakeup();
+			} else {
+				setWakeup();
+			}
 
 			if(MainService.wake_lock.isHeld()) {
 				MainService.wake_lock.release();
@@ -352,6 +356,8 @@ public class MainService extends Service {
 			Log.d(LOG, "Wakeup");
 			
 			if(isSleepingTime()) {
+				Log.d(LOG, "Sleeping time!");
+
 				cancelWakeup();
 				setMorningWakeup();
 				
