@@ -1,6 +1,5 @@
 package de.szalkowski.adamsbatterysaver;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Calendar;
 
@@ -224,16 +223,9 @@ public class MainService extends Service {
 		// BASED ON http://stackoverflow.com/questions/3644144/how-to-disable-mobile-data-on-android
 		
 		try {
-		    final ConnectivityManager conman = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-		    final Class<?> conmanClass = Class.forName(conman.getClass().getName());
-		    final Field iConnectivityManagerField = conmanClass.getDeclaredField("mService");
-		    iConnectivityManagerField.setAccessible(true);
-		    final Object iConnectivityManager = iConnectivityManagerField.get(conman);
-		    final Class<?> iConnectivityManagerClass = Class.forName(iConnectivityManager.getClass().getName());
-		    final Method setMobileDataEnabledMethod = iConnectivityManagerClass.getDeclaredMethod("setMobileDataEnabled", Boolean.TYPE);
-		    setMobileDataEnabledMethod.setAccessible(true);
-	
-		    setMobileDataEnabledMethod.invoke(iConnectivityManager, enabled);
+		    ConnectivityManager conman = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+		    Method setmeth = conman.getClass().getMethod("setMobileDataEnabled", boolean.class);
+		    setmeth.invoke(conman, enabled);
 		}
 		catch(Exception e) {
 			Log.w(LOG, "setMobileDataEnabled failed -- trying alternative method");
@@ -342,6 +334,7 @@ public class MainService extends Service {
 			
 			disableNetwork();
 			if(isSleepingTime()) {
+				Log.d(LOG, "Sleeping time!");
 				setMorningWakeup();
 			} else {
 				setWakeup();
