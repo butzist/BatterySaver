@@ -8,15 +8,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
-    <ToggleButton
-        android:id="@+id/toggleButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:text="ToggleButton" />
-
     <EditText
         android:id="@+id/editText1"
         android:layout_width="wrap_content"
@@ -41,34 +32,36 @@
         android:text="Minutes between syncs"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
+    <TimePicker
+        android:id="@+id/timePickerFrom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true" />
+
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="27dp"
         android:text="Night mode from/to"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <EditText
-        android:id="@+id/editText2"
+    <ToggleButton
+        android:id="@+id/toggleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textView2"
-        android:layout_toLeftOf="@+id/editText1"
-        android:ems="10"
-        android:inputType="time" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="ToggleButton" />
 
-    <EditText
-        android:id="@+id/editText3"
+    <TimePicker
+        android:id="@+id/timePickerTo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editText1"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/textView2"
-        android:ems="10"
-        android:inputType="time" />
+        android:layout_alignLeft="@+id/timePickerFrom"
+        android:layout_below="@+id/timePickerFrom"
+        android:layout_marginTop="20dp" />
 
 </RelativeLayout>

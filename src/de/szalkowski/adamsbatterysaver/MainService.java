@@ -1,8 +1,8 @@
 package de.szalkowski.adamsbatterysaver;
 
-import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Calendar;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -27,8 +27,8 @@ public class MainService extends Service {
 	static public final String ACTION_WAKEUP = "de.szalkowski.adamsbatterysaver.WAKEUP_ACTION"; 
 	static public final String ACTION_TIMEOUT = "de.szalkowski.adamsbatterysaver.TIMEOUT_ACTION"; 
 	static public final String ACTION_UPDATE = "de.szalkowski.adamsbatterysaver.UPDATE_ACTION"; 
-	static private boolean screen_on;
-	static private boolean power_on;
+	private boolean screen_on;
+	private boolean power_on;
 	static public boolean is_running = false;
 	static public PowerManager.WakeLock wake_lock = null;
 	private BroadcastReceiver powerstate_receiver = null;
@@ -62,13 +62,13 @@ public class MainService extends Service {
         
         // check current power state
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        MainService.screen_on = pm.isScreenOn();
-		Log.d(LOG, "Screen is " + (MainService.screen_on ? "on" : "off"));
+        this.screen_on = pm.isScreenOn();
+		Log.d(LOG, "Screen is " + (this.screen_on ? "on" : "off"));
         
         Intent battery_status = this.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         int battery_plugged = battery_status.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
-        MainService.power_on = (battery_plugged == BatteryManager.BATTERY_PLUGGED_USB) || (battery_plugged == BatteryManager.BATTERY_PLUGGED_AC); 
-		Log.d(LOG, "Power is " + (MainService.power_on ? "on" : "off"));
+        this.power_on = (battery_plugged == BatteryManager.BATTERY_PLUGGED_USB) || (battery_plugged == BatteryManager.BATTERY_PLUGGED_AC); 
+		Log.d(LOG, "Power is " + (this.power_on ? "on" : "off"));
 		
 		// set up wake lock
 		if(MainService.wake_lock == null) {
@@ -104,7 +104,7 @@ public class MainService extends Service {
 		
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-		int interval = 6000;
+		int interval = 60000;
 		Intent intent = new Intent(MainService.ACTION_TIMEOUT);
 		PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		alarm.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+interval, pending);
@@ -123,6 +123,39 @@ public class MainService extends Service {
 		Intent intent = new Intent(MainService.ACTION_WAKEUP);
 		PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+interval, interval, pending);
+		
+		this.wakeup_active = true;
+	}
+	
+	protected void setMorningWakeup() {
+		if(this.wakeup_active) return;
+		
+		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+		
+		// set up timeout
+		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+		int interval = settings.getInt("minutes", 15) * 60000;
+		
+		Calendar from = Calendar.getInstance();
+		from.set(Calendar.HOUR_OF_DAY, settings.getInt("from_hour", 22));
+		from.set(Calendar.MINUTE, settings.getInt("from_minute", 0));
+		from.set(Calendar.SECOND, 0);
+		from.set(Calendar.MILLISECOND, 0);
+
+		Calendar to = Calendar.getInstance();
+		to.set(Calendar.HOUR_OF_DAY, settings.getInt("to_hour", 8));
+		to.set(Calendar.MINUTE, settings.getInt("to_minute", 0));
+		to.set(Calendar.SECOND, 0);
+		to.set(Calendar.MILLISECOND, 0);
+
+		if(from.after(to)) {
+			to.add(Calendar.DATE, 1);				
+		}
+
+		long time = to.getTimeInMillis();
+		Intent intent = new Intent(MainService.ACTION_WAKEUP);
+		PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, time, interval, pending);
 		
 		this.wakeup_active = true;
 	}
@@ -164,7 +197,23 @@ public class MainService extends Service {
 			setMobileDataEnabled(false);
 		}
 	}
-	
+
+	protected void saveNetworkStatus() {
+		Log.d(LOG, "save network status");
+
+		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+		SharedPreferences.Editor edit = settings.edit();
+		
+		edit.putBoolean("sync", ContentResolver.getMasterSyncAutomatically());
+
+		WifiManager wifi = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
+		edit.putBoolean("wifi", wifi.isWifiEnabled());
+		
+		edit.putBoolean("data", isMobileDataEnabled());
+		
+		edit.commit();		
+	}
+
 	protected boolean isMobileDataEnabled() {
 		TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
 		return telephonyManager.getDataState() != TelephonyManager.DATA_DISCONNECTED;
@@ -176,11 +225,11 @@ public class MainService extends Service {
 		
 		try {
 		    final ConnectivityManager conman = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-		    final Class conmanClass = Class.forName(conman.getClass().getName());
+		    final Class<?> conmanClass = Class.forName(conman.getClass().getName());
 		    final Field iConnectivityManagerField = conmanClass.getDeclaredField("mService");
 		    iConnectivityManagerField.setAccessible(true);
 		    final Object iConnectivityManager = iConnectivityManagerField.get(conman);
-		    final Class iConnectivityManagerClass = Class.forName(iConnectivityManager.getClass().getName());
+		    final Class<?> iConnectivityManagerClass = Class.forName(iConnectivityManager.getClass().getName());
 		    final Method setMobileDataEnabledMethod = iConnectivityManagerClass.getDeclaredMethod("setMobileDataEnabled", Boolean.TYPE);
 		    setMobileDataEnabledMethod.setAccessible(true);
 	
@@ -191,9 +240,9 @@ public class MainService extends Service {
 			
 			try {    
 				Method dataConnSwitchmethod;
-				Class telephonyManagerClass;
+				Class<?> telephonyManagerClass;
 				Object ITelephonyStub;
-				Class ITelephonyClass;
+				Class<?> ITelephonyClass;
 				
 				  TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
 
@@ -219,18 +268,46 @@ public class MainService extends Service {
 		}
 	}
 
+	protected boolean isSleepingTime() {
+		Log.d(LOG, "sleeping time?");
+
+		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+		
+		Calendar from = Calendar.getInstance();
+		from.set(Calendar.HOUR_OF_DAY, settings.getInt("from_hour", 22));
+		from.set(Calendar.MINUTE, settings.getInt("from_minute", 0));
+		from.set(Calendar.SECOND, 0);
+		from.set(Calendar.MILLISECOND, 0);
+
+		Calendar to = Calendar.getInstance();
+		to.set(Calendar.HOUR_OF_DAY, settings.getInt("to_hour", 8));
+		to.set(Calendar.MINUTE, settings.getInt("to_minute", 0));
+		to.set(Calendar.SECOND, 0);
+		to.set(Calendar.MILLISECOND, 0);
+
+		if(from.after(to)) {
+			to.add(Calendar.DATE, 1);				
+		}
+		
+		Calendar now = Calendar.getInstance();
+
+		return (now.after(from) && now.before(to));
+	}
+	
 	@Override
 	public void onDestroy() {
 		Log.d(LOG, "Destroyed");
+
+		enableNetwork();
+		
+		this.unregisterReceiver(this.powerstate_receiver);
+		MainService.is_running = false;
 		
 		if(MainService.wake_lock.isHeld()) {
 			MainService.wake_lock.release();
 		}
 		MainService.wake_lock = null;
 
-		this.unregisterReceiver(this.powerstate_receiver);
-		MainService.is_running = false;
-		
 		super.onDestroy();
 	}
 
@@ -238,42 +315,27 @@ public class MainService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(LOG, "Started");
 		
+		if(intent == null) {
+			return super.onStartCommand(intent, flags, startId);
+		}
+		
 		if(intent.hasExtra("power")) {
 			if(intent.getBooleanExtra("power", false)) {
 				Log.d(LOG, "Power on");
-				MainService.power_on = true;
-				cancelTimeout();
-				cancelWakeup();
-				enableNetwork();
-				
-				if(MainService.wake_lock.isHeld()) {
-					MainService.wake_lock.release();
-				}
+				this.power_on = true;
 			} else {
 				Log.d(LOG, "Power off");
-				MainService.power_on = false;
-				if(!MainService.screen_on) {
-					setTimeout();
-				}
+				this.power_on = false;
 			}
 		} else if(intent.hasExtra("screen")) {
 			if(intent.getBooleanExtra("screen", false)) {
 				Log.d(LOG, "Screen on");
-				MainService.screen_on = true;
-				cancelTimeout();
-				cancelWakeup();
-				enableNetwork();
-
-				if(MainService.wake_lock.isHeld()) {
-					MainService.wake_lock.release();
-				}
+				this.screen_on = true;
 			} else {
 				Log.d(LOG, "Screen off");
-				MainService.screen_on = false;
-				if(!MainService.power_on) {
-					setTimeout();				
-				}
+				this.screen_on = false;
 			}
+			
 		} else if(intent.hasExtra("timeout")) {
 			Log.d(LOG, "Timeout");
 			this.timeout_active = false;
@@ -284,10 +346,37 @@ public class MainService extends Service {
 			if(MainService.wake_lock.isHeld()) {
 				MainService.wake_lock.release();
 			}
+			
+			return super.onStartCommand(intent, flags, startId);
 		} else if(intent.hasExtra("wakeup")) {
 			Log.d(LOG, "Wakeup");
+			
+			if(isSleepingTime()) {
+				cancelWakeup();
+				setMorningWakeup();
+				
+				if(MainService.wake_lock.isHeld()) {
+					MainService.wake_lock.release();
+				}
+			} else {
+				enableNetwork();
+				setTimeout();
+			}
+			
+			return super.onStartCommand(intent, flags, startId);
+		}
+		
+		if(this.screen_on || this.power_on) {
+			cancelTimeout();
+			cancelWakeup();
 			enableNetwork();
-			setTimeout();
+
+			if(MainService.wake_lock.isHeld()) {
+				MainService.wake_lock.release();
+			}
+		} else if(!this.screen_on && !this.power_on) {
+			saveNetworkStatus();
+			setTimeout();				
 		}
 		
 		//stopSelf();

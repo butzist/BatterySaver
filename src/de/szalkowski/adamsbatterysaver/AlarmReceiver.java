@@ -1,5 +1,6 @@
 package de.szalkowski.adamsbatterysaver;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.os.PowerManager;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
+	@SuppressLint("Wakelock")
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		if(MainService.wake_lock == null) {
