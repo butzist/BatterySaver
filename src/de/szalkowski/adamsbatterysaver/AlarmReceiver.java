@@ -22,10 +22,10 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 		Intent service = new Intent(context,MainService.class);
 		if(intent.getAction().equals(MainService.ACTION_TIMEOUT)) {
-			service.putExtra("timeout", true);
+			service.setAction(MainService.ACTION_TIMEOUT);
 			
 		} else if(intent.getAction().equals(MainService.ACTION_WAKEUP)) {
-			service.putExtra("wakeup", true);
+			service.setAction(MainService.ACTION_WAKEUP);
 		}
 		
 		context.startService(service);

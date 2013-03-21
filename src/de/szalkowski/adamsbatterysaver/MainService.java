@@ -100,9 +100,9 @@ public class MainService extends Service {
 	protected void cancelTimeout() {
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
 
-		Intent intent2 = new Intent(MainService.ACTION_TIMEOUT);
-		PendingIntent pending2 = PendingIntent.getBroadcast(getApplicationContext(), 0, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
-		alarm.cancel(pending2);
+		Intent intent = new Intent(MainService.ACTION_TIMEOUT);
+		PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		alarm.cancel(pending);
 
 		this.timeout_active = false;
 	}
@@ -110,9 +110,9 @@ public class MainService extends Service {
 	protected void cancelWakeup() {
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
 
-		Intent intent1 = new Intent(MainService.ACTION_WAKEUP);
-		PendingIntent pending1 = PendingIntent.getBroadcast(getApplicationContext(), 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
-		alarm.cancel(pending1);
+		Intent intent = new Intent(MainService.ACTION_WAKEUP);
+		PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		alarm.cancel(pending);
 		
 		this.wakeup_active = false;
 	}
@@ -351,30 +351,47 @@ public class MainService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if(intent == null) {
+		if(intent == null || intent.getAction() == null) {
 			return super.onStartCommand(intent, flags, startId);
 		}
 		
 		boolean was_on = this.power_on || this.screen_on;
 		
-		if(intent.hasExtra("power")) {
-			if(intent.getBooleanExtra("power", false)) {
-				Log.d(LOG, "Power on");
-				this.power_on = true;
-			} else {
-				Log.d(LOG, "Power off");
-				this.power_on = false;
-			}
-		} else if(intent.hasExtra("screen")) {
-			if(intent.getBooleanExtra("screen", false)) {
-				Log.d(LOG, "Screen on");
-				this.screen_on = true;
-			} else {
-				Log.d(LOG, "Screen off");
-				this.screen_on = false;
+		if(intent.getAction().equals(MainService.ACTION_UPDATE)) {
+			if(intent.hasExtra("power")) {
+				if(intent.getBooleanExtra("power", false)) {
+					Log.d(LOG, "Power on");
+					this.power_on = true;
+				} else {
+					Log.d(LOG, "Power off");
+					this.power_on = false;
+				}
+			} else if(intent.hasExtra("screen")) {
+				if(intent.getBooleanExtra("screen", false)) {
+					Log.d(LOG, "Screen on");
+					this.screen_on = true;
+				} else {
+					Log.d(LOG, "Screen off");
+					this.screen_on = false;
+				}
 			}
 			
-		} else if(intent.hasExtra("timeout")) {
+			boolean is_on = this.screen_on || this.power_on;
+			
+			if(!was_on && is_on) {
+				cancelTimeout();
+				cancelWakeup();
+				disablePowersave();
+
+				if(MainService.wake_lock.isHeld()) {
+					MainService.wake_lock.release();
+				}
+			} else if(was_on && !is_on) {
+				saveNetworkStatus();
+				setTimeout();				
+			}
+
+		} else if(intent.getAction().equals(MainService.ACTION_TIMEOUT)) {
 			Log.d(LOG, "Timeout");
 			this.timeout_active = false;
 			
@@ -399,7 +416,8 @@ public class MainService extends Service {
 			if(MainService.wake_lock.isHeld()) {
 				MainService.wake_lock.release();
 			}
-		} else if(intent.hasExtra("wakeup")) {
+			
+		} else if(intent.getAction().equals(MainService.ACTION_WAKEUP)) {
 			Log.d(LOG, "Wakeup");
 			
 			if(this.timeout_active) {
@@ -421,22 +439,6 @@ public class MainService extends Service {
 			}
 		}
 		
-		boolean is_on = this.screen_on || this.power_on;
-		
-		if(!was_on && is_on) {
-			cancelTimeout();
-			cancelWakeup();
-			disablePowersave();
-
-			if(MainService.wake_lock.isHeld()) {
-				MainService.wake_lock.release();
-			}
-		} else if(was_on && !is_on) {
-			saveNetworkStatus();
-			setTimeout();				
-		}
-		
-		//stopSelf();
 		return super.onStartCommand(intent, flags, startId);
 	}
 }
