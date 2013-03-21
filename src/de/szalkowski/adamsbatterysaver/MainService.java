@@ -187,8 +187,8 @@ public class MainService extends Service {
 		this.wakeup_active = true;
 	}
 	
-	protected void enableNetwork() {
-		Log.d(LOG, "enabling network");
+	protected void disablePowersave() {
+		Log.d(LOG, "disabling powersave");
 
 		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
 		
@@ -209,8 +209,8 @@ public class MainService extends Service {
 		}
 	}
 	
-	protected void disableNetwork() {
-		Log.d(LOG, "disabling network");
+	protected void enablePowersave() {
+		Log.d(LOG, "enabling powersave");
 
 		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
 		
@@ -231,7 +231,7 @@ public class MainService extends Service {
 		}
 	}
 
-	protected boolean isNetworkDisabled() {
+	protected boolean isPowersaveEnabled() {
 		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
 		
 		if(settings.getBoolean("sync", true) && ContentResolver.getMasterSyncAutomatically()) {
@@ -347,7 +347,7 @@ public class MainService extends Service {
 	public void onDestroy() {
 		Log.d(LOG, "Destroyed");
 
-		enableNetwork();
+		disablePowersave();
 		
 		this.unregisterReceiver(this.powerstate_receiver);
 		MainService.is_running = false;
@@ -367,6 +367,8 @@ public class MainService extends Service {
 		if(intent == null) {
 			return super.onStartCommand(intent, flags, startId);
 		}
+		
+		boolean was_on = this.power_on || this.screen_on;
 		
 		if(intent.hasExtra("power")) {
 			if(intent.getBooleanExtra("power", false)) {
@@ -391,9 +393,9 @@ public class MainService extends Service {
 			
 			Log.v(LOG, "Traffic: " + getTrafficSinceTimeout() + " bytes");
 			
-			disableNetwork();
+			enablePowersave();
 			
-			if(!isNetworkDisabled()) {
+			if(!isPowersaveEnabled()) {
 				//try again
 				setTimeout();
 			}
@@ -410,8 +412,6 @@ public class MainService extends Service {
 			if(MainService.wake_lock.isHeld()) {
 				MainService.wake_lock.release();
 			}
-			
-			return super.onStartCommand(intent, flags, startId);
 		} else if(intent.hasExtra("wakeup")) {
 			Log.d(LOG, "Wakeup");
 			
@@ -429,22 +429,22 @@ public class MainService extends Service {
 					MainService.wake_lock.release();
 				}
 			} else {
-				enableNetwork();
+				disablePowersave();
 				setTimeout();
 			}
-			
-			return super.onStartCommand(intent, flags, startId);
 		}
 		
-		if(this.screen_on || this.power_on) {
+		boolean is_on = this.screen_on || this.power_on;
+		
+		if(!was_on && is_on) {
 			cancelTimeout();
 			cancelWakeup();
-			enableNetwork();
+			disablePowersave();
 
 			if(MainService.wake_lock.isHeld()) {
 				MainService.wake_lock.release();
 			}
-		} else if(!this.screen_on && !this.power_on) {
+		} else if(was_on && !is_on) {
 			saveNetworkStatus();
 			setTimeout();				
 		}
