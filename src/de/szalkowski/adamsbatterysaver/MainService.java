@@ -13,11 +13,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
+import android.net.TrafficStats;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
+import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -33,6 +35,7 @@ public class MainService extends Service {
 	private BroadcastReceiver powerstate_receiver = null;
 	private boolean timeout_active = false;
 	private boolean wakeup_active = false;
+	private long traffic = 0;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -59,6 +62,18 @@ public class MainService extends Service {
         this.powerstate_receiver = new PowerStateReceiver();
         this.registerReceiver(this.powerstate_receiver, filter);
         
+        Intent activity = new Intent(this.getApplicationContext(),MainActivity.class);
+        PendingIntent pending_activity = PendingIntent.getActivity(this, 0, activity, PendingIntent.FLAG_UPDATE_CURRENT);
+        
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle("Adam's Battery Saver")
+                .setContentText("click to configure")
+                .setContentIntent(pending_activity);
+        
+        startForeground(42, builder.build());
+        
         // check current power state
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         this.screen_on = pm.isScreenOn();
@@ -73,7 +88,10 @@ public class MainService extends Service {
 		if(MainService.wake_lock == null) {
 			MainService.wake_lock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Alarm received");
 		}
-
+		
+		if(!this.screen_on && !this.power_on) {
+			setTimeout();		
+		}
 	}
 	
 	protected void cancelTimeout() {
@@ -101,6 +119,8 @@ public class MainService extends Service {
 			cancelTimeout();
 		}
 		
+		this.traffic = TrafficStats.getTotalRxBytes() + TrafficStats.getTotalTxBytes(); 
+		
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
 		int interval = 60000;
@@ -109,6 +129,12 @@ public class MainService extends Service {
 		alarm.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+interval, pending);
 		
 		this.timeout_active = true;
+	}
+	
+	protected long getTrafficSinceTimeout() {
+		long traffic = TrafficStats.getTotalRxBytes() + TrafficStats.getTotalTxBytes();
+		
+		return traffic - this.traffic;
 	}
 	
 	protected void setWakeup() {
@@ -160,7 +186,7 @@ public class MainService extends Service {
 	}
 	
 	protected void enableNetwork() {
-		Log.d(LOG, "enable network");
+		Log.d(LOG, "enabling network");
 
 		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
 		
@@ -169,29 +195,20 @@ public class MainService extends Service {
 			Log.d(LOG, "enabling wifi");
 			wifi.setWifiEnabled(true);
 		}
-		if(wifi.isWifiEnabled()) {
-			Log.d(LOG, "wifi enabled");
-		}
 		
 		if(settings.getBoolean("data", true) && !isMobileDataEnabled()) {
 			Log.d(LOG, "enabling data");
 			setMobileDataEnabled(true);
-		}
-		if(isMobileDataEnabled()) {
-			Log.d(LOG, "data enabled");
 		}
 		
 		if(settings.getBoolean("sync", true) && !ContentResolver.getMasterSyncAutomatically()) {
 			Log.d(LOG, "enabling sync");
 			ContentResolver.setMasterSyncAutomatically(true);
 		}
-		if(ContentResolver.getMasterSyncAutomatically()) {
-			Log.d(LOG, "sync enabled");
-		}
 	}
 	
 	protected void disableNetwork() {
-		Log.d(LOG, "disable network");
+		Log.d(LOG, "disabling network");
 
 		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
 		
@@ -199,40 +216,57 @@ public class MainService extends Service {
 			Log.d(LOG, "disabling sync");
 			ContentResolver.setMasterSyncAutomatically(false);
 		}
-		if(!ContentResolver.getMasterSyncAutomatically()) {
-			Log.d(LOG, "sync disabled");
-		}
 		
 		WifiManager wifi = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
 		if(settings.getBoolean("wifi", true) && wifi.isWifiEnabled()) {
 			Log.d(LOG, "disabling wifi");
 			wifi.setWifiEnabled(false);
 		}
-		if(!wifi.isWifiEnabled()) {
-			Log.d(LOG, "wifi disabled");
-		}
 		
 		if(settings.getBoolean("data", true) && isMobileDataEnabled()) {
 			Log.d(LOG, "disabling data");
 			setMobileDataEnabled(false);
 		}
-		if(!isMobileDataEnabled()) {
-			Log.d(LOG, "data disabled");
+	}
+
+	protected boolean isNetworkDisabled() {
+		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+		
+		if(settings.getBoolean("sync", true) && ContentResolver.getMasterSyncAutomatically()) {
+			Log.w(LOG, "sync not yet disabled");
+			return false;
 		}
+		
+		WifiManager wifi = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
+		if(settings.getBoolean("wifi", true) && wifi.isWifiEnabled()) {
+			Log.w(LOG, "wifi not yet disabled");
+			return false;
+		}
+		
+		if(settings.getBoolean("data", true) && isMobileDataEnabled()) {
+			Log.w(LOG, "data not yet disabled");
+			return false;
+		}
+		
+		return true;
 	}
 
 	protected void saveNetworkStatus() {
-		Log.d(LOG, "save network status");
-
 		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
 		SharedPreferences.Editor edit = settings.edit();
-		
-		edit.putBoolean("sync", ContentResolver.getMasterSyncAutomatically());
+
+		boolean sync_status = ContentResolver.getMasterSyncAutomatically();
+		edit.putBoolean("sync", sync_status);
+		Log.v(LOG, "sync is " + (sync_status ? "on" : "off"));
 
 		WifiManager wifi = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
-		edit.putBoolean("wifi", wifi.isWifiEnabled());
+		boolean wifi_status = wifi.isWifiEnabled();
+		edit.putBoolean("wifi", wifi_status);
+		Log.v(LOG, "wifi is " + (wifi_status ? "on" : "off"));
 		
-		edit.putBoolean("data", isMobileDataEnabled());
+		boolean data_status = isMobileDataEnabled();
+		edit.putBoolean("data", data_status);
+		Log.v(LOG, "data is " + (data_status ? "on" : "off"));
 		
 		edit.commit();		
 	}
@@ -243,7 +277,6 @@ public class MainService extends Service {
 	}
 	
 	protected void setMobileDataEnabled(boolean enabled) {
-		Log.d(LOG, "setMobileDataEnabled " + enabled);
 		// BASED ON http://stackoverflow.com/questions/3644144/how-to-disable-mobile-data-on-android
 		
 		try {
@@ -285,8 +318,6 @@ public class MainService extends Service {
 	}
 
 	protected boolean isSleepingTime() {
-		Log.d(LOG, "sleeping time?");
-
 		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
 		
 		Calendar from = Calendar.getInstance();
@@ -324,13 +355,13 @@ public class MainService extends Service {
 		}
 		MainService.wake_lock = null;
 
+		stopForeground(true);
+
 		super.onDestroy();
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Log.d(LOG, "Started");
-		
 		if(intent == null) {
 			return super.onStartCommand(intent, flags, startId);
 		}
@@ -356,12 +387,22 @@ public class MainService extends Service {
 			Log.d(LOG, "Timeout");
 			this.timeout_active = false;
 			
+			Log.v(LOG, "Traffic: " + getTrafficSinceTimeout() + " bytes");
+			
 			disableNetwork();
-			if(isSleepingTime()) {
-				Log.d(LOG, "Sleeping time!");
-				setMorningWakeup();
-			} else {
-				setWakeup();
+			
+			if(!isNetworkDisabled()) {
+				//try again
+				setTimeout();
+			}
+			
+			if(!this.wakeup_active) {
+				if(isSleepingTime()) {
+					Log.d(LOG, "Sleeping time!");
+					setMorningWakeup();
+				} else {
+					setWakeup();
+				}
 			}
 
 			if(MainService.wake_lock.isHeld()) {
@@ -371,6 +412,10 @@ public class MainService extends Service {
 			return super.onStartCommand(intent, flags, startId);
 		} else if(intent.hasExtra("wakeup")) {
 			Log.d(LOG, "Wakeup");
+			
+			if(this.timeout_active) {
+				cancelTimeout();
+			}
 			
 			if(isSleepingTime()) {
 				Log.d(LOG, "Sleeping time!");
