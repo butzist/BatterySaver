@@ -355,7 +355,7 @@ public class MainService extends Service {
 			return super.onStartCommand(intent, flags, startId);
 		}
 		
-		boolean was_on = this.power_on || this.screen_on;
+		final boolean was_on = this.power_on || this.screen_on;
 		
 		if(intent.getAction().equals(MainService.ACTION_UPDATE)) {
 			if(intent.hasExtra("power")) {
@@ -376,16 +376,12 @@ public class MainService extends Service {
 				}
 			}
 			
-			boolean is_on = this.screen_on || this.power_on;
+			final boolean is_on = this.screen_on || this.power_on;
 			
 			if(!was_on && is_on) {
 				cancelTimeout();
 				cancelWakeup();
 				disablePowersave();
-
-				if(MainService.wake_lock.isHeld()) {
-					MainService.wake_lock.release();
-				}
 			} else if(was_on && !is_on) {
 				saveNetworkStatus();
 				setTimeout();				
@@ -412,11 +408,6 @@ public class MainService extends Service {
 					setWakeup();
 				}
 			}
-
-			if(MainService.wake_lock.isHeld()) {
-				MainService.wake_lock.release();
-			}
-			
 		} else if(intent.getAction().equals(MainService.ACTION_WAKEUP)) {
 			Log.d(LOG, "Wakeup");
 			
@@ -430,15 +421,16 @@ public class MainService extends Service {
 				cancelWakeup();
 				setMorningWakeup();
 				
-				if(MainService.wake_lock.isHeld()) {
-					MainService.wake_lock.release();
-				}
 			} else {
 				disablePowersave();
 				setTimeout();
 			}
 		}
 		
+		if(MainService.wake_lock.isHeld()) {
+			MainService.wake_lock.release();
+		}
+
 		return super.onStartCommand(intent, flags, startId);
 	}
 }
