@@ -30,6 +30,9 @@ public class MainService extends Service {
 	static public final String ACTION_UPDATE = "de.szalkowski.adamsbatterysaver.UPDATE_ACTION"; 
 	private boolean screen_on;
 	private boolean power_on;
+	private boolean wifi_on;
+	private boolean data_on;
+	private boolean sync_on;
 	static public boolean is_running = false;
 	static public PowerManager.WakeLock wake_lock = null;
 	private BroadcastReceiver powerstate_receiver = null;
@@ -50,8 +53,6 @@ public class MainService extends Service {
 		Log.d(LOG, "Created");
 		
 		MainService.is_running = true;
-		
-		//SharedPreferences service_status = this.getSharedPreferences("status", MODE_PRIVATE);
 		
 		// register power state listener
 		IntentFilter filter = new IntentFilter();
@@ -190,20 +191,18 @@ public class MainService extends Service {
 	protected void disablePowersave() {
 		Log.d(LOG, "disabling powersave");
 
-		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
-		
 		WifiManager wifi = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
-		if(settings.getBoolean("wifi", true) && !wifi.isWifiEnabled()) {
+		if(this.wifi_on && !wifi.isWifiEnabled()) {
 			Log.d(LOG, "enabling wifi");
 			wifi.setWifiEnabled(true);
 		}
 		
-		if(settings.getBoolean("data", true) && !isMobileDataEnabled()) {
+		if(this.data_on && !isMobileDataEnabled()) {
 			Log.d(LOG, "enabling data");
 			setMobileDataEnabled(true);
 		}
 		
-		if(settings.getBoolean("sync", true) && !ContentResolver.getMasterSyncAutomatically()) {
+		if(this.sync_on && !ContentResolver.getMasterSyncAutomatically()) {
 			Log.d(LOG, "enabling sync");
 			ContentResolver.setMasterSyncAutomatically(true);
 		}
@@ -212,40 +211,36 @@ public class MainService extends Service {
 	protected void enablePowersave() {
 		Log.d(LOG, "enabling powersave");
 
-		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
-		
-		if(settings.getBoolean("sync", true) && ContentResolver.getMasterSyncAutomatically()) {
+		if(this.sync_on && ContentResolver.getMasterSyncAutomatically()) {
 			Log.d(LOG, "disabling sync");
 			ContentResolver.setMasterSyncAutomatically(false);
 		}
 		
 		WifiManager wifi = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
-		if(settings.getBoolean("wifi", true) && wifi.isWifiEnabled()) {
+		if(this.wifi_on && wifi.isWifiEnabled()) {
 			Log.d(LOG, "disabling wifi");
 			wifi.setWifiEnabled(false);
 		}
 		
-		if(settings.getBoolean("data", true) && isMobileDataEnabled()) {
+		if(this.data_on && isMobileDataEnabled()) {
 			Log.d(LOG, "disabling data");
 			setMobileDataEnabled(false);
 		}
 	}
 
 	protected boolean isPowersaveEnabled() {
-		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
-		
-		if(settings.getBoolean("sync", true) && ContentResolver.getMasterSyncAutomatically()) {
+		if(this.sync_on && ContentResolver.getMasterSyncAutomatically()) {
 			Log.w(LOG, "sync not yet disabled");
 			return false;
 		}
 		
 		WifiManager wifi = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
-		if(settings.getBoolean("wifi", true) && wifi.isWifiEnabled()) {
+		if(this.wifi_on && wifi.isWifiEnabled()) {
 			Log.w(LOG, "wifi not yet disabled");
 			return false;
 		}
 		
-		if(settings.getBoolean("data", true) && isMobileDataEnabled()) {
+		if(this.data_on && isMobileDataEnabled()) {
 			Log.w(LOG, "data not yet disabled");
 			return false;
 		}
@@ -254,23 +249,15 @@ public class MainService extends Service {
 	}
 
 	protected void saveNetworkStatus() {
-		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
-		SharedPreferences.Editor edit = settings.edit();
-
-		boolean sync_status = ContentResolver.getMasterSyncAutomatically();
-		edit.putBoolean("sync", sync_status);
-		Log.v(LOG, "sync is " + (sync_status ? "on" : "off"));
+		this.sync_on = ContentResolver.getMasterSyncAutomatically();
+		Log.v(LOG, "sync is " + (this.sync_on ? "on" : "off"));
 
 		WifiManager wifi = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
-		boolean wifi_status = wifi.isWifiEnabled();
-		edit.putBoolean("wifi", wifi_status);
-		Log.v(LOG, "wifi is " + (wifi_status ? "on" : "off"));
+		this.wifi_on = wifi.isWifiEnabled();
+		Log.v(LOG, "wifi is " + (this.wifi_on ? "on" : "off"));
 		
-		boolean data_status = isMobileDataEnabled();
-		edit.putBoolean("data", data_status);
-		Log.v(LOG, "data is " + (data_status ? "on" : "off"));
-		
-		edit.commit();		
+		this.data_on = isMobileDataEnabled();
+		Log.v(LOG, "data is " + (this.data_on ? "on" : "off"));
 	}
 
 	protected boolean isMobileDataEnabled() {
@@ -452,5 +439,4 @@ public class MainService extends Service {
 		//stopSelf();
 		return super.onStartCommand(intent, flags, startId);
 	}
-
 }
