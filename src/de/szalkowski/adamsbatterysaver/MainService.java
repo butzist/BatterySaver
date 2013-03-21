@@ -89,6 +89,8 @@ public class MainService extends Service {
 			MainService.wake_lock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Alarm received");
 		}
 		
+		saveNetworkStatus();
+		
 		if(!this.screen_on && !this.power_on) {
 			setTimeout();		
 		}
