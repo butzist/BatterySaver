@@ -13,11 +13,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
 
     <application
         android:allowBackup="true"
@@ -50,7 +49,10 @@
         <receiver android:name="AlarmReceiver">
             <intent-filter>
                 <action android:name="de.szalkowski.adamsbatterysaver.WAKEUP_ACTION"/>
-                <action android:name="de.szalkowski.adamsbatterysaver.TIMEOUT_ACTION"/>
+                <action android:name="de.szalkowski.adamsbatterysaver.WAKEUP_TIMEOUT_ACTION"/>
+                <action android:name="de.szalkowski.adamsbatterysaver.UPDATE_ACTION"/>
+                <action android:name="de.szalkowski.adamsbatterysaver.SCREEN_TIMEOUT_ACTION"/>
+                <action android:name="de.szalkowski.adamsbatterysaver.POWER_TIMEOUT_ACTION"/>
             </intent-filter>
         </receiver>
     </application>

@@ -13,6 +13,12 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class MainActivity extends Activity {
+	static final public int DEFAULT_FROM = 22;
+	static final public int DEFAULT_TO = 8;
+	static final public int DEFAULT_MINUTES = 15;
+	static final public int DEFAULT_MINUTES_SHORT = 5;
+	static final public int DEFAULT_TIMEOUT = 60;
+	static final public int DEFAULT_TRAFFIC_LIMIT = 750000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,16 +28,16 @@ public class MainActivity extends Activity {
         SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
         
         EditText minutes = (EditText)this.findViewById(R.id.editText1);
-        minutes.setText(Integer.toString(settings.getInt("minutes", 15)));
+        minutes.setText(Integer.toString(settings.getInt("minutes", DEFAULT_MINUTES)));
         
         TimePicker from_time = (TimePicker)this.findViewById(R.id.timePickerFrom);
         from_time.setIs24HourView(true);
-        from_time.setCurrentHour(settings.getInt("from_hour", 0));
+        from_time.setCurrentHour(settings.getInt("from_hour", DEFAULT_FROM));
         from_time.setCurrentMinute(settings.getInt("from_minute", 0));
         
         TimePicker to_time = (TimePicker)this.findViewById(R.id.timePickerTo);
         to_time.setIs24HourView(true);
-        to_time.setCurrentHour(settings.getInt("to_hour", 8));
+        to_time.setCurrentHour(settings.getInt("to_hour", DEFAULT_TO));
         to_time.setCurrentMinute(settings.getInt("to_minute", 0));
 
         ToggleButton toggle = (ToggleButton)this.findViewById(R.id.toggleButton);
