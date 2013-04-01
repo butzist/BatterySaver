@@ -115,7 +115,7 @@ public class MainActivity extends FragmentActivity {
 	
 	public void setToTime() {
         SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
-        int hour = settings.getInt(SETTINGS_NIGHTMODE_TO_HOUR, DEFAULT_FROM);
+        int hour = settings.getInt(SETTINGS_NIGHTMODE_TO_HOUR, DEFAULT_TO);
         int minute = settings.getInt(SETTINGS_NIGHTMODE_TO_MINUTE, 0);
         
         Calendar time = Calendar.getInstance();
