@@ -56,6 +56,12 @@
                 <action android:name="de.szalkowski.adamsbatterysaver.POWER_TIMEOUT_ACTION"/>
             </intent-filter>
         </receiver>
+        <receiver android:name="WidgetProvider">
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_provider"/>
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

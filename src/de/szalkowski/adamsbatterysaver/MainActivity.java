@@ -59,7 +59,8 @@ public class MainActivity extends FragmentActivity {
 				if(isChecked) {
 					MainActivity.this.startService(service);
 				} else {
-					MainActivity.this.stopService(service);
+					service.setAction(MainService.ACTION_DISABLE);
+					MainActivity.this.startService(service);
 				}
 			}
 		});

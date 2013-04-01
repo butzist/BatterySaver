@@ -27,6 +27,7 @@ public class MainService extends Service {
 	static public final String ACTION_SCREEN_TIMEOUT = "de.szalkowski.adamsbatterysaver.SCREEN_TIMEOUT_ACTION"; 
 	static public final String ACTION_POWER_TIMEOUT = "de.szalkowski.adamsbatterysaver.POWER_TIMEOUT_ACTION"; 
 	static public final String ACTION_UPDATE = "de.szalkowski.adamsbatterysaver.UPDATE_ACTION"; 
+	static public final String ACTION_DISABLE = "de.szalkowski.adamsbatterysaver.DISABLE_ACTION"; 
 	
 	static public boolean is_running = false;
 	static public PowerManager.WakeLock wake_lock = null;
@@ -74,7 +75,9 @@ public class MainService extends Service {
                 .setContentText("click to configure")
                 .setContentIntent(pending_activity);
         
-        startForeground(42, builder.build());
+        if(!WidgetProvider.hasWidgets(this)) {
+        	startForeground(42, builder.build());
+        }
         
         // check current power state
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -426,6 +429,14 @@ public class MainService extends Service {
 			this.cancelWakeupTimeout();
 			this.stopPowersave(true);
 			this.setWakeupTimeout();
+		} else if(intent.getAction().equals(MainService.ACTION_DISABLE)) {
+			SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putBoolean(MainActivity.SETTINGS_START_SERVICE, false);
+			editor.commit();
+
+			WidgetProvider.updateAllWidgets(this);
+			stopSelf();
 		}
 		
 		if(MainService.wake_lock.isHeld()) {
