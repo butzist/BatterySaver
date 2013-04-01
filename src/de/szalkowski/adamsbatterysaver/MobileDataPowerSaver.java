@@ -8,6 +8,8 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public class MobileDataPowerSaver extends PowerSaver {
+	static final public int DEFAULT_FLAGS = FLAG_ENABLE_WITH_SCREEN + FLAG_ENABLE_WITH_POWER + FLAG_ENABLE_ON_INTERVAL + FLAG_SAVE_STATE;
+
 	static private final String LOG = "de.szalkowski.adamsbatterysaver.MobileDataPowerSaver";
 
 	public MobileDataPowerSaver(Context context, int flags) {

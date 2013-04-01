@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 
 public class BluetoothPowerSaver extends PowerSaver {
+	static final public int DEFAULT_FLAGS = FLAG_ENABLE_WITH_POWER + FLAG_SAVE_STATE;
 
 	public BluetoothPowerSaver(Context context, int flags) {
 		super(context, "bluetooth", flags);

@@ -10,6 +10,8 @@ public abstract class PowerSaver {
 	static public int FLAG_ENABLE_WITH_POWER = 0x2;
 	static public int FLAG_ENABLE_ON_INTERVAL = 0x4;
 	static public int FLAG_SAVE_STATE = 0x10;
+	
+	static final public int DEFAULT_FLAGS = FLAG_ENABLE_WITH_SCREEN + FLAG_ENABLE_WITH_POWER + FLAG_ENABLE_ON_INTERVAL + FLAG_SAVE_STATE;
 
 	protected boolean isEnabled;
 	protected boolean savedState;
