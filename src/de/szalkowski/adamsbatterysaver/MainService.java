@@ -39,6 +39,7 @@ public class MainService extends Service {
 	private boolean screen_timeout_active = false;
 	private boolean power_timeout_active = false;
 	private boolean wakeup_active = false;
+	private boolean in_foreground = false;
 	private long traffic = 0;
 	private List<PowerSaver> power_savers;
 
@@ -65,19 +66,12 @@ public class MainService extends Service {
         this.powerstate_receiver = new PowerStateReceiver();
         this.registerReceiver(this.powerstate_receiver, filter);
         
-        Intent activity = new Intent(this.getApplicationContext(),MainActivity.class);
-        PendingIntent pending_activity = PendingIntent.getActivity(this, 0, activity, PendingIntent.FLAG_UPDATE_CURRENT);
-        
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_launcher)
-                .setContentTitle("Adam's Battery Saver")
-                .setContentText("click to configure")
-                .setContentIntent(pending_activity);
-        
-        if(!WidgetProvider.hasWidgets(this)) {
-        	startForeground(42, builder.build());
-        }
+		WidgetProvider.updateAllWidgets(this);
+
+		//if(!WidgetProvider.hasWidgets(this)) {
+        //	toForeground(true);
+        //}
+        toForeground(true);
         
         // check current power state
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -110,6 +104,52 @@ public class MainService extends Service {
 		BluetoothPowerSaver blue = new BluetoothPowerSaver(this, settings.getInt("blue_flags", BluetoothPowerSaver.DEFAULT_FLAGS));
 		this.power_savers.add(blue);
 		
+		setWakeupTimeout();
+	}
+	
+	protected void toForeground(boolean foreground) {
+		if(foreground == this.in_foreground) return;
+		
+		if(foreground) {
+	        Intent activity = new Intent(this.getApplicationContext(),MainActivity.class);
+	        PendingIntent pending_activity = PendingIntent.getActivity(this, 0, activity, PendingIntent.FLAG_UPDATE_CURRENT);
+
+	        NotificationCompat.Builder builder =
+	                new NotificationCompat.Builder(this)
+	                .setSmallIcon(R.drawable.ic_launcher)
+	                .setContentTitle("Adam's Battery Saver")
+	                .setContentText("click to configure")
+	                .setContentIntent(pending_activity);
+	    	this.startForeground(42, builder.build());
+		} else {
+			this.stopForeground(true);		
+		}
+		
+		this.in_foreground = foreground;
+	}
+	
+	protected void updateSettings() {
+		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+		
+		for(PowerSaver saver : this.power_savers) {
+			if(saver.getClass() == WifiPowerSaver.class) {
+				saver.setFlags(settings.getInt("wifi_flags", WifiPowerSaver.DEFAULT_FLAGS));
+			} else if(saver.getClass() == MobileDataPowerSaver.class) {
+				saver.setFlags(settings.getInt("data_flags", MobileDataPowerSaver.DEFAULT_FLAGS));
+			} else if(saver.getClass() == SyncPowerSaver.class) {
+				saver.setFlags(settings.getInt("sync_flags", SyncPowerSaver.DEFAULT_FLAGS));
+			} else if(saver.getClass() == BluetoothPowerSaver.class) {
+				saver.setFlags(settings.getInt("blue_flags", BluetoothPowerSaver.DEFAULT_FLAGS));
+			}
+		}
+		
+        //if(!WidgetProvider.hasWidgets(this)) {
+        //	toForeground(true);
+        //} else {
+        //	toForeground(false);
+        //}
+		
+		setWakeup(false);
 		setWakeupTimeout();
 	}
 	
@@ -352,6 +392,8 @@ public class MainService extends Service {
 		this.unregisterReceiver(this.powerstate_receiver);
 		MainService.is_running = false;
 		
+		WidgetProvider.updateAllWidgets(this);
+		
 		if(MainService.wake_lock.isHeld()) {
 			MainService.wake_lock.release();
 		}
@@ -365,7 +407,7 @@ public class MainService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if(intent == null || intent.getAction() == null) {
-			return super.onStartCommand(intent, flags, startId);
+			return START_STICKY;
 		}
 		
 		if(intent.getAction().equals(MainService.ACTION_UPDATE)) {
@@ -390,6 +432,8 @@ public class MainService extends Service {
 					this.setScreenTimeout();
 					this.setWakeup(true);
 				}
+			} else {
+				updateSettings();
 			}
 			
 			this.applyPowersave();
@@ -435,7 +479,6 @@ public class MainService extends Service {
 			editor.putBoolean(MainActivity.SETTINGS_START_SERVICE, false);
 			editor.commit();
 
-			WidgetProvider.updateAllWidgets(this);
 			stopSelf();
 		}
 		
@@ -443,6 +486,6 @@ public class MainService extends Service {
 			MainService.wake_lock.release();
 		}
 
-		return super.onStartCommand(intent, flags, startId);
+		return START_STICKY;
 	}
 }

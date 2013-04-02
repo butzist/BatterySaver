@@ -6,7 +6,6 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.widget.RemoteViews;
 
 public class WidgetProvider extends AppWidgetProvider {
@@ -14,16 +13,24 @@ public class WidgetProvider extends AppWidgetProvider {
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
 			int[] appWidgetIds) {
-		SharedPreferences settings = context.getApplicationContext().getSharedPreferences("settings", Context.MODE_PRIVATE);
-		boolean serviceRunning = settings.getBoolean(MainActivity.SETTINGS_START_SERVICE, MainService.is_running);
-		
 		for (int id : appWidgetIds) {
-			updateWidget(context, appWidgetManager, id, serviceRunning);
+			updateWidget(context, appWidgetManager, id, MainService.is_running);
 		}
 		
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
 	}
 	
+	@Override
+	public void onDeleted(Context context, int[] appWidgetIds) {
+		if(MainService.is_running) {
+			Intent service = new Intent(context,MainService.class);
+			service.setAction(MainService.ACTION_UPDATE);
+			context.startService(service);
+		}
+		
+		super.onDeleted(context, appWidgetIds);
+	}
+
 	protected static void updateWidget(Context context, AppWidgetManager appWidgetManager, int widgetId, boolean serviceRunning) {
 		int widget_layout;
 		
@@ -43,16 +50,20 @@ public class WidgetProvider extends AppWidgetProvider {
 		PendingIntent pending = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		views.setOnClickPendingIntent(R.id.widgetImage, pending);
 		appWidgetManager.updateAppWidget(widgetId, views);
+		
+		if(MainService.is_running) {
+			Intent service = new Intent(context,MainService.class);
+			service.setAction(MainService.ACTION_UPDATE);
+			context.startService(service);
+		}
 	}
 	
 	public static void updateAllWidgets(Context context) {
-		SharedPreferences settings = context.getApplicationContext().getSharedPreferences("settings", Context.MODE_PRIVATE);
 		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context.getApplicationContext());
 	    int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context.getApplicationContext(), WidgetProvider.class));
-		boolean serviceRunning = settings.getBoolean(MainActivity.SETTINGS_START_SERVICE, MainService.is_running);
 		
 		for (int id : appWidgetIds) {
-			updateWidget(context, appWidgetManager, id, serviceRunning);
+			updateWidget(context, appWidgetManager, id, MainService.is_running);
 		}
 	}
 	

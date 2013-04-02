@@ -53,7 +53,6 @@
             <intent-filter>
                 <action android:name="de.szalkowski.adamsbatterysaver.WAKEUP_ACTION"/>
                 <action android:name="de.szalkowski.adamsbatterysaver.WAKEUP_TIMEOUT_ACTION"/>
-                <action android:name="de.szalkowski.adamsbatterysaver.UPDATE_ACTION"/>
                 <action android:name="de.szalkowski.adamsbatterysaver.SCREEN_TIMEOUT_ACTION"/>
                 <action android:name="de.szalkowski.adamsbatterysaver.POWER_TIMEOUT_ACTION"/>
             </intent-filter>

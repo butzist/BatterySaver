@@ -9,9 +9,10 @@ public abstract class PowerSaver {
 	static public int FLAG_ENABLE_WITH_SCREEN = 0x1;
 	static public int FLAG_ENABLE_WITH_POWER = 0x2;
 	static public int FLAG_ENABLE_ON_INTERVAL = 0x4;
+	static public int FLAG_ENABLED_WHILE_TRAFFIC = 0x8;
 	static public int FLAG_SAVE_STATE = 0x10;
 	
-	static final public int DEFAULT_FLAGS = FLAG_ENABLE_WITH_SCREEN + FLAG_ENABLE_WITH_POWER + FLAG_ENABLE_ON_INTERVAL + FLAG_SAVE_STATE;
+	static final public int DEFAULT_FLAGS = FLAG_ENABLE_WITH_SCREEN + FLAG_ENABLE_WITH_POWER + FLAG_ENABLE_ON_INTERVAL + FLAG_ENABLED_WHILE_TRAFFIC + FLAG_SAVE_STATE;
 
 	protected boolean isEnabled;
 	protected boolean savedState;
@@ -55,6 +56,10 @@ public abstract class PowerSaver {
 				Log.d(LOG, name + " powersave disabled");
 			}
 		}
+	}
+	
+	public void setFlags(int flags) {
+		this.flags = flags;
 	}
 	
 	public boolean isEnabled() {

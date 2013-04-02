@@ -97,6 +97,12 @@ public class MainActivity extends FragmentActivity {
         saveFlags(editor);
         
         editor.commit();
+        
+        if(toggle.isChecked()) {
+    		Intent service = new Intent(MainActivity.this,MainService.class);
+    		service.setAction(MainService.ACTION_UPDATE);
+        	this.startService(service);
+        }
 
         super.onDestroy();
 	}
