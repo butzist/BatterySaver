@@ -5,11 +5,9 @@ import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 
 public class SyncPowerSaver extends PowerSaver {
 	static final public int DEFAULT_FLAGS = FLAG_ENABLE_WITH_SCREEN + FLAG_ENABLE_WITH_POWER + FLAG_ENABLE_ON_INTERVAL;
-	static final private String LOG = "de.szalkowski.adamsbatterysaver.Sync";
 	
 	public SyncPowerSaver(Context context, int flags) {
 		super(context, "sync", flags);
