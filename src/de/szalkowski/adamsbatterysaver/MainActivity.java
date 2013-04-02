@@ -167,7 +167,7 @@ public class MainActivity extends FragmentActivity {
 			public Dialog onCreateDialog(Bundle savedInstanceState) {
 		        SharedPreferences settings = this.getActivity().getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
 		        
-				int hour = settings.getInt(SETTINGS_NIGHTMODE_TO_HOUR, DEFAULT_FROM);
+				int hour = settings.getInt(SETTINGS_NIGHTMODE_TO_HOUR, DEFAULT_TO);
 				int minute = settings.getInt(SETTINGS_NIGHTMODE_TO_MINUTE, 0);
 
 				// Create a new instance of TimePickerDialog and return it
