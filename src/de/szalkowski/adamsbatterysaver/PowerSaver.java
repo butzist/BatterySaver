@@ -16,6 +16,7 @@ public abstract class PowerSaver {
 
 	protected boolean isEnabled;
 	protected boolean savedState;
+	protected boolean unknownState;
 	protected Context context;
 	protected int flags;
 	private String name;
@@ -24,36 +25,56 @@ public abstract class PowerSaver {
 		this.context = context;
 		this.name = name;
 		this.flags = flags;
-		this.isEnabled = this.isReallyEnabled();
-		Log.d(LOG, name + " powersave was " + (this.isEnabled ? "enabled" : "disabled"));
+		this.unknownState = false;
+		this.savedState = false;
 		
-		if((flags & FLAG_SAVE_STATE) == 0) {
-			this.savedState = false;
-		} else {
+		try {
+			this.isEnabled = this.isReallyEnabled();
+			Log.d(LOG, name + " powersave was " + (this.isEnabled ? "enabled" : "disabled"));
+		}
+		catch(Exception e) {
+			this.unknownState = true;
+			Log.e(LOG, name + " " + e.toString());
+		}
+		
+		if((flags & FLAG_SAVE_STATE) != 0) {
 			this.savedState = this.isEnabled;
 		}
 	}
 	
 	public void startPowersave() {
-		if(!this.isEnabled) {
+		if(!this.isEnabled || this.unknownState) {
 			this.isEnabled = true;
 			
-			if((this.flags & FLAG_SAVE_STATE) != 0) {
+			if((this.flags & FLAG_SAVE_STATE) != 0 && !this.unknownState) {
 				this.savedState = this.isReallyEnabled();
 				Log.d(LOG, name + " powersave was " + (this.savedState ? "enabled" : "disabled"));
 			}
-			this.doStartPowersave();
-			Log.d(LOG, name + " powersave enabled");
+			
+			try {
+				this.doStartPowersave();
+				Log.d(LOG, name + " powersave enabled");
+				this.unknownState = false;
+			}
+			catch(Exception e) {
+				Log.e(LOG, name + " " + e.toString());
+			}
 		}
 	}
 
 	public void stopPowersave() {
-		if(this.isEnabled) {
+		if(this.isEnabled || this.unknownState) {
 			this.isEnabled = false;
 			
 			if(!this.savedState) {
-				this.doStopPowersave();
-				Log.d(LOG, name + " powersave disabled");
+				try {
+					this.doStopPowersave();
+					Log.d(LOG, name + " powersave disabled");
+					this.unknownState = false;
+				}
+				catch(Exception e) {
+					Log.e(LOG, name + " " + e.toString());
+				}
 			}
 		}
 	}
@@ -67,7 +88,15 @@ public abstract class PowerSaver {
 	}
 	
 	public boolean isReallyEnabled() {
-		return this.doIsEnabled();
+		boolean enabled = this.isEnabled;
+		try {
+			enabled = this.doIsEnabled();
+		}
+		catch(Exception e) {
+			Log.e(LOG,name + " " + e.toString());
+			this.unknownState = true;
+		}
+		return enabled;
 	}
 	
 	public boolean getSavedState() {
@@ -90,8 +119,8 @@ public abstract class PowerSaver {
 		return (this.flags & FLAG_SAVE_STATE) != 0;
 	}
 	
-	abstract protected void doStartPowersave();
-	abstract protected void doStopPowersave();
-	abstract protected boolean doIsEnabled();
+	abstract protected void doStartPowersave() throws Exception;
+	abstract protected void doStopPowersave() throws Exception;
+	abstract protected boolean doIsEnabled() throws Exception;
 
 }

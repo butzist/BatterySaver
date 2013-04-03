@@ -4,22 +4,25 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 
 public class BluetoothPowerSaver extends PowerSaver {
-	static final public int DEFAULT_FLAGS = FLAG_ENABLE_WITH_POWER + FLAG_SAVE_STATE;
+	static final public int DEFAULT_FLAGS = FLAG_ENABLE_WITH_POWER + FLAG_ENABLED_WHILE_TRAFFIC + FLAG_SAVE_STATE;
 
 	public BluetoothPowerSaver(Context context, int flags) {
 		super(context, "bluetooth", flags);
 	}
 
 	@Override
-	protected void doStartPowersave() {
+	protected void doStartPowersave() throws Exception {
 		BluetoothAdapter bluetooth = BluetoothAdapter.getDefaultAdapter();
 		if(bluetooth != null) {
+			if((this.flags & FLAG_ENABLED_WHILE_TRAFFIC) != 0 && (bluetooth.getState() == BluetoothAdapter.STATE_CONNECTED)) {
+				throw new Exception("still connected");
+			}
 			bluetooth.disable();
 		}
 	}
 
 	@Override
-	protected void doStopPowersave() {
+	protected void doStopPowersave() throws Exception {
 		BluetoothAdapter bluetooth = BluetoothAdapter.getDefaultAdapter();
 		if(bluetooth != null) {
 			bluetooth.enable();
@@ -27,7 +30,7 @@ public class BluetoothPowerSaver extends PowerSaver {
 	}
 
 	@Override
-	protected boolean doIsEnabled() {
+	protected boolean doIsEnabled() throws Exception {
 		BluetoothAdapter bluetooth = BluetoothAdapter.getDefaultAdapter();
 		if(bluetooth == null) return true;
 		

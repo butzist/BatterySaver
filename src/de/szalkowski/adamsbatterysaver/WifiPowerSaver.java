@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.wifi.WifiManager;
 
 public class WifiPowerSaver extends PowerSaver {
+	//static private final String LOG = "de.szalkowski.adamsbatterysaver.WifiPowerSaver";
 	static final public int DEFAULT_FLAGS = FLAG_ENABLE_WITH_SCREEN + FLAG_ENABLE_WITH_POWER + FLAG_ENABLE_ON_INTERVAL + FLAG_SAVE_STATE;
 
 	public WifiPowerSaver(Context context, int flags) {
@@ -11,21 +12,28 @@ public class WifiPowerSaver extends PowerSaver {
 	}
 
 	@Override
-	protected void doStartPowersave() {
+	protected void doStartPowersave() throws Exception {
 		WifiManager wifi = (WifiManager)this.context.getSystemService(Context.WIFI_SERVICE);
 		wifi.setWifiEnabled(false);
 	}
 
 	@Override
-	protected void doStopPowersave() {
+	protected void doStopPowersave() throws Exception {
 		WifiManager wifi = (WifiManager)this.context.getSystemService(Context.WIFI_SERVICE);
 		wifi.setWifiEnabled(true);
 	}
 
 	@Override
-	protected boolean doIsEnabled() {
+	protected boolean doIsEnabled() throws Exception {
 		WifiManager wifi = (WifiManager)this.context.getSystemService(Context.WIFI_SERVICE);
-		return !wifi.isWifiEnabled();
+		int state = wifi.getWifiState();
+		if(state == WifiManager.WIFI_STATE_DISABLED || state == WifiManager.WIFI_STATE_DISABLING) {
+			return true;
+		} else if(state == WifiManager.WIFI_STATE_ENABLED || state == WifiManager.WIFI_STATE_ENABLING) {
+			return false;
+		} else {
+			throw new Exception("unknown state: " + state);
+		}
 	}
 
 }

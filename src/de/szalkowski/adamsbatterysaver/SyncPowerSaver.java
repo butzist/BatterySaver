@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 public class SyncPowerSaver extends PowerSaver {
+	//static private final String LOG = "de.szalkowski.adamsbatterysaver.SyncPowerSaver";
 	static final public int DEFAULT_FLAGS = FLAG_ENABLE_WITH_SCREEN + FLAG_ENABLE_WITH_POWER + FLAG_ENABLE_ON_INTERVAL;
 	
 	public SyncPowerSaver(Context context, int flags) {

@@ -8,31 +8,30 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public class MobileDataPowerSaver extends PowerSaver {
-	static final public int DEFAULT_FLAGS = FLAG_ENABLE_WITH_SCREEN + FLAG_ENABLE_WITH_POWER + FLAG_ENABLE_ON_INTERVAL + FLAG_SAVE_STATE;
-
 	static private final String LOG = "de.szalkowski.adamsbatterysaver.MobileDataPowerSaver";
+	static final public int DEFAULT_FLAGS = FLAG_ENABLE_WITH_SCREEN + FLAG_ENABLE_WITH_POWER + FLAG_ENABLE_ON_INTERVAL + FLAG_SAVE_STATE;
 
 	public MobileDataPowerSaver(Context context, int flags) {
 		super(context, "data", flags);
 	}
 
 	@Override
-	protected void doStartPowersave() {
+	protected void doStartPowersave() throws Exception {
 		this.setMobileDataEnabled(false);
 	}
 
 	@Override
-	protected void doStopPowersave() {
+	protected void doStopPowersave() throws Exception {
 		this.setMobileDataEnabled(true);
 	}
 
 	@Override
-	protected boolean doIsEnabled() {
+	protected boolean doIsEnabled() throws Exception {
 		TelephonyManager telephonyManager = (TelephonyManager) this.context.getSystemService(Context.TELEPHONY_SERVICE);
 		return telephonyManager.getDataState() == TelephonyManager.DATA_DISCONNECTED;
 	}
 
-	protected void setMobileDataEnabled(boolean enabled) {
+	protected void setMobileDataEnabled(boolean enabled) throws Exception {
 		// BASED ON http://stackoverflow.com/questions/3644144/how-to-disable-mobile-data-on-android
 		
 		try {
