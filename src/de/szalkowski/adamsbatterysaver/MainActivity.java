@@ -26,12 +26,17 @@ public class MainActivity extends FragmentActivity {
 	static final public int DEFAULT_TO = 8;
 	static final public int DEFAULT_INTERVAL = 15;
 	static final public int DEFAULT_INTERVAL_SHORT = 5;
+	static final public int DEFAULT_DELAY = 20;
+	static final public int DEFAULT_CHECK_NETWORK_INTERVAL = 20;
 	static final public int DEFAULT_TIMEOUT = 60;
 	static final public int DEFAULT_TRAFFIC_LIMIT = 750000;
 	
 	static final public String SETTINGS_INTERVAL = "interval";
 	static final public String SETTINGS_INTERVAL_SHORT = "interval_short";
 	static final public String SETTINGS_TIMEOUT = "timeout";
+	static final public String SETTINGS_DELAY = "delay";
+	static final public String SETTINGS_CHECK_NETWORK_INTERVAL = "check_net_interval";
+	static final public String SETTINGS_TRAFFIC_LIMIT = "traffic_limit";
 	static final public String SETTINGS_START_SERVICE = "start_service";
 	static final public String SETTINGS_NIGHTMODE_FROM_HOUR = "from_hour";
 	static final public String SETTINGS_NIGHTMODE_FROM_MINUTE = "from_minute";
@@ -200,7 +205,7 @@ public class MainActivity extends FragmentActivity {
 	
 	protected void setFlags() {
 		final String[] devices = {"wifi", "data", "blue", "sync"};
-		final int[] flag_values = {PowerSaver.FLAG_ENABLE_WITH_SCREEN, PowerSaver.FLAG_ENABLE_WITH_POWER, PowerSaver.FLAG_ENABLE_ON_INTERVAL, PowerSaver.FLAG_SAVE_STATE};
+		final int[] flag_values = {PowerSaver.FLAG_DISABLE_WITH_SCREEN, PowerSaver.FLAG_DISABLE_WITH_POWER, PowerSaver.FLAG_DISABLE_ON_INTERVAL, PowerSaver.FLAG_SAVE_STATE};
 		final int[] default_flags = {
 				WifiPowerSaver.DEFAULT_FLAGS,
 				MobileDataPowerSaver.DEFAULT_FLAGS,
@@ -227,7 +232,7 @@ public class MainActivity extends FragmentActivity {
 	
 	protected void saveFlags(SharedPreferences.Editor settings) {
 		final String[] devices = {"wifi", "data", "blue", "sync"};
-		final int[] flag_values = {PowerSaver.FLAG_ENABLE_WITH_SCREEN, PowerSaver.FLAG_ENABLE_WITH_POWER, PowerSaver.FLAG_ENABLE_ON_INTERVAL, PowerSaver.FLAG_SAVE_STATE};
+		final int[] flag_values = {PowerSaver.FLAG_DISABLE_WITH_SCREEN, PowerSaver.FLAG_DISABLE_WITH_POWER, PowerSaver.FLAG_DISABLE_ON_INTERVAL, PowerSaver.FLAG_SAVE_STATE};
 		final int IDs[][] = {
 				{R.id.CheckBoxWifiScreen, R.id.CheckBoxWifiPower, R.id.CheckBoxWifiInterval, R.id.CheckBoxWifiSave},
 				{R.id.CheckBoxDataScreen, R.id.CheckBoxDataPower, R.id.CheckBoxDataInterval, R.id.CheckBoxDataSave},

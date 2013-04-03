@@ -12,6 +12,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.TrafficStats;
 import android.os.BatteryManager;
 import android.os.IBinder;
@@ -26,8 +28,10 @@ public class MainService extends Service {
 	static public final String ACTION_WAKEUP_TIMEOUT = "de.szalkowski.adamsbatterysaver.WAKEUP_TIMEOUT_ACTION"; 
 	static public final String ACTION_SCREEN_TIMEOUT = "de.szalkowski.adamsbatterysaver.SCREEN_TIMEOUT_ACTION"; 
 	static public final String ACTION_POWER_TIMEOUT = "de.szalkowski.adamsbatterysaver.POWER_TIMEOUT_ACTION"; 
-	static public final String ACTION_UPDATE = "de.szalkowski.adamsbatterysaver.UPDATE_ACTION"; 
-	static public final String ACTION_DISABLE = "de.szalkowski.adamsbatterysaver.DISABLE_ACTION"; 
+	static public final String ACTION_UPDATE = "de.szalkowski.adamsbatterysaver.UPDATE_ACTION";
+	static public final String ACTION_DISABLE = "de.szalkowski.adamsbatterysaver.DISABLE_ACTION";
+	static public final String ACTION_WAKEUP_DELAY = "de.szalkowski.adamsbatterysaver.WAKEUP_DELAY_ACTION";
+	static public final String ACTION_WAKEUP_CHECK_NET = "de.szalkowski.adamsbatterysaver.WAKEUP_CHECK_NET_ACTION";
 	
 	static public boolean is_running = false;
 	static public PowerManager.WakeLock wake_lock = null;
@@ -39,6 +43,7 @@ public class MainService extends Service {
 	private boolean screen_timeout_active = false;
 	private boolean power_timeout_active = false;
 	private boolean wakeup_active = false;
+	private boolean delayed_wakeup = false;
 	private boolean in_foreground = false;
 	private long traffic = 0;
 	private List<PowerSaver> power_savers;
@@ -251,6 +256,38 @@ public class MainService extends Service {
 		
 		this.power_timeout_active = true;
 	}
+	
+	protected void setCheckNetWakeup() {
+		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+
+		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+		Intent intent = new Intent(MainService.ACTION_WAKEUP_CHECK_NET);
+		PendingIntent pending = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		int check_interval = settings.getInt(MainActivity.SETTINGS_CHECK_NETWORK_INTERVAL, MainActivity.DEFAULT_CHECK_NETWORK_INTERVAL) * 1000;
+		alarm.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + check_interval, pending);
+	}
+	
+	protected void setDelayedWakeup() {
+		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+
+		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+		Intent intent = new Intent(MainService.ACTION_WAKEUP_DELAY);
+		PendingIntent pending = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		int check_interval = settings.getInt(MainActivity.SETTINGS_DELAY, MainActivity.DEFAULT_DELAY) * 1000;
+		alarm.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + check_interval, pending);
+	}
+	
+	protected boolean checkConnection() {
+		ConnectivityManager connManager = (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo net = connManager.getActiveNetworkInfo();
+		
+		if(net != null && net.isConnected()) {
+			Log.v(LOG,net.getTypeName() + " online");
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	protected long getTrafficSinceWakeup() {
 		long traffic = TrafficStats.getTotalRxBytes() + TrafficStats.getTotalTxBytes();
@@ -275,7 +312,7 @@ public class MainService extends Service {
 		
 		Intent intent = new Intent(MainService.ACTION_WAKEUP);
 		PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+first_interval, interval, pending);
+		alarm.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+first_interval, interval, pending);
 		
 		this.wakeup_active = true;
 	}
@@ -299,20 +336,92 @@ public class MainService extends Service {
 		this.wakeup_active = true;
 	}
 	
-	protected void stopPowersave(boolean isInterval) {
+	protected void stopPowersave() {
+		boolean connection = checkConnection();
+		boolean net_wakeup_scheduled = false;
+		boolean delay_scheduled = false;
+		
 		for(PowerSaver power_saver : this.power_savers) {
-			if(!isInterval || power_saver.flagEnableOnIntervalSet()) {
-				power_saver.stopPowersave();
+			if(!power_saver.flagDisableOnIntervalSet())
+				continue;
+			
+			if(power_saver.flagDelayDisableSet()) {
+				Log.d(LOG,"delaying " + power_saver.getClass().getName());
+				if(!delay_scheduled) {
+					this.setDelayedWakeup();
+					delay_scheduled = true;
+				}
+				continue;
 			}
+				
+			if(!connection && power_saver.flagRequiresNetwork()) {
+				if(!net_wakeup_scheduled) {
+					this.setCheckNetWakeup();
+					net_wakeup_scheduled = true;
+				}
+			}
+
+			power_saver.stopPowersave();
+		}
+	}
+	
+	protected void delayedStopPowersave() {
+		boolean connection = checkConnection();
+		boolean net_wakeup_scheduled = false;
+		
+		for(PowerSaver power_saver : this.power_savers) {
+			if(!power_saver.flagDisableOnIntervalSet() || !power_saver.flagDelayDisableSet())
+				continue;
+			
+			if(!connection && power_saver.flagRequiresNetwork()) {
+				if(!net_wakeup_scheduled) {
+					this.setCheckNetWakeup();
+					net_wakeup_scheduled = true;
+				}
+			}
+
+			power_saver.stopPowersave();
+		}
+	}
+	
+	protected void forceStopPowersave() {
+		for(PowerSaver power_saver : this.power_savers) {
+			power_saver.stopPowersave();
 		}
 	}
 	
 	protected void applyPowersave() {
+		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+		long traffic = this.getTrafficSinceWakeup();
+		// All timeouts need to update this
+		long traffic_limit = settings.getLong(MainActivity.SETTINGS_TRAFFIC_LIMIT, MainActivity.DEFAULT_TRAFFIC_LIMIT);
+		boolean connection = checkConnection();
+		boolean net_wakeup_scheduled = false;
+		boolean delay_scheduled = false;
+		
 		for(PowerSaver power_saver : this.power_savers) {
-			if(power_saver.flagEnableWithPowerSet() && this.power_on) {
-				power_saver.stopPowersave();
-			} else if(power_saver.flagEnableWithScreenSet() && this.screen_on) {
-				power_saver.stopPowersave();
+			if((power_saver.flagDisableWithPowerSet() && this.power_on) || (power_saver.flagDisableWithScreenSet() && this.screen_on)) {
+					if(power_saver.flagDelayDisableSet()) {
+						Log.d(LOG,"delaying 1 " + power_saver.getClass().getName());
+						if(!delay_scheduled) {
+							this.setDelayedWakeup();
+							delay_scheduled = true;
+						}
+						continue;
+					}
+						
+					if(!connection && power_saver.flagRequiresNetwork()) {
+						Log.d(LOG,"delaying 2 " + power_saver.getClass().getName());
+						if(!net_wakeup_scheduled) {
+							this.setCheckNetWakeup();
+							net_wakeup_scheduled = true;
+						}
+					}
+
+					power_saver.stopPowersave();
+			} else if (power_saver.flagDisabledWhileTrafficSet() && (traffic > traffic_limit)) {
+				Log.d(LOG,"delaying powersave for " + power_saver.getClass().getName());
+				this.setWakeupTimeout();
 			} else {
 				power_saver.startPowersave();
 			}
@@ -382,7 +491,7 @@ public class MainService extends Service {
 	public void onDestroy() {
 		Log.d(LOG, "Destroyed");
 
-		stopPowersave(false);
+		forceStopPowersave();
 		
 		cancelWakeup();
 		cancelWakeupTimeout();
@@ -436,6 +545,7 @@ public class MainService extends Service {
 				updateSettings();
 			}
 			
+			this.delayed_wakeup = false;
 			this.applyPowersave();
 			
 		} else if(intent.getAction().equals(MainService.ACTION_WAKEUP_TIMEOUT)) {
@@ -456,6 +566,7 @@ public class MainService extends Service {
 			
 			this.screen_timeout_active = false;
 			this.screen_on = false;
+
 			
 			this.applyPowersave();
 		} else if(intent.getAction().equals(MainService.ACTION_POWER_TIMEOUT)) {
@@ -463,15 +574,40 @@ public class MainService extends Service {
 			
 			this.power_timeout_active = false;
 			this.power_on = false;
+
 			
 			this.applyPowersave();
+		} else if(intent.getAction().equals(MainService.ACTION_WAKEUP_CHECK_NET)) {
+			Log.d(LOG, "Checking network connection");
+			
+			// Try disabling powersave again, if not too late
+			if(this.wakeup_timeout_active) {
+				if(!this.delayed_wakeup) {
+					this.stopPowersave();
+				} else {
+					this.delayedStopPowersave();
+				}
+			} else {
+				this.applyPowersave();
+			}
+		} else if(intent.getAction().equals(MainService.ACTION_WAKEUP_DELAY)) {
+			Log.d(LOG, "Delayed wakeup");
+			
+			// Try disabling powersave again, if not too late
+			if(this.wakeup_timeout_active) {
+				this.delayedStopPowersave();
+				this.delayed_wakeup = true;
+			} else {
+				this.applyPowersave();
+			}
 		} else if(intent.getAction().equals(MainService.ACTION_WAKEUP)) {
 			Log.d(LOG, "Wakeup");
 			
-			this.traffic = TrafficStats.getTotalRxBytes() + TrafficStats.getTotalTxBytes(); 
+			this.traffic = TrafficStats.getTotalRxBytes() + TrafficStats.getTotalTxBytes();
 			
+			this.delayed_wakeup = false;
 			this.cancelWakeupTimeout();
-			this.stopPowersave(true);
+			this.stopPowersave();
 			this.setWakeupTimeout();
 		} else if(intent.getAction().equals(MainService.ACTION_DISABLE)) {
 			SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);

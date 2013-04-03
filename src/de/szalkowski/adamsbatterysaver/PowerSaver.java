@@ -6,13 +6,15 @@ import android.util.Log;
 public abstract class PowerSaver {
 	static private final String LOG = "de.szalkowski.adamsbatterysaver.PowerSaver";
 	
-	static public int FLAG_ENABLE_WITH_SCREEN = 0x1;
-	static public int FLAG_ENABLE_WITH_POWER = 0x2;
-	static public int FLAG_ENABLE_ON_INTERVAL = 0x4;
-	static public int FLAG_ENABLED_WHILE_TRAFFIC = 0x8;
+	static public int FLAG_DISABLE_WITH_SCREEN = 0x1;
+	static public int FLAG_DISABLE_WITH_POWER = 0x2;
+	static public int FLAG_DISABLE_ON_INTERVAL = 0x4;
+	static public int FLAG_DISABLED_WHILE_TRAFFIC = 0x8;
 	static public int FLAG_SAVE_STATE = 0x10;
+	static public int FLAG_DELAY_DISABLE = 0x20;
+	static public int FLAG_REQUIRES_NETWORK = 0x100;
 	
-	static final public int DEFAULT_FLAGS = FLAG_ENABLE_WITH_SCREEN + FLAG_ENABLE_WITH_POWER + FLAG_ENABLE_ON_INTERVAL + FLAG_ENABLED_WHILE_TRAFFIC + FLAG_SAVE_STATE;
+	static final public int DEFAULT_FLAGS = FLAG_DISABLE_WITH_SCREEN + FLAG_DISABLE_WITH_POWER + FLAG_DISABLE_ON_INTERVAL + FLAG_DISABLED_WHILE_TRAFFIC + FLAG_SAVE_STATE;
 
 	protected boolean isEnabled;
 	protected boolean savedState;
@@ -80,7 +82,20 @@ public abstract class PowerSaver {
 	}
 	
 	public void setFlags(int flags) {
+		this.flags &= ~0xFF;
+		this.flags |= flags & 0xFF;
+		
+		if((flags & FLAG_SAVE_STATE) != 0) {
+			this.savedState = this.isEnabled;
+		}
+	}
+	
+	public void setAllFlags(int flags) {
 		this.flags = flags;
+		
+		if((flags & FLAG_SAVE_STATE) != 0) {
+			this.savedState = this.isEnabled;
+		}
 	}
 	
 	public boolean isEnabled() {
@@ -103,20 +118,32 @@ public abstract class PowerSaver {
 		return this.savedState;
 	}
 	
-	public boolean flagEnableWithScreenSet() {
-		return (this.flags & FLAG_ENABLE_WITH_SCREEN) != 0;
+	public boolean flagDisableWithScreenSet() {
+		return (this.flags & FLAG_DISABLE_WITH_SCREEN) != 0;
 	}
 	
-	public boolean flagEnableWithPowerSet() {
-		return (this.flags & FLAG_ENABLE_WITH_POWER) != 0;
+	public boolean flagDisableWithPowerSet() {
+		return (this.flags & FLAG_DISABLE_WITH_POWER) != 0;
 	}
 	
-	public boolean flagEnableOnIntervalSet() {
-		return (this.flags & FLAG_ENABLE_ON_INTERVAL) != 0;
+	public boolean flagDisableOnIntervalSet() {
+		return (this.flags & FLAG_DISABLE_ON_INTERVAL) != 0;
 	}
 	
 	public boolean flagSaveStateSet() {
 		return (this.flags & FLAG_SAVE_STATE) != 0;
+	}
+	
+	public boolean flagDelayDisableSet() {
+		return (this.flags & FLAG_DELAY_DISABLE) != 0;
+	}
+	
+	public boolean flagDisabledWhileTrafficSet() {
+		return (this.flags & FLAG_DISABLED_WHILE_TRAFFIC) != 0;
+	}
+	
+	public boolean flagRequiresNetwork() {
+		return (this.flags & FLAG_REQUIRES_NETWORK) != 0;
 	}
 	
 	abstract protected void doStartPowersave() throws Exception;

@@ -55,6 +55,8 @@
                 <action android:name="de.szalkowski.adamsbatterysaver.WAKEUP_TIMEOUT_ACTION"/>
                 <action android:name="de.szalkowski.adamsbatterysaver.SCREEN_TIMEOUT_ACTION"/>
                 <action android:name="de.szalkowski.adamsbatterysaver.POWER_TIMEOUT_ACTION"/>
+                <action android:name="de.szalkowski.adamsbatterysaver.WAKEUP_DELAY_ACTION"/>
+                <action android:name="de.szalkowski.adamsbatterysaver.WAKEUP_CHECK_NET_ACTION"/>
             </intent-filter>
         </receiver>
         <receiver android:name="WidgetProvider">

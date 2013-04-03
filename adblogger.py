@@ -12,6 +12,7 @@ def timecat(stdscr,fd):
 	curses.init_pair(7, curses.COLOR_BLUE, curses.COLOR_BLACK)
 	colormap['V'] = curses.color_pair(7) | curses.A_BOLD
 	colormap['D'] = curses.color_pair(0) | curses.A_BOLD
+	colormap['I'] = curses.color_pair(0) | curses.A_BOLD
 	colormap['W'] = curses.color_pair(3) | curses.A_BOLD
 	colormap['E'] = curses.color_pair(1) | curses.A_BOLD
 
