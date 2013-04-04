@@ -11,8 +11,7 @@ public abstract class PowerSaver {
 	static public int FLAG_DISABLE_ON_INTERVAL = 0x4;
 	static public int FLAG_DISABLED_WHILE_TRAFFIC = 0x8;
 	static public int FLAG_SAVE_STATE = 0x10;
-	static public int FLAG_DELAY_DISABLE = 0x20;
-	static public int FLAG_REQUIRES_NETWORK = 0x100;
+	static public int FLAG_DISABLE = 0x100;
 	
 	static final public int DEFAULT_FLAGS = FLAG_DISABLE_WITH_SCREEN + FLAG_DISABLE_WITH_POWER + FLAG_DISABLE_ON_INTERVAL + FLAG_DISABLED_WHILE_TRAFFIC + FLAG_SAVE_STATE;
 
@@ -45,6 +44,10 @@ public abstract class PowerSaver {
 	}
 	
 	public void startPowersave() {
+		if(this.flagDisable()) {
+			return;
+		}
+		
 		if(!this.isEnabled || this.unknownState) {
 			this.isEnabled = true;
 			
@@ -65,6 +68,10 @@ public abstract class PowerSaver {
 	}
 
 	public void stopPowersave() {
+		if(flagDisable()) {
+			return;
+		}
+		
 		if(this.isEnabled || this.unknownState) {
 			this.isEnabled = false;
 			
@@ -82,15 +89,6 @@ public abstract class PowerSaver {
 	}
 	
 	public void setFlags(int flags) {
-		this.flags &= ~0xFF;
-		this.flags |= flags & 0xFF;
-		
-		if((flags & FLAG_SAVE_STATE) != 0) {
-			this.savedState = this.isEnabled;
-		}
-	}
-	
-	public void setAllFlags(int flags) {
 		this.flags = flags;
 		
 		if((flags & FLAG_SAVE_STATE) != 0) {
@@ -100,6 +98,10 @@ public abstract class PowerSaver {
 	
 	public boolean isEnabled() {
 		return this.isEnabled;
+	}
+	
+	public String getName() {
+		return this.name;
 	}
 	
 	public boolean isReallyEnabled() {
@@ -134,16 +136,12 @@ public abstract class PowerSaver {
 		return (this.flags & FLAG_SAVE_STATE) != 0;
 	}
 	
-	public boolean flagDelayDisableSet() {
-		return (this.flags & FLAG_DELAY_DISABLE) != 0;
-	}
-	
 	public boolean flagDisabledWhileTrafficSet() {
 		return (this.flags & FLAG_DISABLED_WHILE_TRAFFIC) != 0;
 	}
 	
-	public boolean flagRequiresNetwork() {
-		return (this.flags & FLAG_REQUIRES_NETWORK) != 0;
+	public boolean flagDisable() {
+		return (this.flags & FLAG_DISABLE) != 0;
 	}
 	
 	abstract protected void doStartPowersave() throws Exception;
