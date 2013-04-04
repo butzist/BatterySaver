@@ -23,6 +23,10 @@ public class AlarmReceiver extends BroadcastReceiver {
 			service.setAction(MainService.ACTION_SCREEN_TIMEOUT);
 		} else if(intent.getAction().equals(MainService.ACTION_WAKEUP)) {
 			service.setAction(MainService.ACTION_WAKEUP);
+		} else if(intent.getAction().equals(MainService.ACTION_WAKEUP_DELAY)) {
+			service.setAction(MainService.ACTION_WAKEUP_DELAY);
+		} else if(intent.getAction().equals(MainService.ACTION_WAKEUP_CHECK_NET)) {
+			service.setAction(MainService.ACTION_WAKEUP_CHECK_NET);
 		}
 		
 		context.startService(service);
