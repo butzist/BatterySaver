@@ -3,8 +3,8 @@
     android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="right"
-    android:gravity="top|center_horizontal"
+    android:layout_gravity="top|center_horizontal"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -27,7 +27,6 @@
         android:paddingTop="20dp" >
 
         <TextView
-            android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
@@ -60,7 +59,6 @@
         android:showDividers="middle" >
 
         <TextView
-            android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0"
@@ -97,13 +95,19 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/textView7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <org.thirdparty.VerticalTextView
-                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:gravity="bottom"
+                android:text="disable"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <org.thirdparty.VerticalTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
@@ -112,7 +116,6 @@
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <org.thirdparty.VerticalTextView
-                android:id="@+id/textView9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
@@ -121,7 +124,6 @@
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <org.thirdparty.VerticalTextView
-                android:id="@+id/textView10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
@@ -130,7 +132,6 @@
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <org.thirdparty.VerticalTextView
-                android:id="@+id/textView11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
@@ -138,7 +139,15 @@
                 android:text="save"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        </TableRow>
+            <org.thirdparty.VerticalTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:gravity="bottom"
+                android:text="traffic"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            </TableRow>
 
         <TableRow
             android:id="@+id/tableRow2"
@@ -146,12 +155,16 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
                 android:text="wifi"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <CheckBox
+                android:id="@+id/CheckBoxWifiDisable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <CheckBox
                 android:id="@+id/CheckBoxWifiScreen"
@@ -177,7 +190,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center" />
 
-        </TableRow>
+            <CheckBox
+                android:id="@+id/CheckBoxWifiTraffic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+            </TableRow>
 
         <TableRow
             android:id="@+id/tableRow3"
@@ -185,12 +204,16 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
                 android:text="data"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <CheckBox
+                android:id="@+id/CheckBoxDataDisable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <CheckBox
                 android:id="@+id/CheckBoxDataScreen"
@@ -216,7 +239,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center" />
 
-        </TableRow>
+            <CheckBox
+                android:id="@+id/CheckBoxDataTraffic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+            </TableRow>
 
         <TableRow
             android:id="@+id/tableRow4"
@@ -224,12 +253,16 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
-                android:text="bluetooth"
+                android:text="blue"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <CheckBox
+                android:id="@+id/CheckBoxBlueDisable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <CheckBox
                 android:id="@+id/CheckBoxBlueScreen"
@@ -255,7 +288,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center" />
 
-        </TableRow>
+            <CheckBox
+                android:id="@+id/CheckBoxBlueTraffic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+            </TableRow>
 
         <TableRow
             android:id="@+id/tableRow5"
@@ -263,12 +302,16 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/textView6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
                 android:text="sync"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <CheckBox
+                android:id="@+id/CheckBoxSyncDisable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <CheckBox
                 android:id="@+id/CheckBoxSyncScreen"
@@ -294,7 +337,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center" />
 
-        </TableRow>
+            <CheckBox
+                android:id="@+id/CheckBoxSyncTraffic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+            </TableRow>
     </TableLayout>
 
 </LinearLayout>

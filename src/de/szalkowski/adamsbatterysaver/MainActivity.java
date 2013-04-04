@@ -205,7 +205,7 @@ public class MainActivity extends FragmentActivity {
 	
 	protected void setFlags() {
 		final String[] devices = {"wifi", "data", "blue", "sync"};
-		final int[] flag_values = {PowerSaver.FLAG_DISABLE_WITH_SCREEN, PowerSaver.FLAG_DISABLE_WITH_POWER, PowerSaver.FLAG_DISABLE_ON_INTERVAL, PowerSaver.FLAG_SAVE_STATE};
+		final int[] flag_values = {PowerSaver.FLAG_DISABLE, PowerSaver.FLAG_DISABLE_WITH_SCREEN, PowerSaver.FLAG_DISABLE_WITH_POWER, PowerSaver.FLAG_DISABLE_ON_INTERVAL, PowerSaver.FLAG_SAVE_STATE, PowerSaver.FLAG_DISABLED_WHILE_TRAFFIC};
 		final int[] default_flags = {
 				WifiPowerSaver.DEFAULT_FLAGS,
 				MobileDataPowerSaver.DEFAULT_FLAGS,
@@ -213,17 +213,17 @@ public class MainActivity extends FragmentActivity {
 				SyncPowerSaver.DEFAULT_FLAGS
 		};
 		final int IDs[][] = {
-				{R.id.CheckBoxWifiScreen, R.id.CheckBoxWifiPower, R.id.CheckBoxWifiInterval, R.id.CheckBoxWifiSave},
-				{R.id.CheckBoxDataScreen, R.id.CheckBoxDataPower, R.id.CheckBoxDataInterval, R.id.CheckBoxDataSave},
-				{R.id.CheckBoxBlueScreen, R.id.CheckBoxBluePower, R.id.CheckBoxBlueInterval, R.id.CheckBoxBlueSave},
-				{R.id.CheckBoxSyncScreen, R.id.CheckBoxSyncPower, R.id.CheckBoxSyncInterval, R.id.CheckBoxSyncSave}
+				{R.id.CheckBoxWifiDisable, R.id.CheckBoxWifiScreen, R.id.CheckBoxWifiPower, R.id.CheckBoxWifiInterval, R.id.CheckBoxWifiSave, R.id.CheckBoxWifiTraffic},
+				{R.id.CheckBoxDataDisable, R.id.CheckBoxDataScreen, R.id.CheckBoxDataPower, R.id.CheckBoxDataInterval, R.id.CheckBoxDataSave, R.id.CheckBoxDataTraffic},
+				{R.id.CheckBoxBlueDisable, R.id.CheckBoxBlueScreen, R.id.CheckBoxBluePower, R.id.CheckBoxBlueInterval, R.id.CheckBoxBlueSave, R.id.CheckBoxBlueTraffic},
+				{R.id.CheckBoxSyncDisable, R.id.CheckBoxSyncScreen, R.id.CheckBoxSyncPower, R.id.CheckBoxSyncInterval, R.id.CheckBoxSyncSave, R.id.CheckBoxSyncTraffic}
 		};
 		
         SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
 
-		for(int i=0; i<4; i++) {
+		for(int i=0; i<devices.length; i++) {
 			int flags = settings.getInt(devices[i]+"_flags", default_flags[i]);
-			for(int j=0; j<4; j++) {
+			for(int j=0; j<IDs[i].length; j++) {
 				CheckBox check = (CheckBox)this.findViewById(IDs[i][j]);
 				check.setChecked((flags & flag_values[j]) != 0);
 			}
@@ -232,17 +232,17 @@ public class MainActivity extends FragmentActivity {
 	
 	protected void saveFlags(SharedPreferences.Editor settings) {
 		final String[] devices = {"wifi", "data", "blue", "sync"};
-		final int[] flag_values = {PowerSaver.FLAG_DISABLE_WITH_SCREEN, PowerSaver.FLAG_DISABLE_WITH_POWER, PowerSaver.FLAG_DISABLE_ON_INTERVAL, PowerSaver.FLAG_SAVE_STATE};
+		final int[] flag_values = {PowerSaver.FLAG_DISABLE, PowerSaver.FLAG_DISABLE_WITH_SCREEN, PowerSaver.FLAG_DISABLE_WITH_POWER, PowerSaver.FLAG_DISABLE_ON_INTERVAL, PowerSaver.FLAG_SAVE_STATE, PowerSaver.FLAG_DISABLED_WHILE_TRAFFIC};
 		final int IDs[][] = {
-				{R.id.CheckBoxWifiScreen, R.id.CheckBoxWifiPower, R.id.CheckBoxWifiInterval, R.id.CheckBoxWifiSave},
-				{R.id.CheckBoxDataScreen, R.id.CheckBoxDataPower, R.id.CheckBoxDataInterval, R.id.CheckBoxDataSave},
-				{R.id.CheckBoxBlueScreen, R.id.CheckBoxBluePower, R.id.CheckBoxBlueInterval, R.id.CheckBoxBlueSave},
-				{R.id.CheckBoxSyncScreen, R.id.CheckBoxSyncPower, R.id.CheckBoxSyncInterval, R.id.CheckBoxSyncSave}
+				{R.id.CheckBoxWifiDisable, R.id.CheckBoxWifiScreen, R.id.CheckBoxWifiPower, R.id.CheckBoxWifiInterval, R.id.CheckBoxWifiSave, R.id.CheckBoxWifiTraffic},
+				{R.id.CheckBoxDataDisable, R.id.CheckBoxDataScreen, R.id.CheckBoxDataPower, R.id.CheckBoxDataInterval, R.id.CheckBoxDataSave, R.id.CheckBoxDataTraffic},
+				{R.id.CheckBoxBlueDisable, R.id.CheckBoxBlueScreen, R.id.CheckBoxBluePower, R.id.CheckBoxBlueInterval, R.id.CheckBoxBlueSave, R.id.CheckBoxBlueTraffic},
+				{R.id.CheckBoxSyncDisable, R.id.CheckBoxSyncScreen, R.id.CheckBoxSyncPower, R.id.CheckBoxSyncInterval, R.id.CheckBoxSyncSave, R.id.CheckBoxSyncTraffic}
 		};
 		
-		for(int i=0; i<4; i++) {
+		for(int i=0; i<devices.length; i++) {
 			int flags = 0;
-			for(int j=0; j<4; j++) {
+			for(int j=0; j<IDs[i].length; j++) {
 				CheckBox check = (CheckBox)this.findViewById(IDs[i][j]);
 				if(check.isChecked()) {
 					flags += flag_values[j];
