@@ -210,7 +210,8 @@ public class MainService extends Service {
 		}
 		
 		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
-		
+		this.traffic_at_wakeup = TrafficStats.getTotalRxBytes() + TrafficStats.getTotalTxBytes();
+
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
 		int interval = settings.getInt(MainActivity.SETTINGS_TIMEOUT, MainActivity.DEFAULT_TIMEOUT)*1000;
@@ -227,7 +228,8 @@ public class MainService extends Service {
 		}
 		
 		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
-		
+		this.traffic_at_screenoff = TrafficStats.getTotalRxBytes() + TrafficStats.getTotalTxBytes();
+
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
 		int interval = settings.getInt(MainActivity.SETTINGS_TIMEOUT, MainActivity.DEFAULT_TIMEOUT)*1000;
@@ -244,7 +246,8 @@ public class MainService extends Service {
 		}
 		
 		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
-		
+		this.traffic_at_poweroff = TrafficStats.getTotalRxBytes() + TrafficStats.getTotalTxBytes();
+
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
 		int interval = settings.getInt(MainActivity.SETTINGS_TIMEOUT, MainActivity.DEFAULT_TIMEOUT)*1000;
@@ -313,6 +316,7 @@ public class MainService extends Service {
 	
 	protected void applyPowersave() {
 		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+		Log.v(LOG,"Traffic since timeout: " + this.traffic_since_timeout + " bytes");
 
 		// All timeouts need to update this
 		long traffic_limit = settings.getLong(MainActivity.SETTINGS_TRAFFIC_LIMIT, MainActivity.DEFAULT_TRAFFIC_LIMIT);
@@ -321,7 +325,7 @@ public class MainService extends Service {
 			if((power_saver.flagDisableWithPowerSet() && this.power_on) || (power_saver.flagDisableWithScreenSet() && this.screen_on)) {
 					power_saver.stopPowersave();
 			} else if (power_saver.flagDisabledWhileTrafficSet() && (this.traffic_since_timeout > traffic_limit)) {
-				Log.d(LOG,"delaying powersave for " + power_saver.getClass().getName());
+				Log.d(LOG,"delaying " + power_saver.getName() + " powersave");
 				this.setWakeupTimeout();
 			} else {
 				power_saver.startPowersave();
@@ -429,7 +433,6 @@ public class MainService extends Service {
 					this.power_on = true;
 				} else {
 					Log.d(LOG, "Power off");
-					this.traffic_at_poweroff = TrafficStats.getTotalRxBytes() + TrafficStats.getTotalTxBytes();
 					this.setPowerTimeout();
 				}
 			} else if(intent.hasExtra("screen")) {
@@ -440,7 +443,6 @@ public class MainService extends Service {
 					this.screen_on = true;
 				} else {
 					Log.d(LOG, "Screen off");
-					this.traffic_at_screenoff = TrafficStats.getTotalRxBytes() + TrafficStats.getTotalTxBytes();
 					this.setScreenTimeout();
 					this.setWakeup(true);
 				}
@@ -483,8 +485,6 @@ public class MainService extends Service {
 			this.applyPowersave();
 		} else if(intent.getAction().equals(MainService.ACTION_WAKEUP)) {
 			Log.d(LOG, "Wakeup");
-			
-			this.traffic_at_wakeup = TrafficStats.getTotalRxBytes() + TrafficStats.getTotalTxBytes();
 			
 			this.cancelWakeupTimeout();
 			this.stopPowersave();
