@@ -205,7 +205,7 @@ public class MainService extends Service {
 		}
 		
 		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
-		
+
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
 		int interval = settings.getInt(MainActivity.SETTINGS_TIMEOUT, MainActivity.DEFAULT_TIMEOUT)*1000;
@@ -222,7 +222,7 @@ public class MainService extends Service {
 		}
 		
 		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
-		
+
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
 		int interval = settings.getInt(MainActivity.SETTINGS_TIMEOUT, MainActivity.DEFAULT_TIMEOUT)*1000;
@@ -239,7 +239,7 @@ public class MainService extends Service {
 		}
 		
 		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
-		
+
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
 		int interval = settings.getInt(MainActivity.SETTINGS_TIMEOUT, MainActivity.DEFAULT_TIMEOUT)*1000;
@@ -312,7 +312,7 @@ public class MainService extends Service {
 			if((power_saver.flagDisableWithPowerSet() && this.power_on) || (power_saver.flagDisableWithScreenSet() && this.screen_on)) {
 					power_saver.stopPowersave();
 			} else if (power_saver.flagDisabledWhileTrafficSet() && power_saver.hasTraffic()) {
-				Log.d(LOG,"delaying powersave for " + power_saver.getName());
+				Log.d(LOG,"delaying " + power_saver.getName() + " powersave");
 				this.setWakeupTimeout();
 			} else {
 				power_saver.startPowersave();
