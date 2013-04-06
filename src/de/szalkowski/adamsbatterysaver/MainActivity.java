@@ -203,6 +203,30 @@ public class MainActivity extends FragmentActivity {
 	    newFragment.show(getSupportFragmentManager(), "toPicker");
 	}
 	
+	public void onCheckboxDisable(View v) {
+		for(int i=0; i < CHECKBOX_IDS.length; ++i) {
+			if(v.getId() == CHECKBOX_IDS[i][0]) {
+				CheckBox check = (CheckBox)this.findViewById(CHECKBOX_IDS[i][0]);
+				boolean enabled = check.isChecked();
+				
+				for(int j=1; j < CHECKBOX_IDS[i].length; ++j) {
+					View vv = this.findViewById(CHECKBOX_IDS[i][j]);
+					vv.setEnabled(!enabled);
+				}
+			}
+		}
+		
+	}
+	
+	private static final String[] DEVICES = {"wifi", "data", "blue", "sync"};
+	private static final int[] FLAG_VALUES = {PowerSaver.FLAG_DISABLE, PowerSaver.FLAG_DISABLE_WITH_SCREEN, PowerSaver.FLAG_DISABLE_WITH_POWER, PowerSaver.FLAG_DISABLE_ON_INTERVAL, PowerSaver.FLAG_SAVE_STATE, PowerSaver.FLAG_DISABLED_WHILE_TRAFFIC};
+	private static final int CHECKBOX_IDS[][] = {
+			{R.id.CheckBoxWifiDisable, R.id.CheckBoxWifiScreen, R.id.CheckBoxWifiPower, R.id.CheckBoxWifiInterval, R.id.CheckBoxWifiSave, R.id.CheckBoxWifiTraffic},
+			{R.id.CheckBoxDataDisable, R.id.CheckBoxDataScreen, R.id.CheckBoxDataPower, R.id.CheckBoxDataInterval, R.id.CheckBoxDataSave, R.id.CheckBoxDataTraffic},
+			{R.id.CheckBoxBlueDisable, R.id.CheckBoxBlueScreen, R.id.CheckBoxBluePower, R.id.CheckBoxBlueInterval, R.id.CheckBoxBlueSave, R.id.CheckBoxBlueTraffic},
+			{R.id.CheckBoxSyncDisable, R.id.CheckBoxSyncScreen, R.id.CheckBoxSyncPower, R.id.CheckBoxSyncInterval, R.id.CheckBoxSyncSave, R.id.CheckBoxSyncTraffic}
+	};
+
 	protected void setFlags() {
 		final String[] devices = {"wifi", "data", "blue", "sync"};
 		final int[] flag_values = {PowerSaver.FLAG_DISABLE, PowerSaver.FLAG_DISABLE_WITH_SCREEN, PowerSaver.FLAG_DISABLE_WITH_POWER, PowerSaver.FLAG_DISABLE_ON_INTERVAL, PowerSaver.FLAG_SAVE_STATE, PowerSaver.FLAG_DISABLED_WHILE_TRAFFIC};
@@ -212,43 +236,33 @@ public class MainActivity extends FragmentActivity {
 				BluetoothPowerSaver.DEFAULT_FLAGS,
 				SyncPowerSaver.DEFAULT_FLAGS
 		};
-		final int IDs[][] = {
-				{R.id.CheckBoxWifiDisable, R.id.CheckBoxWifiScreen, R.id.CheckBoxWifiPower, R.id.CheckBoxWifiInterval, R.id.CheckBoxWifiSave, R.id.CheckBoxWifiTraffic},
-				{R.id.CheckBoxDataDisable, R.id.CheckBoxDataScreen, R.id.CheckBoxDataPower, R.id.CheckBoxDataInterval, R.id.CheckBoxDataSave, R.id.CheckBoxDataTraffic},
-				{R.id.CheckBoxBlueDisable, R.id.CheckBoxBlueScreen, R.id.CheckBoxBluePower, R.id.CheckBoxBlueInterval, R.id.CheckBoxBlueSave, R.id.CheckBoxBlueTraffic},
-				{R.id.CheckBoxSyncDisable, R.id.CheckBoxSyncScreen, R.id.CheckBoxSyncPower, R.id.CheckBoxSyncInterval, R.id.CheckBoxSyncSave, R.id.CheckBoxSyncTraffic}
-		};
 		
         SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
 
 		for(int i=0; i<devices.length; i++) {
 			int flags = settings.getInt(devices[i]+"_flags", default_flags[i]);
-			for(int j=0; j<IDs[i].length; j++) {
-				CheckBox check = (CheckBox)this.findViewById(IDs[i][j]);
+			for(int j=0; j<CHECKBOX_IDS[i].length; j++) {
+				CheckBox check = (CheckBox)this.findViewById(CHECKBOX_IDS[i][j]);
 				check.setChecked((flags & flag_values[j]) != 0);
+				
+				if(j>0) {
+					check.setEnabled((flags & PowerSaver.FLAG_DISABLE) == 0);
+				}
 			}
 		}
 	}
 	
 	protected void saveFlags(SharedPreferences.Editor settings) {
-		final String[] devices = {"wifi", "data", "blue", "sync"};
-		final int[] flag_values = {PowerSaver.FLAG_DISABLE, PowerSaver.FLAG_DISABLE_WITH_SCREEN, PowerSaver.FLAG_DISABLE_WITH_POWER, PowerSaver.FLAG_DISABLE_ON_INTERVAL, PowerSaver.FLAG_SAVE_STATE, PowerSaver.FLAG_DISABLED_WHILE_TRAFFIC};
-		final int IDs[][] = {
-				{R.id.CheckBoxWifiDisable, R.id.CheckBoxWifiScreen, R.id.CheckBoxWifiPower, R.id.CheckBoxWifiInterval, R.id.CheckBoxWifiSave, R.id.CheckBoxWifiTraffic},
-				{R.id.CheckBoxDataDisable, R.id.CheckBoxDataScreen, R.id.CheckBoxDataPower, R.id.CheckBoxDataInterval, R.id.CheckBoxDataSave, R.id.CheckBoxDataTraffic},
-				{R.id.CheckBoxBlueDisable, R.id.CheckBoxBlueScreen, R.id.CheckBoxBluePower, R.id.CheckBoxBlueInterval, R.id.CheckBoxBlueSave, R.id.CheckBoxBlueTraffic},
-				{R.id.CheckBoxSyncDisable, R.id.CheckBoxSyncScreen, R.id.CheckBoxSyncPower, R.id.CheckBoxSyncInterval, R.id.CheckBoxSyncSave, R.id.CheckBoxSyncTraffic}
-		};
 		
-		for(int i=0; i<devices.length; i++) {
+		for(int i=0; i<DEVICES.length; i++) {
 			int flags = 0;
-			for(int j=0; j<IDs[i].length; j++) {
-				CheckBox check = (CheckBox)this.findViewById(IDs[i][j]);
+			for(int j=0; j<CHECKBOX_IDS[i].length; j++) {
+				CheckBox check = (CheckBox)this.findViewById(CHECKBOX_IDS[i][j]);
 				if(check.isChecked()) {
-					flags += flag_values[j];
+					flags += FLAG_VALUES[j];
 				}
 			}
-			settings.putInt(devices[i]+"_flags", flags);
+			settings.putInt(DEVICES[i]+"_flags", flags);
 		}
 	}
 }

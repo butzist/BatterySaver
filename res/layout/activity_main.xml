@@ -164,7 +164,8 @@
             <CheckBox
                 android:id="@+id/CheckBoxWifiDisable"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:onClick="onCheckboxDisable" />
 
             <CheckBox
                 android:id="@+id/CheckBoxWifiScreen"
@@ -213,7 +214,8 @@
             <CheckBox
                 android:id="@+id/CheckBoxDataDisable"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:onClick="onCheckboxDisable" />
 
             <CheckBox
                 android:id="@+id/CheckBoxDataScreen"
@@ -262,7 +264,8 @@
             <CheckBox
                 android:id="@+id/CheckBoxBlueDisable"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:onClick="onCheckboxDisable" />
 
             <CheckBox
                 android:id="@+id/CheckBoxBlueScreen"
@@ -311,7 +314,8 @@
             <CheckBox
                 android:id="@+id/CheckBoxSyncDisable"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:onClick="onCheckboxDisable" />
 
             <CheckBox
                 android:id="@+id/CheckBoxSyncScreen"
