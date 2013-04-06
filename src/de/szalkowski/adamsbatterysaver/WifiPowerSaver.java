@@ -1,11 +1,17 @@
 package de.szalkowski.adamsbatterysaver;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.net.TrafficStats;
 import android.net.wifi.WifiManager;
+import android.os.SystemClock;
+import android.util.Log;
 
 public class WifiPowerSaver extends PowerSaver {
-	//static private final String LOG = "de.szalkowski.adamsbatterysaver.WifiPowerSaver";
+	static private final String LOG = "de.szalkowski.adamsbatterysaver.WifiPowerSaver";
 	static final public int DEFAULT_FLAGS = FLAG_DISABLE_WITH_SCREEN + FLAG_DISABLE_WITH_POWER + FLAG_DISABLE_ON_INTERVAL + FLAG_SAVE_STATE;
+	private long traffic;
+	private long time;
 
 	public WifiPowerSaver(Context context, int flags) {
 		super(context, "wifi", flags);
@@ -21,6 +27,8 @@ public class WifiPowerSaver extends PowerSaver {
 	protected void doStopPowersave() throws Exception {
 		WifiManager wifi = (WifiManager)this.context.getSystemService(Context.WIFI_SERVICE);
 		wifi.setWifiEnabled(true);
+		this.time = SystemClock.elapsedRealtime();
+		this.traffic = TrafficStats.getTotalRxBytes() + TrafficStats.getTotalTxBytes() - TrafficStats.getMobileRxBytes() - TrafficStats.getMobileTxBytes();
 	}
 
 	@Override
@@ -34,6 +42,26 @@ public class WifiPowerSaver extends PowerSaver {
 		} else {
 			throw new Exception("unknown state: " + state);
 		}
+	}
+
+	@Override
+	protected boolean doHasTraffic() throws Exception {
+		WifiManager wifi = (WifiManager)this.context.getSystemService(Context.WIFI_SERVICE);
+		if(wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED) {
+			long time_diff = SystemClock.elapsedRealtime() - this.time;
+			long traffic_diff = TrafficStats.getTotalRxBytes() + TrafficStats.getTotalTxBytes() - TrafficStats.getMobileRxBytes() - TrafficStats.getMobileTxBytes() - this.traffic;
+			this.time = SystemClock.elapsedRealtime();
+			this.traffic = TrafficStats.getTotalRxBytes() + TrafficStats.getTotalTxBytes() - TrafficStats.getMobileRxBytes() - TrafficStats.getMobileTxBytes();
+			
+			SharedPreferences settings = context.getApplicationContext().getSharedPreferences("settings", Context.MODE_PRIVATE);
+			final long traffic_limit = settings.getLong(MainActivity.SETTINGS_TRAFFIC_LIMIT, MainActivity.DEFAULT_TRAFFIC_LIMIT);
+			final double traffic_per_minute = traffic_diff/(time_diff/60000.0);
+			Log.v(LOG,"wifi traffic: " + traffic_per_minute + " bytes / minute");
+			if(traffic_per_minute > traffic_limit) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

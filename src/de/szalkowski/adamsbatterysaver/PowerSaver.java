@@ -120,6 +120,18 @@ public abstract class PowerSaver {
 		return this.savedState;
 	}
 	
+	public boolean hasTraffic() {
+		boolean traffic = false;
+		try {
+			traffic = this.doHasTraffic();
+		}
+		catch(Exception e) {
+			Log.e(LOG,name + " " + e.toString());
+		}
+		
+		return traffic;
+	}
+	
 	public boolean flagDisableWithScreenSet() {
 		return (this.flags & FLAG_DISABLE_WITH_SCREEN) != 0;
 	}
@@ -147,5 +159,5 @@ public abstract class PowerSaver {
 	abstract protected void doStartPowersave() throws Exception;
 	abstract protected void doStopPowersave() throws Exception;
 	abstract protected boolean doIsEnabled() throws Exception;
-
+	abstract protected boolean doHasTraffic() throws Exception;
 }
