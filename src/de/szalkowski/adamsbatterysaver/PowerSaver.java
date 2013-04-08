@@ -89,11 +89,16 @@ public abstract class PowerSaver {
 	}
 	
 	public void setFlags(int flags) {
-		this.flags = flags;
-		
-		if((flags & FLAG_SAVE_STATE) != 0) {
-			this.savedState = this.isEnabled;
+		if((this.flags & FLAG_SAVE_STATE) != (flags & FLAG_SAVE_STATE)) {
+			if((flags & FLAG_SAVE_STATE) != 0 && !this.unknownState) {
+				this.savedState = this.isReallyEnabled();
+				Log.d(LOG, name + " powersave was " + (this.savedState ? "enabled" : "disabled"));
+			} else if ((flags & FLAG_SAVE_STATE) == 0) {
+				this.savedState = false;
+			}
 		}
+		
+		this.flags = flags;
 	}
 	
 	public boolean isEnabled() {
