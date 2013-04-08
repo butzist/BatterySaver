@@ -1,6 +1,10 @@
 /**
- * BASED ON:  http://stackoverflow.com/questions/3644144/how-to-disable-mobile-data-on-android
+ * Based on code from Stackoverflow.com under CC BY-SA 3.0
+ * Url:  http://stackoverflow.com/questions/3644144/how-to-disable-mobile-data-on-android
+ * By: http://stackoverflow.com/users/410724/vladimir-sorokin
+ * and http://stackoverflow.com/users/167269/phanikumar
  */
+
 package org.thirdparty;
 
 import java.lang.reflect.Method;

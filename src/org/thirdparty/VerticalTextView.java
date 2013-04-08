@@ -1,6 +1,9 @@
 /**
- * source: http://stackoverflow.com/questions/1258275/vertical-rotated-label-in-android
+ * Based on code from Stackoverflow.com under CC BY-SA 3.0
+ * Url:  http://stackoverflow.com/questions/1258275/vertical-rotated-label-in-android
+ * By:   http://stackoverflow.com/users/907695/mice
  */
+
 package org.thirdparty;
 
 import android.content.Context;
