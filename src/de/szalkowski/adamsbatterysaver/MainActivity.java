@@ -76,7 +76,12 @@ public class MainActivity extends FragmentActivity {
         
         toggle.setChecked(start_service);
         if(start_service != MainService.is_running) {
-        	String text = "service was " + (start_service ? "not " : "") + "running";
+        	String text;
+        	if(start_service) {
+        		text = this.getString(R.string.service_not_running);
+        	} else {
+        		text = this.getString(R.string.service_running);
+        	}
         	Toast.makeText(this.getApplicationContext(), text, Toast.LENGTH_LONG).show();
         }
     }
@@ -122,7 +127,7 @@ public class MainActivity extends FragmentActivity {
         time.set(Calendar.MINUTE, minute);
         
         Button button = (Button)this.findViewById(R.id.buttonFrom);
-        button.setText("from " + DateFormat.getTimeFormat(this).format(time.getTime()));
+        button.setText(this.getText(R.string.from) + " " + DateFormat.getTimeFormat(this).format(time.getTime()));
 	}
 	
 	public void setToTime() {
@@ -135,7 +140,7 @@ public class MainActivity extends FragmentActivity {
         time.set(Calendar.MINUTE, minute);
         
         Button button = (Button)this.findViewById(R.id.buttonTo);
-        button.setText("to " + DateFormat.getTimeFormat(this).format(time.getTime()));
+        button.setText(this.getText(R.string.to) + " " + DateFormat.getTimeFormat(this).format(time.getTime()));
 	}
 	
 	public void showFromTimePicker(View v) {

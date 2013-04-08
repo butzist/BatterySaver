@@ -16,7 +16,7 @@
         android:id="@+id/toggleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Service on/off" />
+        android:text="@string/service_toggle" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:text="Sync interval"
+            android:text="@string/sync_interval"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <EditText
@@ -41,9 +41,9 @@
             android:layout_weight="2"
             android:ems="3"
             android:gravity="center_vertical"
-            android:hint="minutes"
+            android:hint="@string/minutes"
             android:inputType="number"
-            android:text="15" >
+            android:text="" >
 
             <requestFocus />
         </EditText>
@@ -63,7 +63,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0"
             android:gravity="center_vertical"
-            android:text="Night mode"
+            android:text="@string/night_mode"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <Button
@@ -72,7 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="showFromTimePicker"
-            android:text="from" />
+            android:text="@string/from" />
 
         <Button
             android:id="@+id/buttonTo"
@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="showToTimePicker"
-            android:text="to" />
+            android:text="@string/to" />
 
     </LinearLayout>
 
@@ -104,7 +104,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
                 android:gravity="bottom"
-                android:text="disable"
+                android:text="@string/disable"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <org.thirdparty.VerticalTextView
@@ -112,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
                 android:gravity="bottom"
-                android:text="screen"
+                android:text="@string/screen"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <org.thirdparty.VerticalTextView
@@ -120,7 +120,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
                 android:gravity="bottom"
-                android:text="power"
+                android:text="@string/power"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <org.thirdparty.VerticalTextView
@@ -128,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
                 android:gravity="bottom"
-                android:text="interval"
+                android:text="@string/interval"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <org.thirdparty.VerticalTextView
@@ -136,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
                 android:gravity="bottom"
-                android:text="save"
+                android:text="@string/save"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <org.thirdparty.VerticalTextView
@@ -144,7 +144,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
                 android:gravity="bottom"
-                android:text="traffic"
+                android:text="@string/traffic"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </TableRow>
@@ -158,7 +158,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
-                android:text="wifi"
+                android:text="@string/wifi"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <CheckBox
@@ -208,7 +208,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
-                android:text="data"
+                android:text="@string/data"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <CheckBox
@@ -258,7 +258,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
-                android:text="blue"
+                android:text="@string/bluetooth"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <CheckBox
@@ -308,7 +308,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
-                android:text="sync"
+                android:text="@string/sync"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <CheckBox

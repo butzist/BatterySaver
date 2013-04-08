@@ -115,8 +115,8 @@ public class MainService extends Service {
 	        NotificationCompat.Builder builder =
 	                new NotificationCompat.Builder(this)
 	                .setSmallIcon(R.drawable.ic_launcher)
-	                .setContentTitle("Adam's Battery Saver")
-	                .setContentText("click to configure")
+	                .setContentTitle(this.getString(R.string.app_name))
+	                .setContentText(this.getString(R.string.click_to_configure))
 	                .setContentIntent(pending_activity);
 	    	this.startForeground(42, builder.build());
 		} else {
