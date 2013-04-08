@@ -14,9 +14,6 @@ public class BluetoothPowerSaver extends PowerSaver {
 	protected void doStartPowersave() throws Exception {
 		BluetoothAdapter bluetooth = BluetoothAdapter.getDefaultAdapter();
 		if(bluetooth != null) {
-			if((this.flags & FLAG_DISABLED_WHILE_TRAFFIC) != 0 && (bluetooth.getState() == BluetoothAdapter.STATE_CONNECTED)) {
-				throw new Exception("still connected");
-			}
 			bluetooth.disable();
 		}
 	}
@@ -37,5 +34,16 @@ public class BluetoothPowerSaver extends PowerSaver {
 		int state = bluetooth.getState();
 		return state == BluetoothAdapter.STATE_TURNING_OFF || state == BluetoothAdapter.STATE_OFF;
 	}
+
+	@Override
+	protected boolean doHasTraffic() throws Exception {
+		BluetoothAdapter bluetooth = BluetoothAdapter.getDefaultAdapter();
+		if(bluetooth.getState() == BluetoothAdapter.STATE_CONNECTED) {
+			return true;
+		}
+		return false;
+	}
+	
+	
 
 }

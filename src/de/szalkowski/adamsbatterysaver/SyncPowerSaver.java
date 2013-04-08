@@ -98,5 +98,10 @@ public class SyncPowerSaver extends PowerSaver {
 			Log.v(LOG,"network offline");
 			return false;
 		}
+	}
+
+	@Override
+	protected boolean doHasTraffic() throws Exception {
+		return ContentResolver.getCurrentSync() != null;
 	}	
 }
