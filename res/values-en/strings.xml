@@ -9,7 +9,7 @@
   <string name="data">Data</string>
   <string name="bluetooth">Blue</string>
   <string name="sync">Sync</string>
-  <string name="disable">Disable</string>
+  <string name="disable">Manual</string>
   <string name="screen">Screen</string>
   <string name="power">Power</string>
   <string name="interval">Interval</string>

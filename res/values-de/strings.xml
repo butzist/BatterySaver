@@ -9,7 +9,7 @@
   <string name="data">UMTS</string>
   <string name="bluetooth">BT</string>
   <string name="sync">Sync</string>
-  <string name="disable">Deaktiviert</string>
+  <string name="disable">Manuell</string>
   <string name="screen">Bildschirm</string>
   <string name="power">Ladekabel</string>
   <string name="interval">Intervall</string>

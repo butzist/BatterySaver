@@ -1,8 +1,11 @@
 package de.szalkowski.adamsbatterysaver;
 
+import java.lang.reflect.Method;
+
 import org.thirdparty.MobileDataSwitch;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.net.TrafficStats;
 import android.os.SystemClock;
 import android.telephony.TelephonyManager;
@@ -32,8 +35,16 @@ public class MobileDataPowerSaver extends PowerSaver {
 
 	@Override
 	protected boolean doIsEnabled() throws Exception {
-		TelephonyManager telephonyManager = (TelephonyManager) this.context.getSystemService(Context.TELEPHONY_SERVICE);
-		return telephonyManager.getDataState() == TelephonyManager.DATA_DISCONNECTED;
+		try {
+		    ConnectivityManager conman = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		    Method setmeth = conman.getClass().getMethod("getMobileDataEnabled", boolean.class);
+		    boolean enabled = (Boolean)setmeth.invoke(conman);
+		    return !enabled;
+		}
+		catch(Exception e) {
+			TelephonyManager telephonyManager = (TelephonyManager) this.context.getSystemService(Context.TELEPHONY_SERVICE);
+			return telephonyManager.getDataState() == TelephonyManager.DATA_DISCONNECTED;
+		}
 	}
 
 	@Override
@@ -48,7 +59,7 @@ public class MobileDataPowerSaver extends PowerSaver {
 			SharedPreferences settings = context.getApplicationContext().getSharedPreferences("settings", Context.MODE_PRIVATE);
 			final long traffic_limit = settings.getLong(MainActivity.SETTINGS_TRAFFIC_LIMIT, MainActivity.DEFAULT_TRAFFIC_LIMIT);
 			final double traffic_per_minute = traffic_diff/(time_diff/60000.0);
-			Log.v(LOG,"mobile traffic: " + traffic_per_minute + " bytes / minute");
+			Log.v(LOG,"mobile traffic: " + traffic_per_minute + " bytes / minute ("+ traffic_diff + "/" + time_diff/1000.0 + "s)");
 			if(traffic_per_minute > traffic_limit) {
 				return true;
 			}
