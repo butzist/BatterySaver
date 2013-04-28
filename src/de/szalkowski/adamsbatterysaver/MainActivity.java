@@ -29,7 +29,7 @@ public class MainActivity extends FragmentActivity {
 	static final public int DEFAULT_DELAY = 20;
 	static final public int DEFAULT_CHECK_NETWORK_INTERVAL = 20;
 	static final public int DEFAULT_TIMEOUT = 60;
-	static final public int DEFAULT_TRAFFIC_LIMIT = 750000;
+	static final public int DEFAULT_TRAFFIC_LIMIT = 300000;
 	
 	static final public String SETTINGS_INTERVAL = "interval";
 	static final public String SETTINGS_INTERVAL_SHORT = "interval_short";
