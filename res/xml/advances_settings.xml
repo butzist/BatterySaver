@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <Preference android:key="timeout" android:title="@string/pref_title_timeout" android:summary="@string/pref_summary_timeout"/>
+    <Preference android:key="interval_short" android:title="@string/pref_title_interval_short" android:summary="@string/pref_summary_interval_short"/>
+    <Preference android:key="traffic_limit" android:title="@string/pref_title_traffic_limit" android:summary="@string/pref_summary_traffic_limit"/>
+    <Preference android:key="check_net_interval" android:title="@string/pref_title_check_net_interval" android:summary="@string/pref_summary_check_net_interval"/>
+</PreferenceScreen>

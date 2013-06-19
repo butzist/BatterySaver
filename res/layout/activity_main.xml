@@ -19,34 +19,30 @@
         android:text="@string/service_toggle" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical"
         android:paddingTop="20dp" >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_weight="0"
             android:text="@string/sync_interval"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <EditText
+        <SeekBar
             android:id="@+id/editInterval"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="2"
-            android:ems="3"
-            android:gravity="center_vertical"
-            android:hint="@string/minutes"
-            android:inputType="number"
-            android:text="" >
+            android:layout_weight="0"
+            android:max="60"
+            android:min="5"
+            android:progress="15" />
 
-            <requestFocus />
-        </EditText>
     </LinearLayout>
 
     <LinearLayout
@@ -55,7 +51,7 @@
         android:dividerPadding="100dp"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="horizontal"
-        android:paddingTop="10dp"
+        android:paddingTop="20dp"
         android:showDividers="middle" >
 
         <TextView

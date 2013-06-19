@@ -23,4 +23,12 @@
   <string name="service_running">service was running</string>
   <string name="service_not_running">service was not running</string>
   <string name="service_toggle">Service on/off</string>
+  <string name="pref_title_timeout">Timeout before activating power save mode</string>
+  <string name="pref_summary_timeout">Timeout before activating power save</string>
+  <string name="pref_title_interval_short">Short interval</string>
+  <string name="pref_summary_interval_short">first (shorter) interval to check after activating power save</string>
+  <string name="pref_title_traffic_limit">Traffic limit</string>
+  <string name="pref_summary_traffic_limit">traffic threshold (in bytes) to keep WiFi and mobile data connection alive</string>
+  <string name="pref_title_check_net_interval">Network check interval</string>
+  <string name="pref_summary_check_net_interval">Check for network connection every n seconds before enabling sync</string>
 </resources>
