@@ -71,7 +71,7 @@ public class MainService extends Service {
         //	toForeground(true);
         //}
         toForeground(true);
-        
+
         // check current power state
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         this.screen_on = pm.isScreenOn();

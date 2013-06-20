@@ -4,7 +4,6 @@ import java.util.Calendar;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -52,6 +51,7 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
+        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
         
         SeekBar interval = (SeekBar)this.findViewById(R.id.seekInterval);
