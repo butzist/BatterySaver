@@ -1,0 +1,4 @@
+<resources>
+    <string name="url_source">http://sourceforge.net/projects/batterysaver/</string>
+    <string name="url_translation">http://crowdin.net/project/batterysaver/invite</string>
+</resources>

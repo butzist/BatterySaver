@@ -2,7 +2,9 @@ package de.szalkowski.adamsbatterysaver;
 
 import java.util.Calendar;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -12,13 +14,15 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -44,14 +48,35 @@ public class MainActivity extends FragmentActivity {
 	static final public String SETTINGS_NIGHTMODE_TO_MINUTE = "to_minute";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
         
         SeekBar interval = (SeekBar)this.findViewById(R.id.seekInterval);
-        interval.setText(Integer.toString(settings.getInt(SETTINGS_INTERVAL, DEFAULT_INTERVAL)));
+        interval.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {}
+			
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				if(fromUser && progress < 2) {
+					seekBar.setProgress(2);
+				}
+				
+				TextView text = (TextView)MainActivity.this.findViewById(R.id.sync_interval);
+				text.setText(MainActivity.this.getString(R.string.sync_interval, seekBar.getProgress()));
+			}
+		});
+        interval.setProgress(settings.getInt(SETTINGS_INTERVAL, DEFAULT_INTERVAL));
+        
+		TextView interval_text = (TextView)MainActivity.this.findViewById(R.id.sync_interval);
+		interval_text.setText(MainActivity.this.getString(R.string.sync_interval, interval.getProgress()));
         
         ToggleButton toggle = (ToggleButton)this.findViewById(R.id.toggleButton);
         boolean start_service = settings.getBoolean(SETTINGS_START_SERVICE, true);
@@ -94,6 +119,31 @@ public class MainActivity extends FragmentActivity {
     }
 
 	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_settings:
+			Intent i1 = new Intent(this, AdvancedSettingsActivity.class);
+			startActivity(i1);
+			return true;
+
+		case R.id.action_view_source:
+			Intent i2 = new Intent(Intent.ACTION_VIEW);
+			i2.setData(Uri.parse(this.getString(R.string.url_source)));
+			startActivity(i2);
+			return true;
+
+		case R.id.action_view_translation:
+			Intent i3 = new Intent(Intent.ACTION_VIEW);
+			i3.setData(Uri.parse(this.getString(R.string.url_translation)));
+			startActivity(i3);
+			return true;
+			
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
 	protected void onDestroy() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
         SharedPreferences.Editor editor = settings.edit();
@@ -101,8 +151,8 @@ public class MainActivity extends FragmentActivity {
         ToggleButton toggle = (ToggleButton)this.findViewById(R.id.toggleButton);
         editor.putBoolean(SETTINGS_START_SERVICE, toggle.isChecked());
         
-        EditText interval = (EditText)this.findViewById(R.id.seekInterval);
-        editor.putInt(SETTINGS_INTERVAL, Integer.parseInt(interval.getText().toString()));
+        SeekBar interval = (SeekBar)this.findViewById(R.id.seekInterval);
+        editor.putInt(SETTINGS_INTERVAL, interval.getProgress());
         
         saveFlags(editor);
         

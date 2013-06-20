@@ -483,6 +483,12 @@ public class MainService extends Service {
 		if(MainService.wake_lock.isHeld()) {
 			MainService.wake_lock.release();
 		}
+		
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        if(!settings.getBoolean(MainActivity.SETTINGS_START_SERVICE, true)) {
+        	Log.w(LOG, "Server should not be running");
+        	stopSelf();
+        }
 
 		return START_STICKY;
 	}

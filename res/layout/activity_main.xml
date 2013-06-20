@@ -25,13 +25,20 @@
         android:orientation="vertical"
         android:paddingTop="20dp" >
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="0"
-            android:text="@string/sync_interval"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:layout_weight="0" >
+
+            <TextView
+                android:id="@+id/sync_interval"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sync_interval"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        </LinearLayout>
 
         <SeekBar
             android:id="@+id/seekInterval"
@@ -39,43 +46,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_weight="0"
+            android:indeterminate="false"
             android:max="60"
             android:progress="15" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:dividerPadding="100dp"
-        android:gravity="center_vertical|center_horizontal"
-        android:orientation="horizontal"
-        android:paddingTop="20dp"
-        android:showDividers="middle" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0"
-            android:gravity="center_vertical"
-            android:text="@string/night_mode"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <Button
-            android:id="@+id/buttonFrom"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="showFromTimePicker"
-            android:text="@string/from" />
-
-        <Button
-            android:id="@+id/buttonTo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="showToTimePicker"
-            android:text="@string/to" />
 
     </LinearLayout>
 
@@ -344,5 +317,39 @@
 
             </TableRow>
     </TableLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:dividerPadding="100dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal"
+        android:paddingTop="20dp"
+        android:showDividers="middle" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0"
+            android:gravity="center_vertical"
+            android:text="@string/night_mode"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Button
+            android:id="@+id/buttonFrom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="showFromTimePicker"
+            android:text="@string/from" />
+
+        <Button
+            android:id="@+id/buttonTo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="showToTimePicker"
+            android:text="@string/to" />
+    </LinearLayout>
 
 </LinearLayout>

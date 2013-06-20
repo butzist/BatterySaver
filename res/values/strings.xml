@@ -14,8 +14,7 @@
   <string name="interval">Interval</string>
   <string name="save">Save</string>
   <string name="traffic">Traffic</string>
-  <string name="sync_interval">Sync Interval</string>
-  <string name="minutes">min</string>
+  <string name="sync_interval">synchronize every %d minutes</string>
   <string name="night_mode">Night Mode</string>
   <string name="from">from</string>
   <string name="to">to</string>
@@ -33,4 +32,6 @@
   <string name="action_settings">Advanced Settings</string>
   <string name="action_view_source">View Sourcecode</string>
   <string name="action_view_translation">Help translating!</string>
+  <string name="status_active">power saver active</string>
+  <string name="status_inactive">power saver inactive</string>
 </resources>

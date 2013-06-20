@@ -13,7 +13,7 @@ public class AutoStartReceiver extends BroadcastReceiver {
 		if(intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
 			Intent service = new Intent(context, de.szalkowski.adamsbatterysaver.MainService.class);
 	        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-			if(settings.getBoolean("start_service", true)) {
+			if(settings.getBoolean(MainActivity.SETTINGS_START_SERVICE, true)) {
 				context.startService(service);
 			}
 		}

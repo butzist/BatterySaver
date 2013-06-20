@@ -23,7 +23,9 @@ public class PowerStateReceiver extends BroadcastReceiver {
 			return;
 		}
 		
-        context.startService(i);
+		if(MainService.is_running) {
+			context.startService(i);
+		}
 	}
 
 }
