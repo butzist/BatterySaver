@@ -3,6 +3,7 @@ package de.szalkowski.adamsbatterysaver;
 import java.util.Calendar;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -46,9 +48,9 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
         
-        EditText interval = (EditText)this.findViewById(R.id.editInterval);
+        SeekBar interval = (SeekBar)this.findViewById(R.id.seekInterval);
         interval.setText(Integer.toString(settings.getInt(SETTINGS_INTERVAL, DEFAULT_INTERVAL)));
         
         ToggleButton toggle = (ToggleButton)this.findViewById(R.id.toggleButton);
@@ -93,13 +95,13 @@ public class MainActivity extends FragmentActivity {
 
 	@Override
 	protected void onDestroy() {
-        SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
         SharedPreferences.Editor editor = settings.edit();
         
         ToggleButton toggle = (ToggleButton)this.findViewById(R.id.toggleButton);
         editor.putBoolean(SETTINGS_START_SERVICE, toggle.isChecked());
         
-        EditText interval = (EditText)this.findViewById(R.id.editInterval);
+        EditText interval = (EditText)this.findViewById(R.id.seekInterval);
         editor.putInt(SETTINGS_INTERVAL, Integer.parseInt(interval.getText().toString()));
         
         saveFlags(editor);
@@ -116,7 +118,7 @@ public class MainActivity extends FragmentActivity {
 	}
 	
 	public void setFromTime() {
-        SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
         int hour = settings.getInt(SETTINGS_NIGHTMODE_FROM_HOUR, DEFAULT_FROM);
         int minute = settings.getInt(SETTINGS_NIGHTMODE_FROM_MINUTE, 0);
         
@@ -129,7 +131,7 @@ public class MainActivity extends FragmentActivity {
 	}
 	
 	public void setToTime() {
-        SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
         int hour = settings.getInt(SETTINGS_NIGHTMODE_TO_HOUR, DEFAULT_TO);
         int minute = settings.getInt(SETTINGS_NIGHTMODE_TO_MINUTE, 0);
         
@@ -147,7 +149,7 @@ public class MainActivity extends FragmentActivity {
 
 			@Override
 			public Dialog onCreateDialog(Bundle savedInstanceState) {
-		        SharedPreferences settings = this.getActivity().getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+		        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
 		        
 				int hour = settings.getInt(SETTINGS_NIGHTMODE_FROM_HOUR, DEFAULT_FROM);
 				int minute = settings.getInt(SETTINGS_NIGHTMODE_FROM_MINUTE, 0);
@@ -158,7 +160,7 @@ public class MainActivity extends FragmentActivity {
 			}
 
 			public void onTimeSet(TimePicker view, int hour, int minute) {
-		        SharedPreferences settings = this.getActivity().getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+		        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
 		        SharedPreferences.Editor editor = settings.edit();
 		        
 				editor.putInt(SETTINGS_NIGHTMODE_FROM_HOUR, hour);
@@ -179,7 +181,7 @@ public class MainActivity extends FragmentActivity {
 
 			@Override
 			public Dialog onCreateDialog(Bundle savedInstanceState) {
-		        SharedPreferences settings = this.getActivity().getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+		        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
 		        
 				int hour = settings.getInt(SETTINGS_NIGHTMODE_TO_HOUR, DEFAULT_TO);
 				int minute = settings.getInt(SETTINGS_NIGHTMODE_TO_MINUTE, 0);
@@ -190,7 +192,7 @@ public class MainActivity extends FragmentActivity {
 			}
 
 			public void onTimeSet(TimePicker view, int hour, int minute) {
-		        SharedPreferences settings = this.getActivity().getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+		        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
 		        SharedPreferences.Editor editor = settings.edit();
 		        
 				editor.putInt(SETTINGS_NIGHTMODE_TO_HOUR, hour);
@@ -240,7 +242,7 @@ public class MainActivity extends FragmentActivity {
 				SyncPowerSaver.DEFAULT_FLAGS
 		};
 		
-        SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 
 		for(int i=0; i<devices.length; i++) {
 			int flags = settings.getInt(devices[i]+"_flags", default_flags[i]);

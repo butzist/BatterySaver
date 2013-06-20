@@ -16,6 +16,7 @@ import android.os.BatteryManager;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -86,7 +87,7 @@ public class MainService extends Service {
 			MainService.wake_lock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Alarm received");
 		}
 		
-		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 		
 		this.power_savers = new LinkedList<PowerSaver>();
 
@@ -127,7 +128,7 @@ public class MainService extends Service {
 	}
 	
 	protected void updateSettings() {
-		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 		
 		for(PowerSaver saver : this.power_savers) {
 			if(saver.getClass() == WifiPowerSaver.class) {
@@ -204,7 +205,7 @@ public class MainService extends Service {
 			cancelWakeupTimeout();
 		}
 		
-		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
@@ -221,7 +222,7 @@ public class MainService extends Service {
 			cancelScreenTimeout();
 		}
 		
-		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
@@ -238,7 +239,7 @@ public class MainService extends Service {
 			cancelPowerTimeout();
 		}
 		
-		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
@@ -255,7 +256,7 @@ public class MainService extends Service {
 			cancelWakeup();
 		}
 		
-		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 		
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
@@ -277,7 +278,7 @@ public class MainService extends Service {
 			cancelWakeup();
 		}
 		
-		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 		
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
@@ -321,7 +322,7 @@ public class MainService extends Service {
 	}
 
 	protected boolean isSleepingTime() {
-		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 		
 		Calendar from = Calendar.getInstance();
 		from.set(Calendar.HOUR_OF_DAY, settings.getInt(MainActivity.SETTINGS_NIGHTMODE_FROM_HOUR, MainActivity.DEFAULT_FROM));
@@ -352,7 +353,7 @@ public class MainService extends Service {
 	}
 	
 	protected long getWakeupTime() {
-		SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 		
 		Calendar from = Calendar.getInstance();
 		from.set(Calendar.HOUR_OF_DAY, settings.getInt(MainActivity.SETTINGS_NIGHTMODE_FROM_HOUR, MainActivity.DEFAULT_FROM));
@@ -471,7 +472,7 @@ public class MainService extends Service {
 			this.stopPowersave();
 			this.setWakeupTimeout();
 		} else if(intent.getAction().equals(MainService.ACTION_DISABLE)) {
-			SharedPreferences settings = this.getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
+	        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putBoolean(MainActivity.SETTINGS_START_SERVICE, false);
 			editor.commit();

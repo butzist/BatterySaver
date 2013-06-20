@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.net.TrafficStats;
 import android.net.wifi.WifiManager;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class WifiPowerSaver extends PowerSaver {
@@ -53,7 +54,7 @@ public class WifiPowerSaver extends PowerSaver {
 			this.time = SystemClock.elapsedRealtime();
 			this.traffic = TrafficStats.getTotalRxBytes() + TrafficStats.getTotalTxBytes() - TrafficStats.getMobileRxBytes() - TrafficStats.getMobileTxBytes();
 			
-			SharedPreferences settings = context.getApplicationContext().getSharedPreferences("settings", Context.MODE_PRIVATE);
+	        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
 			final long traffic_limit = settings.getLong(MainActivity.SETTINGS_TRAFFIC_LIMIT, MainActivity.DEFAULT_TRAFFIC_LIMIT);
 			final double traffic_per_minute = traffic_diff/(time_diff/60000.0);
 			Log.v(LOG,"wifi traffic: " + traffic_per_minute + " bytes / minute ("+ traffic_diff + "/" + time_diff/1000.0 + "s)");
