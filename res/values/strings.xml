@@ -21,17 +21,18 @@
   <string name="service_running">service was running</string>
   <string name="service_not_running">service was not running</string>
   <string name="service_toggle">Service on/off</string>
-  <string name="pref_title_timeout">Timeout</string>
-  <string name="pref_summary_timeout">Wait %d seconds before activating power save</string>
-  <string name="pref_title_interval_short">Short interval</string>
-  <string name="pref_summary_interval_short">first (shorter) interval to check after activating power save</string>
-  <string name="pref_title_traffic_limit">Traffic limit</string>
-  <string name="pref_summary_traffic_limit">traffic threshold (in bytes) to keep WiFi and mobile data connection alive</string>
-  <string name="pref_title_check_net_interval">Network check interval</string>
-  <string name="pref_summary_check_net_interval">Check for network connection every n seconds before enabling sync</string>
+  <string name="status_active">power saver active</string>
+  <string name="status_inactive">power saver inactive</string>
+  <string name="pref_timeout_title">Timeout</string>
+  <string name="pref_timeout_summary">Wait %d seconds before activating power save mode</string>
+  <string name="pref_timeout_message">Seconds before activating power save mode (longer = more time to check accounts = more power consumption)</string>
+  <string name="pref_interval_short_title">Short interval</string>
+  <string name="pref_interval_short_summary">Synchronize accounts after %d minutes for the first time</string>
+  <string name="pref_interval_short_message">Minutes to wait until checking accouts for the first time after enabling power save mode (e.g. to check early for new chat messages)</string>
+  <string name="pref_traffic_limit_title">Traffic limit</string>
+  <string name="pref_traffic_limit_summary">Keep WiFi and mobile data connection alive while transmitting more that %d bytes/minute</string>
+  <string name="pref_traffic_limit_message">Threshold in bytes/minute to inhibit power save mode</string>
   <string name="action_settings">Advanced Settings</string>
   <string name="action_view_source">View Sourcecode</string>
   <string name="action_view_translation">Help translating!</string>
-  <string name="status_active">power saver active</string>
-  <string name="status_inactive">power saver inactive</string>
 </resources>

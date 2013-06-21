@@ -31,14 +31,12 @@ public class MainActivity extends FragmentActivity {
 	static final public int DEFAULT_TO = 8;
 	static final public int DEFAULT_INTERVAL = 15;
 	static final public int DEFAULT_INTERVAL_SHORT = 5;
-	static final public int DEFAULT_CHECK_NETWORK_INTERVAL = 20;
 	static final public int DEFAULT_TIMEOUT = 60;
 	static final public int DEFAULT_TRAFFIC_LIMIT = 300000;
 	
 	static final public String SETTINGS_INTERVAL = "interval";
 	static final public String SETTINGS_INTERVAL_SHORT = "interval_short";
 	static final public String SETTINGS_TIMEOUT = "timeout";
-	static final public String SETTINGS_CHECK_NETWORK_INTERVAL = "check_net_interval";
 	static final public String SETTINGS_TRAFFIC_LIMIT = "traffic_limit";
 	static final public String SETTINGS_START_SERVICE = "start_service";
 	static final public String SETTINGS_NIGHTMODE_FROM_HOUR = "from_hour";

@@ -12,11 +12,10 @@
         android:layout_gravity="center_horizontal"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <EditText
+    <NumberPicker
         android:id="@+id/pref_number_picker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:inputType="number" />
+        android:layout_gravity="center_horizontal" />
 
 </LinearLayout>

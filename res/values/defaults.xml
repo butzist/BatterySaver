@@ -1,6 +1,4 @@
 <resources>
     <string name="url_source">http://sourceforge.net/projects/batterysaver/</string>
     <string name="url_translation">http://crowdin.net/project/batterysaver/invite</string>
-    <string name="pref_default_timeout_short">5</string>
-    <string name="pref_default_timeout">15</string>
 </resources>
