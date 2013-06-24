@@ -100,8 +100,13 @@ public class SyncPowerSaver extends PowerSaver {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected boolean doHasTraffic() throws Exception {
-		return ContentResolver.getCurrentSync() != null;
+		if(android.os.Build.VERSION.SDK_INT >= 11) {
+			return !ContentResolver.getCurrentSyncs().isEmpty();
+		} else {
+			return ContentResolver.getCurrentSync() != null;
+		}
 	}	
 }
