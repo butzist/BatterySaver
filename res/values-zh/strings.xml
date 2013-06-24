@@ -21,8 +21,6 @@
   <string name="service_running">服務已執行</string>
   <string name="service_not_running">服務未執行</string>
   <string name="service_toggle">服務開/關</string>
-  <string name="status_active">省電啟動</string>
-  <string name="status_inactive">省電閒置</string>
   <string name="pref_timeout_title">逾時</string>
   <string name="pref_timeout_summary">啟動省電模式之前等待 %d 秒</string>
   <string name="pref_interval_short_title">短的間隔</string>
@@ -33,4 +31,5 @@
   <string name="action_settings">進階設定</string>
   <string name="action_view_source">檢視原始碼</string>
   <string name="action_view_translation">請幫助我們翻譯！</string>
+  <string name="action_view_bugs">報告問題</string>
 </resources>

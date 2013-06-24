@@ -21,9 +21,10 @@
   <string name="service_running">tjänsten igång</string>
   <string name="service_not_running">tjänsten inte igång</string>
   <string name="service_toggle">Service på/av</string>
-  <string name="status_active">Power saver aktiva</string>
-  <string name="status_inactive">Power saver inaktiva</string>
+  <string name="status_active">energibesparing aktiva</string>
+  <string name="status_inactive">energibesparing inaktiva</string>
   <string name="action_settings">Avancerade inställningar</string>
   <string name="action_view_source">Visa källkoden</string>
   <string name="action_view_translation">Hjälp översätta!</string>
+  <string name="action_view_bugs">Rapportera ett Problem</string>
 </resources>

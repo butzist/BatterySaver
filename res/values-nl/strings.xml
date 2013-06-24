@@ -21,9 +21,10 @@
   <string name="service_running">service was uitgevoerd</string>
   <string name="service_not_running">service is niet actief</string>
   <string name="service_toggle">Service aan/uit</string>
-  <string name="status_active">actieve Spaarder van de macht</string>
-  <string name="status_inactive">niet-actieve Spaarder van de macht</string>
+  <string name="status_active">energiebesparing actief</string>
+  <string name="status_inactive">energiebesparing niet-actief</string>
   <string name="action_settings">Geavanceerde instellingen</string>
   <string name="action_view_source">Bekijk broncode</string>
   <string name="action_view_translation">Help met vertalen!</string>
+  <string name="action_view_bugs">Een probleem melden</string>
 </resources>

@@ -21,9 +21,10 @@
   <string name="service_running">servicio funcionaba</string>
   <string name="service_not_running">servicio no funcionaba</string>
   <string name="service_toggle">Servicio de encendido/apagado</string>
-  <string name="status_active">ahorrador de energía activa</string>
-  <string name="status_inactive">ahorrador de energía inactiva</string>
+  <string name="status_active">activo de ahorro de energía</string>
+  <string name="status_inactive">inactivo de ahorro de energía</string>
   <string name="action_settings">Configuración avanzada</string>
   <string name="action_view_source">Ver código fuente</string>
   <string name="action_view_translation">Ayudar a traducir!</string>
+  <string name="action_view_bugs">Informar de un problema</string>
 </resources>

@@ -21,9 +21,10 @@
   <string name="service_running">Serviciul a fost execută</string>
   <string name="service_not_running">Serviciul nu a fost execută</string>
   <string name="service_toggle">Serviciu de pornire/oprire</string>
-  <string name="status_active">economizorul de energie activă</string>
-  <string name="status_inactive">economizorul de energie inactiv</string>
+  <string name="status_active">activă de economisire a energiei</string>
+  <string name="status_inactive">inactiv de economisire a energiei</string>
   <string name="action_settings">Setări Avansate</string>
   <string name="action_view_source">Vezi Sourcecode</string>
   <string name="action_view_translation">Ajuta la traducerea!</string>
+  <string name="action_view_bugs">Raportaţi o problemă</string>
 </resources>

@@ -129,6 +129,12 @@ public class MainActivity extends FragmentActivity {
 			startActivity(i3);
 			return true;
 			
+		case R.id.action_view_bugs:
+			Intent i4 = new Intent(Intent.ACTION_VIEW);
+			i4.setData(Uri.parse(this.getString(R.string.url_bugs)));
+			startActivity(i4);
+			return true;
+			
 		default:
 			return super.onOptionsItemSelected(item);
 		}

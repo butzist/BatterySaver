@@ -21,9 +21,10 @@
   <string name="service_running">tjenesten var kjører</string>
   <string name="service_not_running">tjenesten var ikke kjører</string>
   <string name="service_toggle">Service på/av</string>
-  <string name="status_active">makt sparer aktive</string>
-  <string name="status_inactive">makt sparer inaktiv</string>
+  <string name="status_active">makt bevarer aktive</string>
+  <string name="status_inactive">makt bevarer inaktiv</string>
   <string name="action_settings">Avanserte innstillinger</string>
   <string name="action_view_source">Vis kildekoden</string>
   <string name="action_view_translation">Hjelp til med oversettelse!</string>
+  <string name="action_view_bugs">Rapportere et Problem</string>
 </resources>

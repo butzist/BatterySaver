@@ -21,9 +21,10 @@
   <string name="service_running">service var løb</string>
   <string name="service_not_running">service ikke kører</string>
   <string name="service_toggle">Service on/off</string>
-  <string name="status_active">Strømbesparer aktive</string>
-  <string name="status_inactive">Strømbesparer inaktive</string>
+  <string name="status_active">strømbesparende aktive</string>
+  <string name="status_inactive">strømbesparende inaktive</string>
   <string name="action_settings">Avancerede indstillinger</string>
   <string name="action_view_source">Se kildekode</string>
   <string name="action_view_translation">Hjælp oversætte!</string>
+  <string name="action_view_bugs">Rapport et Problem</string>
 </resources>

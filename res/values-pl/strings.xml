@@ -23,7 +23,17 @@
   <string name="service_toggle">Serwis wł. / wył.</string>
   <string name="status_active">aktywne oszczędzanie energii</string>
   <string name="status_inactive">nie aktywne oszczędzanie energii</string>
+  <string name="pref_timeout_title">Limit czasu</string>
+  <string name="pref_timeout_summary">Czekać %d sekund przed uaktywnieniem trybu oszczędzania energii</string>
+  <string name="pref_timeout_message">Sekund przed uaktywnieniem trybu oszczędzania</string>
+  <string name="pref_interval_short_title">Krótki interwał</string>
+  <string name="pref_interval_short_summary">Synchronizowanie kont po %d min po raz pierwszy</string>
+  <string name="pref_interval_short_message">Czekać tyle minut do sprawdzania kont po raz pierwszy po włączeniu trybu oszczędnościowego</string>
+  <string name="pref_traffic_limit_title">Limit ruchu</string>
+  <string name="pref_traffic_limit_summary">Podtrzymanie WiFi i komórkowe połączenie transmisji danych podczas przekazywania więcej niż %d bajtów/minutę</string>
+  <string name="pref_traffic_limit_message">Limit w bajtach na minutę który hamuje tryb oszczędzania energii</string>
   <string name="action_settings">Ustawienia zaawansowane</string>
   <string name="action_view_source">Widok kodu źródłowego</string>
   <string name="action_view_translation">Pomóż w tłumaczeniu!</string>
+  <string name="action_view_bugs">Zgłoś Problem</string>
 </resources>

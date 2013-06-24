@@ -21,9 +21,10 @@
   <string name="service_running">service était en cours d\'exécution</string>
   <string name="service_not_running">service n\'était pas en cours d\'exécution</string>
   <string name="service_toggle">Service marche/arrêt</string>
-  <string name="status_active">économiseur d\'énergie active</string>
-  <string name="status_inactive">économiseur d\'énergie inactive</string>
+  <string name="status_active">puissance économie actif</string>
+  <string name="status_inactive">puissance économie inactif</string>
   <string name="action_settings">Paramètres avancés</string>
   <string name="action_view_source">Affichage code source</string>
-  <string name="action_view_translation">Aidez-nous à traduire !</string>
+  <string name="action_view_translation">Aidez-nous à traduire!</string>
+  <string name="action_view_bugs">Signaler un problème</string>
 </resources>

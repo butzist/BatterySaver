@@ -35,4 +35,5 @@
   <string name="action_settings">Erweiterte Einstellungen</string>
   <string name="action_view_source">Quellcode anzeigen</string>
   <string name="action_view_translation">Helfen Sie beim Übersetzen!</string>
+  <string name="action_view_bugs">Ein Problem melden</string>
 </resources>

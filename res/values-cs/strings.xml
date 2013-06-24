@@ -21,9 +21,10 @@
   <string name="service_running">Služba byla spuštěna</string>
   <string name="service_not_running">Služba nebyla spuštěna</string>
   <string name="service_toggle">Služba zapnuto/vypnuto</string>
-  <string name="status_active">úsporný režim aktivní</string>
-  <string name="status_inactive">úsporný režim neaktivní</string>
+  <string name="status_active">úsporné aktivní</string>
+  <string name="status_inactive">úsporné neaktivní</string>
   <string name="action_settings">Upřesnit nastavení</string>
   <string name="action_view_source">Zobrazení zdrojového kódu</string>
   <string name="action_view_translation">Pomozte s překladem!</string>
+  <string name="action_view_bugs">Oznámit problém</string>
 </resources>
