@@ -27,13 +27,6 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class MainActivity extends FragmentActivity {
-	static final public int DEFAULT_FROM = 22;
-	static final public int DEFAULT_TO = 8;
-	static final public int DEFAULT_INTERVAL = 15;
-	static final public int DEFAULT_INTERVAL_SHORT = 5;
-	static final public int DEFAULT_TIMEOUT = 60;
-	static final public int DEFAULT_TRAFFIC_LIMIT = 300000;
-	
 	static final public String SETTINGS_INTERVAL = "interval";
 	static final public String SETTINGS_INTERVAL_SHORT = "interval_short";
 	static final public String SETTINGS_TIMEOUT = "timeout";
@@ -71,7 +64,7 @@ public class MainActivity extends FragmentActivity {
 				text.setText(MainActivity.this.getString(R.string.sync_interval, seekBar.getProgress()));
 			}
 		});
-        interval.setProgress(settings.getInt(SETTINGS_INTERVAL, DEFAULT_INTERVAL));
+        interval.setProgress(settings.getInt(SETTINGS_INTERVAL, this.getResources().getInteger(R.integer.pref_interval_default)));
         
 		TextView interval_text = (TextView)MainActivity.this.findViewById(R.id.sync_interval);
 		interval_text.setText(MainActivity.this.getString(R.string.sync_interval, interval.getProgress()));
@@ -167,7 +160,7 @@ public class MainActivity extends FragmentActivity {
 	
 	public void setFromTime() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-        int hour = settings.getInt(SETTINGS_NIGHTMODE_FROM_HOUR, DEFAULT_FROM);
+        int hour = settings.getInt(SETTINGS_NIGHTMODE_FROM_HOUR, this.getResources().getInteger(R.integer.pref_from_hour_default));
         int minute = settings.getInt(SETTINGS_NIGHTMODE_FROM_MINUTE, 0);
         
         Calendar time = Calendar.getInstance();
@@ -180,7 +173,7 @@ public class MainActivity extends FragmentActivity {
 	
 	public void setToTime() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-        int hour = settings.getInt(SETTINGS_NIGHTMODE_TO_HOUR, DEFAULT_TO);
+        int hour = settings.getInt(SETTINGS_NIGHTMODE_TO_HOUR, this.getResources().getInteger(R.integer.pref_to_hour_default));
         int minute = settings.getInt(SETTINGS_NIGHTMODE_TO_MINUTE, 0);
         
         Calendar time = Calendar.getInstance();
@@ -199,7 +192,7 @@ public class MainActivity extends FragmentActivity {
 			public Dialog onCreateDialog(Bundle savedInstanceState) {
 		        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
 		        
-				int hour = settings.getInt(SETTINGS_NIGHTMODE_FROM_HOUR, DEFAULT_FROM);
+				int hour = settings.getInt(SETTINGS_NIGHTMODE_FROM_HOUR, this.getResources().getInteger(R.integer.pref_from_hour_default));
 				int minute = settings.getInt(SETTINGS_NIGHTMODE_FROM_MINUTE, 0);
 
 				// Create a new instance of TimePickerDialog and return it
@@ -231,7 +224,7 @@ public class MainActivity extends FragmentActivity {
 			public Dialog onCreateDialog(Bundle savedInstanceState) {
 		        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
 		        
-				int hour = settings.getInt(SETTINGS_NIGHTMODE_TO_HOUR, DEFAULT_TO);
+				int hour = settings.getInt(SETTINGS_NIGHTMODE_TO_HOUR, this.getResources().getInteger(R.integer.pref_to_hour_default));
 				int minute = settings.getInt(SETTINGS_NIGHTMODE_TO_MINUTE, 0);
 
 				// Create a new instance of TimePickerDialog and return it

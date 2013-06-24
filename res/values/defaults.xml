@@ -1,4 +1,11 @@
 <resources>
     <string name="url_source">http://sourceforge.net/projects/batterysaver/</string>
     <string name="url_translation">http://crowdin.net/project/batterysaver/invite</string>
+
+    <integer name="pref_from_hour_default">22</integer>
+    <integer name="pref_to_hour_default">8</integer>
+    <integer name="pref_interval_default">15</integer>
+    <integer name="pref_interval_short_default">5</integer>
+    <integer name="pref_timeout_default">60</integer>
+    <integer name="pref_traffic_limit_default">300000</integer>
 </resources>

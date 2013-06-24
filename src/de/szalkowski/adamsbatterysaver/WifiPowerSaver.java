@@ -55,7 +55,7 @@ public class WifiPowerSaver extends PowerSaver {
 			this.traffic = TrafficStats.getTotalRxBytes() + TrafficStats.getTotalTxBytes() - TrafficStats.getMobileRxBytes() - TrafficStats.getMobileTxBytes();
 			
 	        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-			final long traffic_limit = settings.getLong(MainActivity.SETTINGS_TRAFFIC_LIMIT, MainActivity.DEFAULT_TRAFFIC_LIMIT);
+			final long traffic_limit = settings.getLong(MainActivity.SETTINGS_TRAFFIC_LIMIT, (long)context.getResources().getInteger(R.integer.pref_traffic_limit_default));
 			final double traffic_per_minute = traffic_diff/(time_diff/60000.0);
 			Log.v(LOG,"wifi traffic: " + traffic_per_minute + " bytes / minute ("+ traffic_diff + "/" + time_diff/1000.0 + "s)");
 			if(traffic_per_minute > traffic_limit) {

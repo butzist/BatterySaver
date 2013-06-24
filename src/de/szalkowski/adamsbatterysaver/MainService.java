@@ -209,7 +209,7 @@ public class MainService extends Service {
 
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-		int interval = settings.getInt(MainActivity.SETTINGS_TIMEOUT, MainActivity.DEFAULT_TIMEOUT)*1000;
+		int interval = settings.getInt(MainActivity.SETTINGS_TIMEOUT, this.getResources().getInteger(R.integer.pref_timeout_default))*1000;
 		Intent intent = new Intent(MainService.ACTION_WAKEUP_TIMEOUT);
 		PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		alarm.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+interval, pending);
@@ -226,7 +226,7 @@ public class MainService extends Service {
 
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-		int interval = settings.getInt(MainActivity.SETTINGS_TIMEOUT, MainActivity.DEFAULT_TIMEOUT)*1000;
+		int interval = settings.getInt(MainActivity.SETTINGS_TIMEOUT, this.getResources().getInteger(R.integer.pref_timeout_default))*1000;
 		Intent intent = new Intent(MainService.ACTION_SCREEN_TIMEOUT);
 		PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		alarm.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+interval, pending);
@@ -243,7 +243,7 @@ public class MainService extends Service {
 
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-		int interval = settings.getInt(MainActivity.SETTINGS_TIMEOUT, MainActivity.DEFAULT_TIMEOUT)*1000;
+		int interval = settings.getInt(MainActivity.SETTINGS_TIMEOUT, this.getResources().getInteger(R.integer.pref_timeout_default))*1000;
 		Intent intent = new Intent(MainService.ACTION_POWER_TIMEOUT);
 		PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		alarm.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+interval, pending);
@@ -260,8 +260,8 @@ public class MainService extends Service {
 		
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-		int interval = settings.getInt(MainActivity.SETTINGS_INTERVAL, MainActivity.DEFAULT_INTERVAL) * 60000;
-		int first_interval = settings.getInt(MainActivity.SETTINGS_INTERVAL_SHORT, MainActivity.DEFAULT_INTERVAL_SHORT) * 60000;
+		int interval = settings.getInt(MainActivity.SETTINGS_INTERVAL, this.getResources().getInteger(R.integer.pref_interval_default)) * 60000;
+		int first_interval = settings.getInt(MainActivity.SETTINGS_INTERVAL_SHORT, this.getResources().getInteger(R.integer.pref_interval_short_default)) * 60000;
 		if(!short_interval) {
 			first_interval = interval;
 		}
@@ -282,7 +282,7 @@ public class MainService extends Service {
 		
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-		int interval = settings.getInt(MainActivity.SETTINGS_INTERVAL, MainActivity.DEFAULT_INTERVAL) * 60000;
+		int interval = settings.getInt(MainActivity.SETTINGS_INTERVAL, this.getResources().getInteger(R.integer.pref_interval_default)) * 60000;
 		long wakeup_time = getWakeupTime();
 		
 		Intent intent = new Intent(MainService.ACTION_WAKEUP);
@@ -325,13 +325,13 @@ public class MainService extends Service {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 		
 		Calendar from = Calendar.getInstance();
-		from.set(Calendar.HOUR_OF_DAY, settings.getInt(MainActivity.SETTINGS_NIGHTMODE_FROM_HOUR, MainActivity.DEFAULT_FROM));
+		from.set(Calendar.HOUR_OF_DAY, settings.getInt(MainActivity.SETTINGS_NIGHTMODE_FROM_HOUR, this.getResources().getInteger(R.integer.pref_from_hour_default)));
 		from.set(Calendar.MINUTE, settings.getInt(MainActivity.SETTINGS_NIGHTMODE_FROM_MINUTE, 0));
 		from.set(Calendar.SECOND, 0);
 		from.set(Calendar.MILLISECOND, 0);
 		
 		Calendar to = Calendar.getInstance();
-		to.set(Calendar.HOUR_OF_DAY, settings.getInt(MainActivity.SETTINGS_NIGHTMODE_TO_HOUR, MainActivity.DEFAULT_TO));
+		to.set(Calendar.HOUR_OF_DAY, settings.getInt(MainActivity.SETTINGS_NIGHTMODE_TO_HOUR, this.getResources().getInteger(R.integer.pref_to_hour_default)));
 		to.set(Calendar.MINUTE, settings.getInt(MainActivity.SETTINGS_NIGHTMODE_TO_MINUTE, 0));
 		to.set(Calendar.SECOND, 0);
 		to.set(Calendar.MILLISECOND, 0);
@@ -347,7 +347,7 @@ public class MainService extends Service {
 		}
 
 		// add interval time so that first wakeup can not fall into night time
-		now.add(Calendar.MINUTE, settings.getInt(MainActivity.SETTINGS_INTERVAL, MainActivity.DEFAULT_INTERVAL));
+		now.add(Calendar.MINUTE, settings.getInt(MainActivity.SETTINGS_INTERVAL, this.getResources().getInteger(R.integer.pref_interval_default)));
 
 		return (now.after(from) && now.before(to));
 	}
@@ -356,13 +356,13 @@ public class MainService extends Service {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 		
 		Calendar from = Calendar.getInstance();
-		from.set(Calendar.HOUR_OF_DAY, settings.getInt(MainActivity.SETTINGS_NIGHTMODE_FROM_HOUR, MainActivity.DEFAULT_FROM));
+		from.set(Calendar.HOUR_OF_DAY, settings.getInt(MainActivity.SETTINGS_NIGHTMODE_FROM_HOUR, this.getResources().getInteger(R.integer.pref_from_hour_default)));
 		from.set(Calendar.MINUTE, settings.getInt(MainActivity.SETTINGS_NIGHTMODE_FROM_MINUTE, 0));
 		from.set(Calendar.SECOND, 0);
 		from.set(Calendar.MILLISECOND, 0);
 
 		Calendar to = Calendar.getInstance();
-		to.set(Calendar.HOUR_OF_DAY, settings.getInt(MainActivity.SETTINGS_NIGHTMODE_TO_HOUR, MainActivity.DEFAULT_TO));
+		to.set(Calendar.HOUR_OF_DAY, settings.getInt(MainActivity.SETTINGS_NIGHTMODE_TO_HOUR, this.getResources().getInteger(R.integer.pref_to_hour_default)));
 		to.set(Calendar.MINUTE, settings.getInt(MainActivity.SETTINGS_NIGHTMODE_TO_MINUTE, 0));
 		to.set(Calendar.SECOND, 0);
 		to.set(Calendar.MILLISECOND, 0);
