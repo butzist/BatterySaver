@@ -1,6 +1,6 @@
 package de.szalkowski.adamsbatterysaver;
 
-import android.annotation.SuppressLint;
+//import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
@@ -38,7 +38,7 @@ public class IntegerDialogPreference extends DialogPreference {
 		return (value != null);
 	}
 
-	@SuppressLint("NewApi")
+	//@SuppressLint("NewApi")
 	protected void setPicker(int value) {
 		if(android.os.Build.VERSION.SDK_INT >= 11) {
 			NumberPicker picker = (NumberPicker)this.picker;
@@ -52,7 +52,7 @@ public class IntegerDialogPreference extends DialogPreference {
 		
 	}
 	
-	@SuppressLint("NewApi")
+	//@SuppressLint("NewApi")
 	protected int getPicker() {
 		if(android.os.Build.VERSION.SDK_INT >= 11) {
 			NumberPicker picker = (NumberPicker)this.picker;
