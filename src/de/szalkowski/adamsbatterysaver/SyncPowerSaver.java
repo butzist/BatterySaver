@@ -2,6 +2,7 @@ package de.szalkowski.adamsbatterysaver;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -100,6 +101,7 @@ public class SyncPowerSaver extends PowerSaver {
 		}
 	}
 
+	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	@Override
 	protected boolean doHasTraffic() throws Exception {
