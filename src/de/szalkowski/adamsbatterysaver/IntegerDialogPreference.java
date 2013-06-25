@@ -178,7 +178,8 @@ public class IntegerDialogPreference extends DialogPreference {
 	    }
 
 	    // Standard creator object using an instance of this class
-	    public static final Parcelable.Creator<SavedState> CREATOR =
+	    @SuppressWarnings("unused")
+		public static final Parcelable.Creator<SavedState> CREATOR =
 	            new Parcelable.Creator<SavedState>() {
 
 	        public SavedState createFromParcel(Parcel in) {

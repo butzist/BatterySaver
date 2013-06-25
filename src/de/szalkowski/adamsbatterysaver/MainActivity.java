@@ -2,6 +2,8 @@ package de.szalkowski.adamsbatterysaver;
 
 import java.util.Calendar;
 
+import org.thirdparty.AdvancedSettingsActivity;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -114,25 +116,25 @@ public class MainActivity extends FragmentActivity {
 		switch (item.getItemId()) {
 		case R.id.action_settings:
 			Intent i1 = new Intent(this, AdvancedSettingsActivity.class);
-			startActivity(i1);
+			this.startActivity(i1);
 			return true;
 
 		case R.id.action_view_source:
 			Intent i2 = new Intent(Intent.ACTION_VIEW);
 			i2.setData(Uri.parse(this.getString(R.string.url_source)));
-			startActivity(i2);
+			this.startActivity(i2);
 			return true;
 
 		case R.id.action_view_translation:
 			Intent i3 = new Intent(Intent.ACTION_VIEW);
 			i3.setData(Uri.parse(this.getString(R.string.url_translation)));
-			startActivity(i3);
+			this.startActivity(i3);
 			return true;
 			
 		case R.id.action_view_bugs:
 			Intent i4 = new Intent(Intent.ACTION_VIEW);
 			i4.setData(Uri.parse(this.getString(R.string.url_bugs)));
-			startActivity(i4);
+			this.startActivity(i4);
 			return true;
 			
 		default:

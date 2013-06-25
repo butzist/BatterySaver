@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.szalkowski.adamsbatterysaver"
-    android:versionCode="3"
-    android:versionName="1.2" >
+    android:versionCode="4"
+    android:versionName="1.3" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -34,7 +34,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="de.szalkowski.adamsbatterysaver.AdvancedSettingsActivity">
+        <activity android:name="org.thirdparty.AdvancedSettingsActivity">
         </activity>
         <service android:name="MainService"></service>
         <receiver android:name="AutoStartReceiver" android:label="@string/app_name">
