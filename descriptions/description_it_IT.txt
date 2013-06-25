@@ -1,0 +1,7 @@
+Questo risparmio batteria Android App prolunga la durata della batteria controllando lo stato del Wi-Fi, mobili dati, sincronizzazione bluetooth e account. La connettività è disabilitata quando lo schermo è spento e ripristinata allo stato originale ad intervalli per sincronizzare i messaggi, e-mail, calendario, contatti ecc. e può essere disabilitata durante la notte per risparmiare ancora più energia.
+
+Non era soddisfatto con le soluzioni disponibili sul mercato, al 100% così ho scritto questo :)
+Questa App solo Disabilita e ripristina lo stato originale del wifi, mobili dati ecc. - così si consiglia inoltre di installare un widget per il controllo di queste. Per me ZDBox (https://play.google.com/store/apps/details?id=com.zdworks.android.toolbox) ha fatto un buon lavoro.
+
+
+Questa applicazione è Software Open Source. Suggerimenti, segnalazioni di problemi, codice e traduzione contributi e donazioni sono i Benvenuti a http://sf.net/projects/batterysaver

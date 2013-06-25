@@ -1,0 +1,7 @@
+Esse protetor de bateria Android App prolonga a vida da bateria, controlando o status de wifi, móvel de dados, bluetooth e a conta de sincronização. A conectividade é desabilitada quando a tela estiver desligada e restaurada ao estado original em intervalos para sincronizar mensagens, e-mails, calendário, contatos, etc. e pode ser desativado durante o período nocturno para economizar ainda mais energia.
+
+Não fiquei 100% satisfeito com as soluções disponíveis no mercado, então eu escrevi este :)
+Este App apenas desativa e restaura o estado original de wifi, móvel de dados etc. -Assim, é recomendável instalar adicionalmente um widget para controlar estas. Para mim ZDBox (https://play.google.com/store/apps/details?id=com.zdworks.android.toolbox) fez um bom trabalho.
+
+
+Esta aplicação é Software de código aberto. Sugestões, relatórios de problema, código e tradução de contribuições e doações são bem-vindas no http://sf.net/projects/batterysaver

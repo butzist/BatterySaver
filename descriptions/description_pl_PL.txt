@@ -1,0 +1,7 @@
+To App dla Androida przedłuża żywotność baterii kontrolując stan wifi, 3g, bluetooth i synchronizacji kont. Łączność jest deaktywowana, gdy ekran zostanie wyłączony, i przywrócona do pierwotnego stanu w odstępach 15 minut do synchronizowania wiadomości, e-maili, kalendarza, kontaktów itp. Poza tym może być wyłączona w porze nocnej by oszczędzać więcej energii.
+
+Nie byłem 100% zadowolony z rozwiązaniami dostępnymi na rynku, więc napisałem ten :)
+Ta aplikacja tylko wyłącza i przywraca oryginalny stan wifi, mobilnych danych itp. dlatego zaleca się dodatkowo zainstalować widget do kontrolowania łączności. Dla mnie ZDBox (https://play.google.com/store/apps/details?id=com.zdworks.android.toolbox) zrobił dobrą robotę.
+
+
+Ta aplikacja jest Open Source Software. Sugestie, raporty o problemach, składki do kodu i translacji, i darowizny są mile widziane na http://sf.net/projects/batterysaver

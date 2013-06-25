@@ -1,0 +1,7 @@
+This Android battery saver App prolongs battery life by controlling the status of wifi, mobile data, bluetooth and account synchronization. The connectivity is disabled when the screen is turned off and restored to the original state at intervals to synchronize messages, e-mails, calendar, contacts etc. and can be disabled during night time to save even more energy.
+
+I was not 100% satisfied with the solutions available on the market, so I wrote this one :)
+This App only disables and restores the original state of wifi, mobile data etc. - it is thus recommended to additionally install a widget for controlling these. For me ZDBox (https://play.google.com/store/apps/details?id=com.zdworks.android.toolbox) did a good job.
+
+
+This application is Open Source Software. Suggestions, problem reports, code and translation contributions, and donations are welcome at http://sf.net/projects/batterysaver

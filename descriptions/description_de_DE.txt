@@ -1,0 +1,7 @@
+Diese Android Batteriesparapp verlängert die Batterielaufzeit, indem WLAN, UMTS, Bluetooth und die Kontensynchronisation intelligent verwaltet werden. Die Konnektivität wird deaktiviert, wenn der Bildschirm ausgeschaltet ist und alle 15 Minuten wieder in den Originalzustand versetzt um Nachrichten, E-mails, Kalender, Kontakte usw. zu synchronisieren. Während der Nacht kann diese Synchronisierung ausgeschaltet werden um noch mehr Energie zu sparen.
+
+Ich war nicht 100% zufrieden mit den Lösungen, die bisher auf dem Markt verfügbar waren - also hab ich diese App hier geschrieben :)
+Diese App deaktiviert WLAN, 3G usw. und stellt den ursprünglichen Zustand regelmässig wieder her - es empfiehlt sich also ein Widget zusätzlich zu installieren,  um diese zu steuern. Für mich hat z.B. ZDBox (https://play.google.com/store/apps/details?id=com.zdworks.android.toolbox) ganz gut funktioniert (siehe Screenshot).
+
+
+Diese Anwendung ist Open Source Software. Vorschläge, Problemberichte, Code, Übersetzungen und Spenden sind herzlich willkommen auf http://sf.net/projects/batterysaver

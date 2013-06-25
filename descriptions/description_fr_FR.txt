@@ -1,0 +1,7 @@
+Cet économiseur de batterie Android App prolonge la vie de la batterie en contrôlant l'état de données mobiles, wifi, synchronisation bluetooth et compte. La connectivité est désactivée lorsque l'écran est éteint et restaurée à l'état d'origine à intervalles pour synchroniser les messages, e-mails, calendrier, contacts, etc. et peut être désactivé pendant la nuit pour sauver encore plus d'énergie.
+
+Je n'étais pas 100 % satisfait par les solutions disponibles sur le marché, j'ai donc écrit celui-ci:)
+Ce soft seulement désactive et rétablit l'état initial du wifi, des données mobiles etc. - Il est donc recommandé d'installer également un widget pour le contrôle de ceux-ci. ZDBox (https://play.google.com/store/apps/details?id=com.zdworks.android.toolbox) fait du bon travail pour moi.
+
+
+Cette application est Open Source Software. Suggestions, rapports de problème, code et traduction des contributions et dons sont les bienvenus à http://sf.net/projects/batterysaver

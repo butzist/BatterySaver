@@ -1,4 +1,4 @@
-for d in *; do
+for d in ?? ??-??; do
    mv $d values-$(echo $d | sed 's/-/-r/')
 done
 mv values-sv-rSE values-sv
