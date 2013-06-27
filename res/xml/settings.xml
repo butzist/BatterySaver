@@ -3,4 +3,7 @@
     <de.szalkowski.adamsbatterysaver.IntegerDialogPreference android:key="timeout" android:title="@string/pref_timeout_title" android:summary="@string/pref_timeout_summary" android:defaultValue="@integer/pref_timeout_default" android:dialogMessage="@string/pref_timeout_message" />
     <de.szalkowski.adamsbatterysaver.IntegerDialogPreference android:key="interval_short" android:title="@string/pref_interval_short_title" android:summary="@string/pref_interval_short_summary" android:defaultValue="@integer/pref_interval_short_default"  android:dialogMessage="@string/pref_interval_short_message"/>
     <de.szalkowski.adamsbatterysaver.IntegerDialogPreference android:key="traffic_limit" android:title="@string/pref_traffic_limit_title" android:summary="@string/pref_traffic_limit_summary" android:defaultValue="@integer/pref_traffic_limit_default" android:dialogMessage="@string/pref_traffic_limit_message"/>
+    <Preference android:title="Wifi whitelist" android:summary="Specify Apps which will prevent Wifi from being switched off automatically">
+        <intent android:targetPackage="de.szalkowski.adamsbatterysaver" android:targetClass="de.szalkowski.adamsbatterysaver.WhiteListPreferenceActivity" />
+    </Preference>
 </PreferenceScreen>

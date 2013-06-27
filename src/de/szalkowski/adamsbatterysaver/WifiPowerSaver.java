@@ -1,5 +1,9 @@
 package de.szalkowski.adamsbatterysaver;
 
+import java.util.HashSet;
+import java.util.List;
+
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.TrafficStats;
@@ -60,6 +64,17 @@ public class WifiPowerSaver extends PowerSaver {
 			Log.v(LOG,"wifi traffic: " + traffic_per_minute + " bytes / minute ("+ traffic_diff + "/" + time_diff/1000.0 + "s)");
 			if(traffic_per_minute > traffic_limit) {
 				return true;
+			}
+
+			ActivityManager am = (ActivityManager)this.context.getSystemService(Context.ACTIVITY_SERVICE);
+			List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(1);
+			if(!tasks.isEmpty()) {
+				String currentTaskPackage = tasks.get(0).topActivity.getPackageName();
+				Log.d(LOG,"current task: " + currentTaskPackage);
+				if(settings.getStringSet("wifi_whitelist", new HashSet<String>()).contains(currentTaskPackage)) {
+					Log.d(LOG,currentTaskPackage + " is on whitelist");
+					return true;
+				}
 			}
 		}
 		return false;

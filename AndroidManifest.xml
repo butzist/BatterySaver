@@ -19,7 +19,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <application
         android:allowBackup="true"
@@ -30,12 +31,12 @@
             android:name="de.szalkowski.adamsbatterysaver.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+               <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="org.thirdparty.AdvancedSettingsActivity">
-        </activity>
+        <activity android:name="org.thirdparty.AdvancedSettingsActivity"></activity>
+        <activity android:name="de.szalkowski.adamsbatterysaver.WhiteListPreferenceActivity"></activity>
         <service android:name="MainService"></service>
         <receiver android:name="AutoStartReceiver" android:label="@string/app_name">
             <intent-filter>
