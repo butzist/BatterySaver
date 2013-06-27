@@ -17,6 +17,7 @@ import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -42,7 +43,11 @@ public class MainActivity extends FragmentActivity {
     @Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+		if(android.os.Build.VERSION.SDK_INT >= 11) {
+			this.requestWindowFeature(Window.FEATURE_ACTION_BAR);
+		}
+
+		setContentView(R.layout.activity_main);
         
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
