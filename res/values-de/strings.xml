@@ -23,6 +23,7 @@
   <string name="service_toggle">Dienst Start/Stopp</string>
   <string name="status_active">Energiesparmodus aktiv</string>
   <string name="status_inactive">Energiesparmodus inaktiv</string>
+  <string name="currently_running">läuft gerade</string>
   <string name="pref_timeout_title">Timeout</string>
   <string name="pref_timeout_summary">Vor Aktivierung des Stromsparmodus %d Sekunden warten</string>
   <string name="pref_timeout_message">Sekunden vor der Aktivierung des Stromsparmodus warten (höher = mehr Zeit um Konten zu überprüfen = mehr Stromverbrauch)</string>
@@ -32,6 +33,11 @@
   <string name="pref_traffic_limit_title">Datenverkehrslimit</string>
   <string name="pref_traffic_limit_summary">Wi-Fi und mobile Datenverbindung aktiv halten solange mehr als %d Bytes/Minute übertragen werden</string>
   <string name="pref_traffic_limit_message">Schwellwert in Bytes/Minute um Stromsparmodus zu verhindern</string>
+  <string name="pref_wifi_whitelist_title">Weiße Liste für WLAN</string>
+  <string name="pref_wifi_whitelist_summary">Wählen Sie Anwendungen die verhindern, dass WLAN automatisch abgeschaltet wird, solange sie laufen</string>
+  <string name="pref_only_top_task_title">Nur neuester Task für weiße Liste</string>
+  <string name="pref_only_top_task_summary_true">Nur den aktuellsten laufenden Task für die weiße Liste berücksichtigen</string>
+  <string name="pref_only_top_task_summary_false">Alle laufenden Tasks für die weiße Liste berücksichtigen</string>
   <string name="action_settings">Erweiterte Einstellungen</string>
   <string name="action_view_source">Quellcode anzeigen</string>
   <string name="action_view_translation">Helfen Sie beim Übersetzen!</string>

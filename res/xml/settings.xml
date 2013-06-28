@@ -6,4 +6,5 @@
     <Preference android:title="@string/pref_wifi_whitelist_title" android:summary="@string/pref_wifi_whitelist_summary">
         <intent android:targetPackage="de.szalkowski.adamsbatterysaver" android:targetClass="de.szalkowski.adamsbatterysaver.WhiteListPreferenceActivity" />
     </Preference>
+    <CheckBoxPreference android:key="only_top_task" android:title="@string/pref_only_top_task_title" android:summaryOn="@string/pref_only_top_task_summary_true" android:summaryOff="@string/pref_only_top_task_summary_false" android:defaultValue="@bool/pref_only_top_task_default"/>
 </PreferenceScreen>

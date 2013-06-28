@@ -35,6 +35,9 @@
   <string name="pref_traffic_limit_message">Threshold in bytes/minute to inhibit power save mode</string>
   <string name="pref_wifi_whitelist_title">WiFi whitelist</string>
   <string name="pref_wifi_whitelist_summary">Select Apps which will prevent WiFi from being switched off automatically</string>
+  <string name="pref_only_top_task_title">Whitelist only top task</string>
+  <string name="pref_only_top_task_summary_true">Only consider the top running task for whitelist</string>
+  <string name="pref_only_top_task_summary_false">Consider all running tasks for whitelist</string>
   <string name="action_settings">Advanced Settings</string>
   <string name="action_view_source">View Sourcecode</string>
   <string name="action_view_translation">Help Translating!</string>

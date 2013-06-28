@@ -21,8 +21,20 @@
   <string name="service_running">servizio è stato in esecuzione</string>
   <string name="service_not_running">servizio non è stato in esecuzione</string>
   <string name="service_toggle">Servizio di accensione e spegnimento</string>
-  <string name="status_active">risparmio attivo</string>
-  <string name="status_inactive">risparmio inattivi</string>
+  <string name="status_active">risparmio energetico attivo</string>
+  <string name="status_inactive">risparmio energetico inattivo</string>
+  <string name="currently_running">in esecuzione</string>
+  <string name="pref_timeout_title">Timeout</string>
+  <string name="pref_timeout_summary">Attendere %d secondi prima di attivare modalità risparmio energetico</string>
+  <string name="pref_timeout_message">Secondi prima di attivare modalità risparmio energetico (più tempo = più tempo per controllare accounts = maggiore consumo energetico)</string>
+  <string name="pref_interval_short_title">Intervallo breve</string>
+  <string name="pref_interval_short_summary">Sincronizzare gli account dopo %d minuti per la prima volta</string>
+  <string name="pref_interval_short_message">Minuti di attesa prima di controllare gli accounts per la prima volta dopo aver abilitato modalità risparmio energetico (ad esempio, per verificare al più presto nuovi messaggi in chat)</string>
+  <string name="pref_traffic_limit_title">Lmite di traffico</string>
+  <string name="pref_traffic_limit_summary">Mantenere WiFi e connessione dati attiva durante una trasmissione a più di %d bytes al minuto</string>
+  <string name="pref_traffic_limit_message">Soglia in bytes al minuto per inibire la modalità risparmio energetico</string>
+  <string name="pref_wifi_whitelist_title">WiFi whitelist</string>
+  <string name="pref_wifi_whitelist_summary">Selezionare quali App possono prevenire il WiFi di essere spento automaticamente</string>
   <string name="action_settings">Impostazioni avanzate</string>
   <string name="action_view_source">Vista Sourcecode</string>
   <string name="action_view_translation">Aiutaci a tradurre!</string>

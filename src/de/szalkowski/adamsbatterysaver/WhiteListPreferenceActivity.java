@@ -17,9 +17,11 @@ import android.preference.CheckBoxPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.util.Log;
 
 public class WhiteListPreferenceActivity extends PreferenceActivity {
 	protected PreferenceScreen screen;
+	static private final String LOG = "de.szalkowski.adamsbatterysaver.WhiteListPreferenceActivity";
 	
 	@SuppressWarnings("deprecation")
 	@SuppressLint("NewApi")
@@ -51,9 +53,14 @@ public class WhiteListPreferenceActivity extends PreferenceActivity {
 		Set<String> packages = new HashSet<String>();
 		ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
 		List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(100);
+		Log.v(LOG, "currently running:");
 		for (ActivityManager.RunningTaskInfo task : tasks) {
 			String currentTaskPackage = task.topActivity.getPackageName();
-			packages.add(currentTaskPackage);			
+			String logMsg = String.format(context.getResources().getConfiguration().locale, "%s: (state %s, activities running %d/%d)",currentTaskPackage,task.description,task.numRunning,task.numActivities); 
+			Log.v(LOG, logMsg);
+
+			if(task.numRunning < 1) continue;
+			packages.add(currentTaskPackage);
 		}
 		
 		return packages;

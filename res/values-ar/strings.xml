@@ -8,6 +8,8 @@
   <string name="screen">الشاشة</string>
   <string name="power">السلطة</string>
   <string name="save">حفظ</string>
+  <string name="sync_interval">مزامنة كل %d دقيقة</string>
+  <string name="night_mode">وضع ليلي</string>
   <string name="from">من</string>
   <string name="to">إلى</string>
   <string name="service_running">تم تشغيل الخدمة</string>
@@ -15,6 +17,7 @@
   <string name="service_toggle">خدمة تشغيل/إيقاف تشغيل</string>
   <string name="status_active">النشطة حفظ الطاقة</string>
   <string name="status_inactive">قوة الحفظ غير نشط</string>
+  <string name="currently_running">قيد التشغيل حاليا</string>
   <string name="action_settings">إعدادات متقدمة</string>
   <string name="action_view_source">Sourcecode رأي</string>
   <string name="action_view_translation">المساعدة في ترجمة!</string>
