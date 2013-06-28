@@ -4,7 +4,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -45,13 +47,37 @@ public class WhiteListPreferenceActivity extends PreferenceActivity {
 		}
 	}
 	
+	protected Set<String> getRunningTasks(Context context) {
+		Set<String> packages = new HashSet<String>();
+		ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+		List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(100);
+		for (ActivityManager.RunningTaskInfo task : tasks) {
+			String currentTaskPackage = task.topActivity.getPackageName();
+			packages.add(currentTaskPackage);			
+		}
+		
+		return packages;
+	}
+	
 	protected void fillWhiteList(PreferenceScreen screen, Context context) {
 		Set<String> currentWhiteList = screen.getSharedPreferences().getStringSet("wifi_whitelist", new HashSet<String>());
 		PackageManager pm = this.getPackageManager();
-		List<PackageInfo> packages = pm.getInstalledPackages(PackageManager.GET_ACTIVITIES);
+		Set<String> runningTasks = this.getRunningTasks(context);
+		
+		List<PackageInfo> packages = pm.getInstalledPackages(PackageManager.GET_ACTIVITIES | PackageManager.GET_PERMISSIONS);
 		for(PackageInfo pack : packages) {
 			if(pack.applicationInfo.enabled == false) continue;
 			if(pack.activities == null || pack.activities.length == 0) continue;
+			
+			boolean usesInternet = false;
+			if(pack.requestedPermissions == null) continue;
+			for(String perm : pack.requestedPermissions) {
+				if (perm.equals(Manifest.permission.INTERNET)) {
+					usesInternet = true;
+					break;
+				}
+			}
+			if(!usesInternet) continue;
 			
 			CheckBoxPreference preference = new CheckBoxPreference(context);
 			preference.setPersistent(false);
@@ -67,6 +93,10 @@ public class WhiteListPreferenceActivity extends PreferenceActivity {
 				icon = default_icon;
 			}
 			preference.setIcon(icon);
+			
+			if(runningTasks.contains(pack.packageName)) {
+				preference.setSummary(context.getText(R.string.currently_running));
+			}
 			
 			screen.addPreference(preference);
             this.screen = screen;

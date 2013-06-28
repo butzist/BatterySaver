@@ -23,6 +23,7 @@
   <string name="service_toggle">Service on/off</string>
   <string name="status_active">power saving active</string>
   <string name="status_inactive">power saving inactive</string>
+  <string name="currently_running">currently running</string>
   <string name="pref_timeout_title">Timeout</string>
   <string name="pref_timeout_summary">Wait %d seconds before activating power save mode</string>
   <string name="pref_timeout_message">Seconds before activating power save mode (longer = more time to check accounts = more power consumption)</string>
@@ -32,6 +33,8 @@
   <string name="pref_traffic_limit_title">Traffic limit</string>
   <string name="pref_traffic_limit_summary">Keep WiFi and mobile data connection alive while transmitting more that %d bytes/minute</string>
   <string name="pref_traffic_limit_message">Threshold in bytes/minute to inhibit power save mode</string>
+  <string name="pref_wifi_whitelist_title">WiFi whitelist</string>
+  <string name="pref_wifi_whitelist_summary">Select Apps which will prevent WiFi from being switched off automatically</string>
   <string name="action_settings">Advanced Settings</string>
   <string name="action_view_source">View Sourcecode</string>
   <string name="action_view_translation">Help Translating!</string>

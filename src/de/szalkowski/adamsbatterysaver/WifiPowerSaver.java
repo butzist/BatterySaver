@@ -67,11 +67,10 @@ public class WifiPowerSaver extends PowerSaver {
 			}
 
 			ActivityManager am = (ActivityManager)this.context.getSystemService(Context.ACTIVITY_SERVICE);
-			List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(1);
-			if(!tasks.isEmpty()) {
-				String currentTaskPackage = tasks.get(0).topActivity.getPackageName();
+			List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(100);
+			for (ActivityManager.RunningTaskInfo task : tasks) {
+				String currentTaskPackage = task.topActivity.getPackageName();
 				
-				Log.d(LOG,"current task: " + currentTaskPackage);
 				if(settings.getStringSet("wifi_whitelist", new HashSet<String>()).contains(currentTaskPackage)) {
 					Log.d(LOG,currentTaskPackage + " is on whitelist");
 					return true;
