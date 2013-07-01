@@ -67,20 +67,22 @@ public class WifiPowerSaver extends PowerSaver {
 				return true;
 			}
 
-			ActivityManager am = (ActivityManager)this.context.getSystemService(Context.ACTIVITY_SERVICE);
-			Set<String> whiteList = settings.getStringSet("wifi_whitelist", new HashSet<String>());
-			boolean onlyTop = settings.getBoolean("only_top_task", context.getResources().getBoolean(R.bool.pref_only_top_task_default));
-			List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(100);
-			for (ActivityManager.RunningTaskInfo task : tasks) {
-				if(task.numRunning < 1) continue;
-				String currentTaskPackage = task.topActivity.getPackageName();
-				
-				if(whiteList.contains(currentTaskPackage)) {
-					Log.d(LOG,currentTaskPackage + " is on whitelist");
-					return true;
-				} else {
-					if(onlyTop)
-						return false;
+			if(android.os.Build.VERSION.SDK_INT >= 11) {
+				ActivityManager am = (ActivityManager)this.context.getSystemService(Context.ACTIVITY_SERVICE);
+				Set<String> whiteList = settings.getStringSet("wifi_whitelist", new HashSet<String>());
+				boolean onlyTop = settings.getBoolean("only_top_task", context.getResources().getBoolean(R.bool.pref_only_top_task_default));
+				List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(100);
+				for (ActivityManager.RunningTaskInfo task : tasks) {
+					if(task.numRunning < 1) continue;
+					String currentTaskPackage = task.topActivity.getPackageName();
+					
+					if(whiteList.contains(currentTaskPackage)) {
+						Log.d(LOG,currentTaskPackage + " is on whitelist");
+						return true;
+					} else {
+						if(onlyTop)
+							return false;
+					}
 				}
 			}
 		}
