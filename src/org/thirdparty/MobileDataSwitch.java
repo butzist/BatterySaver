@@ -26,12 +26,12 @@ public abstract class MobileDataSwitch {
 		
 		try {
 		    ConnectivityManager conman = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		    Method setmeth = conman.getClass().getMethod("setMobileDataEnabled", boolean.class);
+		    Method setmeth = conman.getClass().getDeclaredMethod("setMobileDataEnabled", boolean.class);
 		    setmeth.setAccessible(true);
 		    setmeth.invoke(conman, enabled);
 		}
 		catch(Exception e) {
-			Log.w(LOG, "setMobileDataEnabled failed -- trying alternative method");
+			Log.w(LOG, "setMobileDataEnabled failed -- trying alternative method: "+e.toString());
 			
 			try {    
 				Method dataConnSwitchmethod;
@@ -58,23 +58,22 @@ public abstract class MobileDataSwitch {
 				    dataConnSwitchmethod.invoke(ITelephonyStub);
 			}
 			catch(Exception ee) {
-				Log.e(LOG, "setMobileDataEnabled failed");
+				Log.e(LOG, "setMobileDataEnabled failed: "+e.toString());
 			}
 		}
 	}
 	
 	public static boolean getMobileDataEnabled(Context context) throws Exception {
 		try {
-		    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-	        Class<?> cmClass = Class.forName(cm.getClass().getName());
-	        Method method = cmClass.getDeclaredMethod("getMobileDataEnabled");
+		    ConnectivityManager conman = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+	        Method method = conman.getClass().getDeclaredMethod("getMobileDataEnabled");
 	        method.setAccessible(true);
-	        boolean mobileDataEnabled = (Boolean)method.invoke(cmClass);
+	        boolean mobileDataEnabled = (Boolean)method.invoke(conman);
 
 	        return mobileDataEnabled;
 		}
 		catch(Exception e) {
-			Log.w(LOG,"Primary dectection method failed: "+e.toString());
+			Log.w(LOG,"getMobileDataEnabled failed -- trying alternative method: "+e.toString());
 			TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 			return telephonyManager.getDataState() != TelephonyManager.DATA_DISCONNECTED;
 		}
