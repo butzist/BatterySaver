@@ -20,7 +20,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public abstract class MobileDataSwitch {
-	static final private String LOG = "org.thirdparty.MobileDataSwitch";
+	static final private String LOG = "de.szalkowski.adamsbatterysaver.thirdparty.MobileDataSwitch";
 
 	public static void setMobileDataEnabled(Context context, boolean enabled) throws Exception {
 		

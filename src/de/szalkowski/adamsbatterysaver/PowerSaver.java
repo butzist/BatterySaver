@@ -1,6 +1,13 @@
 package de.szalkowski.adamsbatterysaver;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import android.app.ActivityManager;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 public abstract class PowerSaver {
@@ -127,6 +134,10 @@ public abstract class PowerSaver {
 	
 	public boolean hasTraffic() {
 		boolean traffic = false;
+		
+		if(this.isWhitelisted())
+			return true;
+		
 		try {
 			traffic = this.doHasTraffic();
 		}
@@ -135,6 +146,33 @@ public abstract class PowerSaver {
 		}
 		
 		return traffic;
+	}
+
+	public boolean isWhitelisted() {
+		if(android.os.Build.VERSION.SDK_INT >= 11) {
+	        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+			ActivityManager am = (ActivityManager)this.context.getSystemService(Context.ACTIVITY_SERVICE);
+			Set<String> whiteList = settings.getStringSet(this.name + "_whitelist", new HashSet<String>());
+			if(whiteList.isEmpty())
+				return false;
+			
+			boolean onlyTop = settings.getBoolean("only_top_task", context.getResources().getBoolean(R.bool.pref_only_top_task_default));
+			List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(100);
+			for (ActivityManager.RunningTaskInfo task : tasks) {
+				if(task.numRunning < 1) continue;
+				String currentTaskPackage = task.topActivity.getPackageName();
+				
+				if(whiteList.contains(currentTaskPackage)) {
+					Log.d(LOG,currentTaskPackage + " is on whitelist");
+					return true;
+				} else {
+					if(onlyTop)
+						return false;
+				}
+			}
+		}
+		
+		return false;
 	}
 	
 	public boolean flagDisableWithScreenSet() {
