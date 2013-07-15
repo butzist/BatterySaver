@@ -1,11 +1,8 @@
 package de.szalkowski.adamsbatterysaver;
 
-import java.lang.reflect.Method;
-
 import org.thirdparty.MobileDataSwitch;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
 import android.net.TrafficStats;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
@@ -36,16 +33,7 @@ public class MobileDataPowerSaver extends PowerSaver {
 
 	@Override
 	protected boolean doIsEnabled() throws Exception {
-		try {
-		    ConnectivityManager conman = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		    Method setmeth = conman.getClass().getMethod("getMobileDataEnabled", boolean.class);
-		    boolean enabled = (Boolean)setmeth.invoke(conman);
-		    return !enabled;
-		}
-		catch(Exception e) {
-			TelephonyManager telephonyManager = (TelephonyManager) this.context.getSystemService(Context.TELEPHONY_SERVICE);
-			return telephonyManager.getDataState() == TelephonyManager.DATA_DISCONNECTED;
-		}
+		return !MobileDataSwitch.getMobileDataEnabled(context);
 	}
 
 	@Override

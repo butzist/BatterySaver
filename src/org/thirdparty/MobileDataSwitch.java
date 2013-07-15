@@ -1,8 +1,13 @@
 /**
  * Based on code from Stackoverflow.com under CC BY-SA 3.0
- * Url:  http://stackoverflow.com/questions/3644144/how-to-disable-mobile-data-on-android
- * By: http://stackoverflow.com/users/410724/vladimir-sorokin
- * and http://stackoverflow.com/users/167269/phanikumar
+ * Url: http://stackoverflow.com/questions/3644144/how-to-disable-mobile-data-on-android
+ * By:  http://stackoverflow.com/users/410724/vladimir-sorokin
+ * and  http://stackoverflow.com/users/167269/phanikumar
+ * 
+ * and
+ * 
+ * Url: http://stackoverflow.com/questions/12806709/android-how-to-tell-if-mobile-network-data-is-enabled-or-disabled-even-when
+ * By:  http://stackoverflow.com/users/769265/david-wasser
  */
 
 package org.thirdparty;
@@ -22,6 +27,7 @@ public abstract class MobileDataSwitch {
 		try {
 		    ConnectivityManager conman = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		    Method setmeth = conman.getClass().getMethod("setMobileDataEnabled", boolean.class);
+		    setmeth.setAccessible(true);
 		    setmeth.invoke(conman, enabled);
 		}
 		catch(Exception e) {
@@ -54,6 +60,23 @@ public abstract class MobileDataSwitch {
 			catch(Exception ee) {
 				Log.e(LOG, "setMobileDataEnabled failed");
 			}
+		}
+	}
+	
+	public static boolean getMobileDataEnabled(Context context) throws Exception {
+		try {
+		    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+	        Class<?> cmClass = Class.forName(cm.getClass().getName());
+	        Method method = cmClass.getDeclaredMethod("getMobileDataEnabled");
+	        method.setAccessible(true);
+	        boolean mobileDataEnabled = (Boolean)method.invoke(cmClass);
+
+	        return mobileDataEnabled;
+		}
+		catch(Exception e) {
+			Log.w(LOG,"Primary dectection method failed: "+e.toString());
+			TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+			return telephonyManager.getDataState() != TelephonyManager.DATA_DISCONNECTED;
 		}
 	}
 }
