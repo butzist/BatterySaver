@@ -46,7 +46,7 @@ public class WidgetProvider extends AppWidgetProvider {
 		//	intent.setAction(MainService.ACTION_DISABLE);
 		//}
 		//PendingIntent pending = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		Intent intent = new Intent(context,MainActivity.class);
+		Intent intent = new Intent(context,MainFragment.class);
 		PendingIntent pending = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		views.setOnClickPendingIntent(R.id.widgetImage, pending);
 		appWidgetManager.updateAppWidget(widgetId, views);

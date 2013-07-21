@@ -19,6 +19,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.util.Log;
 
+@SuppressLint("NewApi")
 public class WhiteListPreferenceActivity extends PreferenceActivity {
 	protected PreferenceScreen screen;
 	static private final String LOG = "de.szalkowski.adamsbatterysaver.WhiteListPreferenceActivity";
@@ -35,6 +36,7 @@ public class WhiteListPreferenceActivity extends PreferenceActivity {
 		        public void onCreate(final Bundle savedInstanceState)
 		        {
 		            super.onCreate(savedInstanceState);
+		            getActionBar().setDisplayHomeAsUpEnabled(true);
 		            
 		            PreferenceScreen screen = this.getPreferenceManager().createPreferenceScreen(WhiteListPreferenceActivity.this);
 		            fillWhiteList(screen,WhiteListPreferenceActivity.this);

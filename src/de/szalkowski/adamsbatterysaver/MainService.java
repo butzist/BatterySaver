@@ -110,7 +110,7 @@ public class MainService extends Service {
 		if(foreground == this.in_foreground) return;
 		
 		if(foreground) {
-	        Intent activity = new Intent(this.getApplicationContext(),MainActivity.class);
+	        Intent activity = new Intent(this.getApplicationContext(),MainFragment.class);
 	        PendingIntent pending_activity = PendingIntent.getActivity(this, 0, activity, PendingIntent.FLAG_UPDATE_CURRENT);
 
 	        NotificationCompat.Builder builder =
