@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity" >
+    tools:context=".MainFragment" >
 
 	<LinearLayout android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
@@ -126,18 +126,20 @@
 	            android:id="@+id/tableRow2"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content" >
-	
-	            <TextView
+
+	            <ImageView
+	                android:id="@+id/imageView1"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-	                android:layout_gravity="right|center_vertical"
-	                android:text="@string/wifi"
-	                android:textAppearance="?android:attr/textAppearanceMedium" />
+	                android:layout_gravity="center"
+	                android:contentDescription="@string/wifi"
+	                android:src="@drawable/device_access_network_wifi" />
 	
 	            <CheckBox
 	                android:id="@+id/CheckBoxWifiDisable"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
+	                android:layout_gravity="center"
 	                android:onClick="onCheckboxDisable" />
 	
 	            <CheckBox
@@ -176,18 +178,20 @@
 	            android:id="@+id/tableRow3"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content" >
-	
-	            <TextView
+
+	            <ImageView
+	                android:id="@+id/imageView2"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-	                android:layout_gravity="right|center_vertical"
-	                android:text="@string/data"
-	                android:textAppearance="?android:attr/textAppearanceMedium" />
+	                android:layout_gravity="center"
+	                android:contentDescription="@string/data"
+	                android:src="@drawable/device_access_network_cell" />
 	
 	            <CheckBox
 	                android:id="@+id/CheckBoxDataDisable"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
+	                android:layout_gravity="center"
 	                android:onClick="onCheckboxDisable" />
 	
 	            <CheckBox
@@ -226,18 +230,20 @@
 	            android:id="@+id/tableRow4"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content" >
-	
-	            <TextView
+
+	            <ImageView
+	                android:id="@+id/imageView3"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-	                android:layout_gravity="right|center_vertical"
-	                android:text="@string/bluetooth"
-	                android:textAppearance="?android:attr/textAppearanceMedium" />
+	                android:layout_gravity="center"
+	                android:contentDescription="@string/bluetooth"
+	                android:src="@drawable/device_access_bluetooth" />
 	
 	            <CheckBox
 	                android:id="@+id/CheckBoxBlueDisable"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
+	                android:layout_gravity="center"
 	                android:onClick="onCheckboxDisable" />
 	
 	            <CheckBox
@@ -276,18 +282,20 @@
 	            android:id="@+id/tableRow5"
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content" >
-	
-	            <TextView
+
+	            <ImageView
+	                android:id="@+id/imageView4"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-	                android:layout_gravity="right|center_vertical"
-	                android:text="@string/sync"
-	                android:textAppearance="?android:attr/textAppearanceMedium" />
+	                android:layout_gravity="center"
+	                android:contentDescription="@string/sync"
+	                android:src="@drawable/navigation_refresh" />
 	
 	            <CheckBox
 	                android:id="@+id/CheckBoxSyncDisable"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
+	                android:layout_gravity="center"
 	                android:onClick="onCheckboxDisable" />
 	
 	            <CheckBox
@@ -321,6 +329,7 @@
 	                android:layout_gravity="center" />
 	
 	            </TableRow>
+
 	    </TableLayout>
 	
 	    <LinearLayout

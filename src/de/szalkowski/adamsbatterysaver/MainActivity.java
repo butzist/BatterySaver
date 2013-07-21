@@ -5,10 +5,13 @@ import java.util.Calendar;
 import org.thirdparty.AdvancedSettingsActivity;
 
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.DialogFragment;
@@ -17,7 +20,6 @@ import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -43,10 +45,6 @@ public class MainActivity extends FragmentActivity {
     @Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		if(android.os.Build.VERSION.SDK_INT >= 11) {
-			this.requestWindowFeature(Window.FEATURE_ACTION_BAR);
-		}
-
 		setContentView(R.layout.activity_main);
         
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
@@ -108,6 +106,20 @@ public class MainActivity extends FragmentActivity {
         	Toast.makeText(this.getApplicationContext(), text, Toast.LENGTH_LONG).show();
         }
     }
+    
+	/**
+	 * Backward-compatible version of {@link ActionBar#getThemedContext()} that
+	 * simply returns the {@link android.app.Activity} if
+	 * <code>getThemedContext</code> is unavailable.
+	 */
+	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+	private Context getActionBarThemedContextCompat() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+			return getActionBar().getThemedContext();
+		} else {
+			return this;
+		}
+	}
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
