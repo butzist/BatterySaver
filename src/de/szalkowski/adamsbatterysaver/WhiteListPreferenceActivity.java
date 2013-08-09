@@ -19,6 +19,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.util.Log;
 
+@SuppressLint("NewApi")
 public class WhiteListPreferenceActivity extends PreferenceActivity {
 	protected PreferenceScreen screen;
 	static private final String LOG = "de.szalkowski.adamsbatterysaver.WhiteListPreferenceActivity";

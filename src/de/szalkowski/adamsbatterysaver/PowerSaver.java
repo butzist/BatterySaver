@@ -3,7 +3,7 @@ package de.szalkowski.adamsbatterysaver;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -148,6 +148,7 @@ public abstract class PowerSaver {
 		return traffic;
 	}
 
+	@SuppressLint("NewApi")
 	public boolean isWhitelisted() {
 		if(android.os.Build.VERSION.SDK_INT >= 11) {
 	        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
