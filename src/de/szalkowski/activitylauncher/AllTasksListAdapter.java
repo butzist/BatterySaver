@@ -24,15 +24,20 @@ public class AllTasksListAdapter extends BaseExpandableListAdapter {
 	protected Map<Pair<Integer,Integer>,Integer> index = null;
 	protected Context context;
 	
-	public AllTasksListAdapter(Context context) {
+	public AllTasksListAdapter(Context context, AllTasksListAsyncProvider.Updater updater) {
 		this.context = context;
 		PackageManager pm = context.getPackageManager();
 		List<PackageInfo> all_packages = pm.getInstalledPackages(PackageManager.GET_ACTIVITIES);
 		this.activities = new ArrayList<MyActivityInfo>(all_packages.size()*3);
 		this.packages = new ArrayList<MyPackageInfo>(all_packages.size());
 		this.index = new HashMap<Pair<Integer,Integer>, Integer>(all_packages.size()*3);
+		updater.updateMax(all_packages.size());
+		updater.update(0);
 		
-		for(PackageInfo pack : all_packages) {
+		for(int i=0; i < all_packages.size(); ++i) {
+			updater.update(i+1);
+			PackageInfo pack = all_packages.get(i);
+			
 			if(pack.activities == null) continue;
 			int n_activities = 0;
 			int pack_pos = this.packages.size();

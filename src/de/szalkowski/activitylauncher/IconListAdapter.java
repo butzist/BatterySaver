@@ -21,14 +21,19 @@ public class IconListAdapter extends BaseAdapter {
 	private Context context;
 	private PackageManager pm;
 
-	public IconListAdapter(Context context) {
+	public IconListAdapter(Context context, IconListAsyncProvider.Updater updater) {
 		TreeSet<String> icons = new TreeSet<String>();
 		
 		this.context = context;
 		this.pm = context.getPackageManager();
 		List<PackageInfo> all_packages = this.pm.getInstalledPackages(PackageManager.GET_ACTIVITIES);
+		updater.updateMax(all_packages.size());
+		updater.update(0);
 		
-		for(PackageInfo pack : all_packages) {
+		for(int i=0; i< all_packages.size(); ++i) {
+			updater.update(i+1);
+			
+			PackageInfo pack = all_packages.get(i);
 			if(pack.activities == null) continue;
 
 			for(ActivityInfo activity : pack.activities) {

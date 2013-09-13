@@ -12,9 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class IconPickerDialogFragment extends DialogFragment {
+public class IconPickerDialogFragment extends DialogFragment implements IconListAsyncProvider.Listener {
 	public interface IconPickerListener {
 		public void iconPicked(String icon);		
 	}
@@ -30,6 +32,9 @@ public class IconPickerDialogFragment extends DialogFragment {
 			} catch(ClassCastException e) {}
 		}
 		super.onAttach(activity);
+		
+		IconListAsyncProvider provider = new IconListAsyncProvider(this.getActivity(), this);
+		provider.execute();
 	}
 	
 	public void attachIconPickerListener(IconPickerListener listener) {
@@ -44,7 +49,6 @@ public class IconPickerDialogFragment extends DialogFragment {
 		View view = inflater.inflate(R.layout.icon_picker, null);
 		
 		this.grid = (GridView)view;
-		this.grid.setAdapter(new IconListAdapter(getActivity()));
 		this.grid.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> view, View item, int index,
@@ -55,7 +59,9 @@ public class IconPickerDialogFragment extends DialogFragment {
 				}
 			}
 		});
-
+		
+		//XXX view = new ProgressBar(getActivity());
+		
 		builder.setTitle(R.string.title_dialog_icon_picker)
 		.setView(view)
 		.setNegativeButton(android.R.string.cancel, new OnClickListener() {
@@ -64,8 +70,17 @@ public class IconPickerDialogFragment extends DialogFragment {
 				IconPickerDialogFragment.this.getDialog().cancel();
 			}
 		});
-
-
+		
 		return builder.create();
+	}
+
+	@Override
+	public void onIconListProviderFinished(IconListAsyncProvider taskProvider,
+			IconListAdapter adapter) {
+		try {
+			this.grid.setAdapter(taskProvider.get());
+		} catch (Exception e) {
+			Toast.makeText(this.getActivity(), R.string.error_icons, Toast.LENGTH_SHORT).show();
+		}
 	}
 }
