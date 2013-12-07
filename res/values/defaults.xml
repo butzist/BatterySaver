@@ -1,7 +1,7 @@
 <resources>
-    <string name="url_source">http://sourceforge.net/projects/batterysaver/</string>
-    <string name="url_translation">http://crowdin.net/project/batterysaver/invite</string>
-    <string name="url_bugs">https://sourceforge.net/p/batterysaver/tickets/</string>
+    <string translatable="false" name="url_source">http://sourceforge.net/projects/batterysaver/</string>
+    <string translatable="false" name="url_translation">http://crowdin.net/project/batterysaver/invite</string>
+    <string translatable="false" name="url_bugs">https://sourceforge.net/p/batterysaver/tickets/</string>
     
     <integer name="pref_from_hour_default">22</integer>
     <integer name="pref_to_hour_default">8</integer>
