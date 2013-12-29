@@ -23,6 +23,19 @@
   <string name="service_toggle">Servicio de encendido/apagado</string>
   <string name="status_active">activo de ahorro de energía</string>
   <string name="status_inactive">inactivo de ahorro de energía</string>
+  <string name="currently_running">actualmente en ejecución</string>
+  <string name="pref_timeout_title">Tiempo de espera</string>
+  <string name="pref_timeout_summary">Esperar %d segundos antes de poder activar el modo ahorro</string>
+  <string name="pref_timeout_message">Segundos antes de poder activar modo de ahorro (más = más tiempo para revisar cuentas = más consumo de energía)</string>
+  <string name="pref_interval_short_title">Intervalo corto</string>
+  <string name="pref_interval_short_summary">Sincronizar cuentas tras %d  minutos desde la primera vez</string>
+  <string name="pref_interval_short_message">Minutos a esperar para comprobar cuentas por primera vez después de habilitar el modo ahorro de energía (por ejemplo, para comprobar nuevos mensajes de chat)</string>
+  <string name="pref_traffic_limit_title">Límite de tráfico</string>
+  <string name="pref_traffic_limit_summary">Mantener activo el Wi-Fi y la conexión de datos móvil mientras está transmitiendo más de %d bytes/minuto</string>
+  <string name="pref_traffic_limit_message">Umbral en bytes/minuto para inhibir el modo ahorro de energía</string>
+  <string name="pref_wifi_whitelist_title">Lista blanca de Wi-Fi</string>
+  <string name="pref_wifi_whitelist_summary">Selecciona las aplicaciones que no quieres que se desconecten del Wi-Fi automáticamente</string>
+  <string name="pref_only_top_task_summary_false">Considerar todas las tareas en ejecución para la lista blanca</string>
   <string name="action_settings">Configuración avanzada</string>
   <string name="action_view_source">Ver código fuente</string>
   <string name="action_view_translation">Ayudar a traducir!</string>
