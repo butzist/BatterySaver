@@ -209,67 +209,69 @@ public class MainActivity extends FragmentActivity {
         button.setText(this.getText(R.string.to) + " " + DateFormat.getTimeFormat(this).format(time.getTime()));
 	}
 	
-	public void showFromTimePicker(View v) {
-		class TimePickerFragment_From extends DialogFragment
-		implements TimePickerDialog.OnTimeSetListener {
+	public static class TimePickerFragment_From extends DialogFragment
+	implements TimePickerDialog.OnTimeSetListener {
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+	        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
+	        
+			int hour = settings.getInt(SETTINGS_NIGHTMODE_FROM_HOUR, this.getResources().getInteger(R.integer.pref_from_hour_default));
+			int minute = settings.getInt(SETTINGS_NIGHTMODE_FROM_MINUTE, 0);
 
-			@Override
-			public Dialog onCreateDialog(Bundle savedInstanceState) {
-		        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
-		        
-				int hour = settings.getInt(SETTINGS_NIGHTMODE_FROM_HOUR, this.getResources().getInteger(R.integer.pref_from_hour_default));
-				int minute = settings.getInt(SETTINGS_NIGHTMODE_FROM_MINUTE, 0);
-
-				// Create a new instance of TimePickerDialog and return it
-				return new TimePickerDialog(getActivity(), this, hour, minute,
-						DateFormat.is24HourFormat(getActivity()));
-			}
-
-			public void onTimeSet(TimePicker view, int hour, int minute) {
-		        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
-		        SharedPreferences.Editor editor = settings.edit();
-		        
-				editor.putInt(SETTINGS_NIGHTMODE_FROM_HOUR, hour);
-				editor.putInt(SETTINGS_NIGHTMODE_FROM_MINUTE, minute);
-				
-				editor.commit();
-				setFromTime();
-			}
+			// Create a new instance of TimePickerDialog and return it
+			return new TimePickerDialog(getActivity(), this, hour, minute,
+					DateFormat.is24HourFormat(getActivity()));
 		}
-		
+
+		public void onTimeSet(TimePicker view, int hour, int minute) {
+	        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
+	        SharedPreferences.Editor editor = settings.edit();
+	        
+			editor.putInt(SETTINGS_NIGHTMODE_FROM_HOUR, hour);
+			editor.putInt(SETTINGS_NIGHTMODE_FROM_MINUTE, minute);
+			
+			editor.commit();
+			
+			MainActivity mainActivity = (MainActivity)getActivity();
+			mainActivity.setFromTime();
+		}
+	}
+	
+	public static class TimePickerFragment_To extends DialogFragment
+	implements TimePickerDialog.OnTimeSetListener {
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+	        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
+	        
+			int hour = settings.getInt(SETTINGS_NIGHTMODE_TO_HOUR, this.getResources().getInteger(R.integer.pref_to_hour_default));
+			int minute = settings.getInt(SETTINGS_NIGHTMODE_TO_MINUTE, 0);
+
+			// Create a new instance of TimePickerDialog and return it
+			return new TimePickerDialog(getActivity(), this, hour, minute,
+					DateFormat.is24HourFormat(getActivity()));
+		}
+
+		public void onTimeSet(TimePicker view, int hour, int minute) {
+	        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
+	        SharedPreferences.Editor editor = settings.edit();
+	        
+			editor.putInt(SETTINGS_NIGHTMODE_TO_HOUR, hour);
+			editor.putInt(SETTINGS_NIGHTMODE_TO_MINUTE, minute);
+			
+			editor.commit();
+			
+			MainActivity mainActivity = (MainActivity)getActivity();
+			mainActivity.setToTime();
+		}
+	}
+	
+	public void showFromTimePicker(View v) {
 		DialogFragment newFragment = new TimePickerFragment_From();
 	    newFragment.show(getSupportFragmentManager(), "fromPicker");
 	}
 
 	public void showToTimePicker(View v) {
-		class TimePickerFragment_To extends DialogFragment
-		implements TimePickerDialog.OnTimeSetListener {
-
-			@Override
-			public Dialog onCreateDialog(Bundle savedInstanceState) {
-		        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
-		        
-				int hour = settings.getInt(SETTINGS_NIGHTMODE_TO_HOUR, this.getResources().getInteger(R.integer.pref_to_hour_default));
-				int minute = settings.getInt(SETTINGS_NIGHTMODE_TO_MINUTE, 0);
-
-				// Create a new instance of TimePickerDialog and return it
-				return new TimePickerDialog(getActivity(), this, hour, minute,
-						DateFormat.is24HourFormat(getActivity()));
-			}
-
-			public void onTimeSet(TimePicker view, int hour, int minute) {
-		        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
-		        SharedPreferences.Editor editor = settings.edit();
-		        
-				editor.putInt(SETTINGS_NIGHTMODE_TO_HOUR, hour);
-				editor.putInt(SETTINGS_NIGHTMODE_TO_MINUTE, minute);
-				
-				editor.commit();
-				setToTime();
-			}
-		}
-		
-		
 		DialogFragment newFragment = new TimePickerFragment_To();
 	    newFragment.show(getSupportFragmentManager(), "toPicker");
 	}
