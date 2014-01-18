@@ -1,6 +1,10 @@
-package de.szalkowski.adamsbatterysaver;
+package de.szalkowski.adamsbatterysaver.devices;
 
 import org.thirdparty.MobileDataSwitch;
+
+import de.szalkowski.adamsbatterysaver.R;
+import de.szalkowski.adamsbatterysaver.R.integer;
+import de.szalkowski.adamsbatterysaver.ui.MainActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.TrafficStats;

@@ -1,9 +1,11 @@
-package de.szalkowski.adamsbatterysaver;
+package de.szalkowski.adamsbatterysaver.ui;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.szalkowski.adamsbatterysaver.R;
+import de.szalkowski.adamsbatterysaver.R.string;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;

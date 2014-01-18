@@ -31,7 +31,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="de.szalkowski.adamsbatterysaver.MainActivity"
+            android:name="de.szalkowski.adamsbatterysaver.ui.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                <action android:name="android.intent.action.MAIN" />
@@ -39,7 +39,7 @@
             </intent-filter>
         </activity>
         <activity android:name="org.thirdparty.AdvancedSettingsActivity"></activity>
-        <activity android:name="de.szalkowski.adamsbatterysaver.WhiteListPreferenceActivity"></activity>
+        <activity android:name="de.szalkowski.adamsbatterysaver.ui.WhiteListPreferenceActivity"></activity>
         <service android:name="MainService"></service>
         <receiver android:name="AutoStartReceiver" android:label="@string/app_name">
             <intent-filter>

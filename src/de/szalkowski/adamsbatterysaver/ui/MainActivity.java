@@ -1,9 +1,16 @@
-package de.szalkowski.adamsbatterysaver;
+package de.szalkowski.adamsbatterysaver.ui;
 
 import java.util.Calendar;
 
 import org.thirdparty.AdvancedSettingsActivity;
 
+import de.szalkowski.adamsbatterysaver.R;
+import de.szalkowski.adamsbatterysaver.devices.BluetoothPowerSaver;
+import de.szalkowski.adamsbatterysaver.devices.MobileDataPowerSaver;
+import de.szalkowski.adamsbatterysaver.devices.PowerSaver;
+import de.szalkowski.adamsbatterysaver.devices.SyncPowerSaver;
+import de.szalkowski.adamsbatterysaver.devices.WifiPowerSaver;
+import de.szalkowski.adamsbatterysaver.service.MainService;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;

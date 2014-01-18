@@ -1,4 +1,4 @@
-package de.szalkowski.adamsbatterysaver;
+package de.szalkowski.adamsbatterysaver.service;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

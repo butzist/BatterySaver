@@ -1,4 +1,4 @@
-package de.szalkowski.adamsbatterysaver;
+package de.szalkowski.adamsbatterysaver.devices;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;

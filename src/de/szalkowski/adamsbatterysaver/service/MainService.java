@@ -1,9 +1,16 @@
-package de.szalkowski.adamsbatterysaver;
+package de.szalkowski.adamsbatterysaver.service;
 
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.szalkowski.adamsbatterysaver.R;
+import de.szalkowski.adamsbatterysaver.devices.BluetoothPowerSaver;
+import de.szalkowski.adamsbatterysaver.devices.MobileDataPowerSaver;
+import de.szalkowski.adamsbatterysaver.devices.PowerSaver;
+import de.szalkowski.adamsbatterysaver.devices.SyncPowerSaver;
+import de.szalkowski.adamsbatterysaver.devices.WifiPowerSaver;
+import de.szalkowski.adamsbatterysaver.ui.MainActivity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -65,11 +72,6 @@ public class MainService extends Service {
         this.powerstate_receiver = new PowerStateReceiver();
         this.registerReceiver(this.powerstate_receiver, filter);
         
-		WidgetProvider.updateAllWidgets(this);
-
-		//if(!WidgetProvider.hasWidgets(this)) {
-        //	toForeground(true);
-        //}
         toForeground(true);
 
         // check current power state
@@ -393,8 +395,6 @@ public class MainService extends Service {
 		
 		this.unregisterReceiver(this.powerstate_receiver);
 		MainService.is_running = false;
-		
-		WidgetProvider.updateAllWidgets(this);
 		
 		if(MainService.wake_lock.isHeld()) {
 			MainService.wake_lock.release();
