@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.szalkowski.adamsbatterysaver"
-    android:versionCode="11"
-    android:versionName="1.6" >
+    android:versionCode="12"
+    android:versionName="2.0" >
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="19" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
@@ -41,7 +41,7 @@
         <activity android:name="org.thirdparty.AdvancedSettingsActivity"></activity>
         <activity android:name="de.szalkowski.adamsbatterysaver.ui.WhiteListPreferenceActivity"></activity>
         <service android:name="MainService"></service>
-        <receiver android:name="AutoStartReceiver" android:label="@string/app_name">
+        <receiver android:name="service.AutoStartReceiver" android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -55,7 +55,7 @@
                 <data android:scheme="package" android:path="de.szalkowski.adamsbatterysaver"/>
                 </intent-filter>
             </receiver>
-        <receiver android:label="@string/app_name" android:name="PowerStateReceiver">
+        <receiver android:name="service.PowerStateReceiver" android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
@@ -63,18 +63,12 @@
                 <action android:name="android.intent.action.SCREEN_OFF"/>
             </intent-filter>
         </receiver>
-        <receiver android:name="AlarmReceiver">
+        <receiver android:name="service.AlarmReceiver" android:label="@string/app_name">
             <intent-filter>
                 <action android:name="de.szalkowski.adamsbatterysaver.WAKEUP_ACTION"/>
                 <action android:name="de.szalkowski.adamsbatterysaver.WAKEUP_TIMEOUT_ACTION"/>
                 <action android:name="de.szalkowski.adamsbatterysaver.SCREEN_TIMEOUT_ACTION"/>
                 <action android:name="de.szalkowski.adamsbatterysaver.POWER_TIMEOUT_ACTION"/>
-            </intent-filter>
-        </receiver>
-        <receiver android:name="WidgetProvider">
-            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_provider"/>
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
         </receiver>
     </application>

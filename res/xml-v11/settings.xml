@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    <de.szalkowski.adamsbatterysaver.IntegerDialogPreference android:key="timeout" android:title="@string/pref_timeout_title" android:summary="@string/pref_timeout_summary" android:defaultValue="@integer/pref_timeout_default" android:dialogMessage="@string/pref_timeout_message" />
-    <de.szalkowski.adamsbatterysaver.IntegerDialogPreference android:key="interval_short" android:title="@string/pref_interval_short_title" android:summary="@string/pref_interval_short_summary" android:defaultValue="@integer/pref_interval_short_default"  android:dialogMessage="@string/pref_interval_short_message"/>
-    <de.szalkowski.adamsbatterysaver.IntegerDialogPreference android:key="traffic_limit" android:title="@string/pref_traffic_limit_title" android:summary="@string/pref_traffic_limit_summary" android:defaultValue="@integer/pref_traffic_limit_default" android:dialogMessage="@string/pref_traffic_limit_message"/>
+    <de.szalkowski.adamsbatterysaver.ui.IntegerDialogPreference android:key="timeout" android:title="@string/pref_timeout_title" android:summary="@string/pref_timeout_summary" android:defaultValue="@integer/pref_timeout_default" android:dialogMessage="@string/pref_timeout_message" />
+    <de.szalkowski.adamsbatterysaver.ui.IntegerDialogPreference android:key="interval_short" android:title="@string/pref_interval_short_title" android:summary="@string/pref_interval_short_summary" android:defaultValue="@integer/pref_interval_short_default"  android:dialogMessage="@string/pref_interval_short_message"/>
+    <de.szalkowski.adamsbatterysaver.ui.IntegerDialogPreference android:key="traffic_limit" android:title="@string/pref_traffic_limit_title" android:summary="@string/pref_traffic_limit_summary" android:defaultValue="@integer/pref_traffic_limit_default" android:dialogMessage="@string/pref_traffic_limit_message"/>
     <Preference android:title="@string/pref_wifi_whitelist_title" android:summary="@string/pref_wifi_whitelist_summary">
-        <intent android:targetPackage="de.szalkowski.adamsbatterysaver" android:targetClass="de.szalkowski.adamsbatterysaver.WhiteListPreferenceActivity" />
+        <intent android:targetPackage="de.szalkowski.adamsbatterysaver" android:targetClass="de.szalkowski.adamsbatterysaver.ui.WhiteListPreferenceActivity" />
     </Preference>
     <CheckBoxPreference android:key="only_top_task" android:title="@string/pref_only_top_task_title" android:summaryOn="@string/pref_only_top_task_summary_true" android:summaryOff="@string/pref_only_top_task_summary_false" android:defaultValue="@bool/pref_only_top_task_default"/>
 </PreferenceScreen>
