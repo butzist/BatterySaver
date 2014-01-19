@@ -4,9 +4,9 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.szalkowski.adamsbatterysaver.Constants;
 import de.szalkowski.adamsbatterysaver.Logger;
 import de.szalkowski.adamsbatterysaver.R;
+import de.szalkowski.adamsbatterysaver.SettingsManager;
 import de.szalkowski.adamsbatterysaver.devices.BluetoothPowerSaver;
 import de.szalkowski.adamsbatterysaver.devices.MobileDataPowerSaver;
 import de.szalkowski.adamsbatterysaver.devices.PowerSaver;
@@ -20,12 +20,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.BatteryManager;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
 public class MainService extends Service {
@@ -48,6 +46,7 @@ public class MainService extends Service {
 	private boolean wakeup_active = false;
 	private boolean in_foreground = false;
 	private List<PowerSaver> power_savers;
+	private SettingsManager settings;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -89,20 +88,20 @@ public class MainService extends Service {
 			MainService.wake_lock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Alarm received");
 		}
 		
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        settings = SettingsManager.getSettingsManager(this.getApplicationContext());
 		
 		this.power_savers = new LinkedList<PowerSaver>();
 
-		WifiPowerSaver wifi = new WifiPowerSaver(this, settings.getInt("wifi_flags", WifiPowerSaver.DEFAULT_FLAGS));
+		WifiPowerSaver wifi = new WifiPowerSaver(this);
 		this.power_savers.add(wifi);
 		
-		MobileDataPowerSaver data = new MobileDataPowerSaver(this, settings.getInt("data_flags", MobileDataPowerSaver.DEFAULT_FLAGS));
+		MobileDataPowerSaver data = new MobileDataPowerSaver(this);
 		this.power_savers.add(data);
 		
-		SyncPowerSaver sync = new SyncPowerSaver(this, settings.getInt("sync_flags", SyncPowerSaver.DEFAULT_FLAGS));
+		SyncPowerSaver sync = new SyncPowerSaver(this);
 		this.power_savers.add(sync);
 		
-		BluetoothPowerSaver blue = new BluetoothPowerSaver(this, settings.getInt("blue_flags", BluetoothPowerSaver.DEFAULT_FLAGS));
+		BluetoothPowerSaver blue = new BluetoothPowerSaver(this);
 		this.power_savers.add(blue);
 		
 		setWakeupTimeout();
@@ -129,26 +128,10 @@ public class MainService extends Service {
 		this.in_foreground = foreground;
 	}
 	
-	protected void updateSettings() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-		
+	protected void updateSettings() {		
 		for(PowerSaver saver : this.power_savers) {
-			if(saver.getClass() == WifiPowerSaver.class) {
-				saver.setFlags(settings.getInt("wifi_flags", WifiPowerSaver.DEFAULT_FLAGS));
-			} else if(saver.getClass() == MobileDataPowerSaver.class) {
-				saver.setFlags(settings.getInt("data_flags", MobileDataPowerSaver.DEFAULT_FLAGS));
-			} else if(saver.getClass() == SyncPowerSaver.class) {
-				saver.setFlags(settings.getInt("sync_flags", SyncPowerSaver.DEFAULT_FLAGS));
-			} else if(saver.getClass() == BluetoothPowerSaver.class) {
-				saver.setFlags(settings.getInt("blue_flags", BluetoothPowerSaver.DEFAULT_FLAGS));
-			}
+			saver.updateSettings();
 		}
-		
-        //if(!WidgetProvider.hasWidgets(this)) {
-        //	toForeground(true);
-        //} else {
-        //	toForeground(false);
-        //}
 		
 		setWakeup(false);
 		setWakeupTimeout();
@@ -206,12 +189,10 @@ public class MainService extends Service {
 		if(this.wakeup_timeout_active) {
 			cancelWakeupTimeout();
 		}
-		
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-		int interval = settings.getInt(Constants.SETTINGS_TIMEOUT, this.getResources().getInteger(R.integer.pref_timeout_default))*1000;
+		int interval = settings.getTimeout()*1000;
 		Intent intent = new Intent(MainService.ACTION_WAKEUP_TIMEOUT);
 		PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		alarm.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+interval, pending);
@@ -224,11 +205,9 @@ public class MainService extends Service {
 			cancelScreenTimeout();
 		}
 		
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-		int interval = settings.getInt(Constants.SETTINGS_TIMEOUT, this.getResources().getInteger(R.integer.pref_timeout_default))*1000;
+		int interval = settings.getTimeout()*1000;
 		Intent intent = new Intent(MainService.ACTION_SCREEN_TIMEOUT);
 		PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		alarm.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+interval, pending);
@@ -241,11 +220,9 @@ public class MainService extends Service {
 			cancelPowerTimeout();
 		}
 		
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-		int interval = settings.getInt(Constants.SETTINGS_TIMEOUT, this.getResources().getInteger(R.integer.pref_timeout_default))*1000;
+		int interval = settings.getTimeout()*1000;
 		Intent intent = new Intent(MainService.ACTION_POWER_TIMEOUT);
 		PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		alarm.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+interval, pending);
@@ -258,12 +235,10 @@ public class MainService extends Service {
 			cancelWakeup();
 		}
 		
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-		
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-		int interval = settings.getInt(Constants.SETTINGS_INTERVAL, this.getResources().getInteger(R.integer.pref_interval_default)) * 60000;
-		int first_interval = settings.getInt(Constants.SETTINGS_INTERVAL_SHORT, this.getResources().getInteger(R.integer.pref_interval_short_default)) * 60000;
+		int interval = settings.getInterval() * 60000;
+		int first_interval = settings.getShortInterval() * 60000;
 		if(!short_interval) {
 			first_interval = interval;
 		}
@@ -280,11 +255,9 @@ public class MainService extends Service {
 			cancelWakeup();
 		}
 		
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-		
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-		int interval = settings.getInt(Constants.SETTINGS_INTERVAL, this.getResources().getInteger(R.integer.pref_interval_default)) * 60000;
+		int interval = settings.getInterval() * 60000;
 		long wakeup_time = getWakeupTime();
 		
 		Intent intent = new Intent(MainService.ACTION_WAKEUP);
@@ -324,17 +297,15 @@ public class MainService extends Service {
 	}
 
 	protected boolean isSleepingTime() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-		
 		Calendar from = Calendar.getInstance();
-		from.set(Calendar.HOUR_OF_DAY, settings.getInt(Constants.SETTINGS_NIGHTMODE_FROM_HOUR, this.getResources().getInteger(R.integer.pref_from_hour_default)));
-		from.set(Calendar.MINUTE, settings.getInt(Constants.SETTINGS_NIGHTMODE_FROM_MINUTE, 0));
+		from.set(Calendar.HOUR_OF_DAY, settings.getNightModeFromHour());
+		from.set(Calendar.MINUTE, settings.getNightModeFromMinute());
 		from.set(Calendar.SECOND, 0);
 		from.set(Calendar.MILLISECOND, 0);
 		
 		Calendar to = Calendar.getInstance();
-		to.set(Calendar.HOUR_OF_DAY, settings.getInt(Constants.SETTINGS_NIGHTMODE_TO_HOUR, this.getResources().getInteger(R.integer.pref_to_hour_default)));
-		to.set(Calendar.MINUTE, settings.getInt(Constants.SETTINGS_NIGHTMODE_TO_MINUTE, 0));
+		to.set(Calendar.HOUR_OF_DAY, settings.getNightModeToHour());
+		to.set(Calendar.MINUTE, settings.getNightModeToMinute());
 		to.set(Calendar.SECOND, 0);
 		to.set(Calendar.MILLISECOND, 0);
 
@@ -349,23 +320,21 @@ public class MainService extends Service {
 		}
 
 		// add interval time so that first wakeup can not fall into night time
-		now.add(Calendar.MINUTE, settings.getInt(Constants.SETTINGS_INTERVAL, this.getResources().getInteger(R.integer.pref_interval_default)));
+		now.add(Calendar.MINUTE, settings.getInterval());
 
 		return (now.after(from) && now.before(to));
 	}
 	
 	protected long getWakeupTime() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-		
 		Calendar from = Calendar.getInstance();
-		from.set(Calendar.HOUR_OF_DAY, settings.getInt(Constants.SETTINGS_NIGHTMODE_FROM_HOUR, this.getResources().getInteger(R.integer.pref_from_hour_default)));
-		from.set(Calendar.MINUTE, settings.getInt(Constants.SETTINGS_NIGHTMODE_FROM_MINUTE, 0));
+		from.set(Calendar.HOUR_OF_DAY, settings.getNightModeFromHour());
+		from.set(Calendar.MINUTE, settings.getNightModeFromMinute());
 		from.set(Calendar.SECOND, 0);
 		from.set(Calendar.MILLISECOND, 0);
 
 		Calendar to = Calendar.getInstance();
-		to.set(Calendar.HOUR_OF_DAY, settings.getInt(Constants.SETTINGS_NIGHTMODE_TO_HOUR, this.getResources().getInteger(R.integer.pref_to_hour_default)));
-		to.set(Calendar.MINUTE, settings.getInt(Constants.SETTINGS_NIGHTMODE_TO_MINUTE, 0));
+		to.set(Calendar.HOUR_OF_DAY, settings.getNightModeToHour());
+		to.set(Calendar.MINUTE, settings.getNightModeToMinute());
 		to.set(Calendar.SECOND, 0);
 		to.set(Calendar.MILLISECOND, 0);
 
@@ -472,11 +441,7 @@ public class MainService extends Service {
 			this.stopPowersave();
 			this.setWakeupTimeout();
 		} else if(intent.getAction().equals(MainService.ACTION_DISABLE)) {
-	        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-			SharedPreferences.Editor editor = settings.edit();
-			editor.putBoolean(Constants.SETTINGS_START_SERVICE, false);
-			editor.commit();
-
+			settings.setStartService(false);
 			stopSelf();
 		}
 		
@@ -484,8 +449,7 @@ public class MainService extends Service {
 			MainService.wake_lock.release();
 		}
 		
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-        if(!settings.getBoolean(Constants.SETTINGS_START_SERVICE, true)) {
+        if(!settings.getStartService()) {
         	Logger.warning("Server should not be running");
         	stopSelf();
         }

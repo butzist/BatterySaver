@@ -1,11 +1,9 @@
 package de.szalkowski.adamsbatterysaver.service;
 
-import de.szalkowski.adamsbatterysaver.Constants;
+import de.szalkowski.adamsbatterysaver.SettingsManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 public class AutoStartReceiver extends BroadcastReceiver {
 
@@ -15,8 +13,8 @@ public class AutoStartReceiver extends BroadcastReceiver {
 				intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED) ||
 				intent.getAction().equals(Intent.ACTION_PACKAGE_REPLACED)) {
 			Intent service = new Intent(context, de.szalkowski.adamsbatterysaver.service.MainService.class);
-	        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-			if(settings.getBoolean(Constants.SETTINGS_START_SERVICE, true)) {
+	        SettingsManager settings = SettingsManager.getSettingsManager(context.getApplicationContext());
+			if(settings.getStartService()) {
 				context.startService(service);
 			}
 		}

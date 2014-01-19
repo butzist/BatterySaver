@@ -1,13 +1,17 @@
 package de.szalkowski.adamsbatterysaver.devices;
 
+import de.szalkowski.adamsbatterysaver.SettingsManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 
 public class BluetoothPowerSaver extends PowerSaver {
 	static final public int DEFAULT_FLAGS = FLAG_DISABLE_WITH_POWER + FLAG_DISABLED_WHILE_TRAFFIC + FLAG_SAVE_STATE;
+	private SettingsManager settings;
 
-	public BluetoothPowerSaver(Context context, int flags) {
-		super(context, "bluetooth", flags);
+	public BluetoothPowerSaver(Context context) {
+		super(context, "bluetooth", DEFAULT_FLAGS);
+        settings = SettingsManager.getSettingsManager(context.getApplicationContext());
+        setFlags(settings.getBluetoothFlags(DEFAULT_FLAGS));
 	}
 
 	@Override
@@ -44,6 +48,8 @@ public class BluetoothPowerSaver extends PowerSaver {
 		return false;
 	}
 	
-	
-
+	@Override
+	protected void doUpdateSettings() throws Exception {
+        setFlags(settings.getBluetoothFlags(DEFAULT_FLAGS));
+	}
 }

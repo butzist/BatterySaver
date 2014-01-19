@@ -1,6 +1,7 @@
 package de.szalkowski.adamsbatterysaver.devices;
 
 import de.szalkowski.adamsbatterysaver.Logger;
+import de.szalkowski.adamsbatterysaver.SettingsManager;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
@@ -24,9 +25,12 @@ public class SyncPowerSaver extends PowerSaver {
 	
 	private BroadcastReceiver alarm_receiver;
 	private int retries = 1;
+	private SettingsManager settings;
 	
-	public SyncPowerSaver(Context context, int flags) {
-		super(context, "sync", flags);
+	public SyncPowerSaver(Context context) {
+		super(context, "sync", DEFAULT_FLAGS);
+        settings = SettingsManager.getSettingsManager(context.getApplicationContext());
+        setFlags(settings.getSyncFlags(DEFAULT_FLAGS));
 		
 		this.alarm_receiver = new BroadcastReceiver() {
 			@Override
@@ -109,5 +113,10 @@ public class SyncPowerSaver extends PowerSaver {
 		} else {
 			return ContentResolver.getCurrentSync() != null;
 		}
-	}	
+	}
+	
+	@Override
+	protected void doUpdateSettings() throws Exception {
+        setFlags(settings.getSyncFlags(DEFAULT_FLAGS));
+	}
 }

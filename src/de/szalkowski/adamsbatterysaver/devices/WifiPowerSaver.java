@@ -1,22 +1,22 @@
 package de.szalkowski.adamsbatterysaver.devices;
 
-import de.szalkowski.adamsbatterysaver.Constants;
 import de.szalkowski.adamsbatterysaver.Logger;
-import de.szalkowski.adamsbatterysaver.R;
+import de.szalkowski.adamsbatterysaver.SettingsManager;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.TrafficStats;
 import android.net.wifi.WifiManager;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 
 public class WifiPowerSaver extends PowerSaver {
 	static final public int DEFAULT_FLAGS = FLAG_DISABLE_WITH_SCREEN + FLAG_DISABLE_WITH_POWER + FLAG_DISABLE_ON_INTERVAL + FLAG_SAVE_STATE;
 	private long traffic;
 	private long time;
+	private SettingsManager settings;
 
-	public WifiPowerSaver(Context context, int flags) {
-		super(context, "wifi", flags);
+	public WifiPowerSaver(Context context) {
+		super(context, "wifi", DEFAULT_FLAGS);
+        settings = SettingsManager.getSettingsManager(context.getApplicationContext());
+        setFlags(settings.getWifiFlags(DEFAULT_FLAGS));
 	}
 
 	@Override
@@ -55,8 +55,7 @@ public class WifiPowerSaver extends PowerSaver {
 			this.time = SystemClock.elapsedRealtime();
 			this.traffic = TrafficStats.getTotalRxBytes() + TrafficStats.getTotalTxBytes() - TrafficStats.getMobileRxBytes() - TrafficStats.getMobileTxBytes();
 			
-	        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-			final long traffic_limit = (long)settings.getInt(Constants.SETTINGS_TRAFFIC_LIMIT, context.getResources().getInteger(R.integer.pref_traffic_limit_default));
+			final long traffic_limit = (long)settings.getTrafficLimit();
 			final double traffic_per_minute = traffic_diff/(time_diff/60000.0);
 			Logger.verbose("wifi traffic: " + traffic_per_minute + " bytes / minute ("+ traffic_diff + "/" + time_diff/1000.0 + "s)");
 			if(traffic_per_minute > traffic_limit) {
@@ -66,4 +65,9 @@ public class WifiPowerSaver extends PowerSaver {
 		return false;
 	}
 
+	
+	@Override
+	protected void doUpdateSettings() throws Exception {
+        setFlags(settings.getWifiFlags(DEFAULT_FLAGS));
+	}
 }

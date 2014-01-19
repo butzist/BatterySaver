@@ -200,8 +200,18 @@ public abstract class PowerSaver {
 		return (this.flags & FLAG_DISABLE) != 0;
 	}
 	
+	public void updateSettings() {
+		try {
+			doUpdateSettings();
+		}
+		catch(Exception e) {
+			Logger.error(name + " " + e.toString());
+		}
+	}
+	
 	abstract protected void doStartPowersave() throws Exception;
 	abstract protected void doStopPowersave() throws Exception;
 	abstract protected boolean doIsEnabled() throws Exception;
 	abstract protected boolean doHasTraffic() throws Exception;
+	abstract protected void doUpdateSettings() throws Exception;
 }
