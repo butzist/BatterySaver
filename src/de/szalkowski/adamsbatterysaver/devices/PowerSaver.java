@@ -4,17 +4,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.szalkowski.adamsbatterysaver.Logger;
 import de.szalkowski.adamsbatterysaver.R;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 public abstract class PowerSaver {
-	static private final String LOG = "de.szalkowski.adamsbatterysaver.PowerSaver";
-	
 	static public int FLAG_DISABLE_WITH_SCREEN = 0x1;
 	static public int FLAG_DISABLE_WITH_POWER = 0x2;
 	static public int FLAG_DISABLE_ON_INTERVAL = 0x4;
@@ -40,11 +38,11 @@ public abstract class PowerSaver {
 		
 		try {
 			this.isEnabled = this.isReallyEnabled();
-			Log.d(LOG, name + " powersave was " + (this.isEnabled ? "enabled" : "disabled"));
+			Logger.debug(name + " powersave was " + (this.isEnabled ? "enabled" : "disabled"));
 		}
 		catch(Exception e) {
 			this.unknownState = true;
-			Log.e(LOG, name + " " + e.toString());
+			Logger.error(name + " " + e.toString());
 		}
 		
 		if((flags & FLAG_SAVE_STATE) != 0) {
@@ -62,16 +60,16 @@ public abstract class PowerSaver {
 			
 			if((this.flags & FLAG_SAVE_STATE) != 0 && !this.unknownState) {
 				this.savedState = this.isReallyEnabled();
-				Log.d(LOG, name + " powersave was " + (this.savedState ? "enabled" : "disabled"));
+				Logger.debug(name + " powersave was " + (this.savedState ? "enabled" : "disabled"));
 			}
 			
 			try {
 				this.doStartPowersave();
-				Log.d(LOG, name + " powersave enabled");
+				Logger.debug(name + " powersave enabled");
 				this.unknownState = false;
 			}
 			catch(Exception e) {
-				Log.e(LOG, name + " " + e.toString());
+				Logger.error(name + " " + e.toString());
 			}
 		}
 	}
@@ -87,11 +85,11 @@ public abstract class PowerSaver {
 			if(!this.savedState) {
 				try {
 					this.doStopPowersave();
-					Log.d(LOG, name + " powersave disabled");
+					Logger.debug(name + " powersave disabled");
 					this.unknownState = false;
 				}
 				catch(Exception e) {
-					Log.e(LOG, name + " " + e.toString());
+					Logger.error(name + " " + e.toString());
 				}
 			}
 		}
@@ -101,7 +99,7 @@ public abstract class PowerSaver {
 		if((this.flags & FLAG_SAVE_STATE) != (flags & FLAG_SAVE_STATE)) {
 			if((flags & FLAG_SAVE_STATE) != 0 && !this.unknownState) {
 				this.savedState = this.isReallyEnabled();
-				Log.d(LOG, name + " powersave was " + (this.savedState ? "enabled" : "disabled"));
+				Logger.debug(name + " powersave was " + (this.savedState ? "enabled" : "disabled"));
 			} else if ((flags & FLAG_SAVE_STATE) == 0) {
 				this.savedState = false;
 			}
@@ -124,7 +122,7 @@ public abstract class PowerSaver {
 			enabled = this.doIsEnabled();
 		}
 		catch(Exception e) {
-			Log.e(LOG,name + " " + e.toString());
+			Logger.error(name + " " + e.toString());
 			this.unknownState = true;
 		}
 		return enabled;
@@ -144,7 +142,7 @@ public abstract class PowerSaver {
 			traffic = this.doHasTraffic();
 		}
 		catch(Exception e) {
-			Log.e(LOG,name + " " + e.toString());
+			Logger.error(name + " " + e.toString());
 		}
 		
 		return traffic;
@@ -166,7 +164,7 @@ public abstract class PowerSaver {
 				String currentTaskPackage = task.topActivity.getPackageName();
 				
 				if(whiteList.contains(currentTaskPackage)) {
-					Log.d(LOG,currentTaskPackage + " is on whitelist");
+					Logger.error(currentTaskPackage + " is on whitelist");
 					return true;
 				} else {
 					if(onlyTop)

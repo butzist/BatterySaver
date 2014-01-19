@@ -1,5 +1,6 @@
 package de.szalkowski.adamsbatterysaver.devices;
 
+import de.szalkowski.adamsbatterysaver.Logger;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
@@ -14,10 +15,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.util.Log;
 
 public class SyncPowerSaver extends PowerSaver {
-	static final private String LOG = "de.szalkowski.adamsbatterysaver.SyncPowerSaver";
 	static final public int DEFAULT_FLAGS = FLAG_DISABLE_WITH_SCREEN + FLAG_DISABLE_WITH_POWER + FLAG_DISABLE_ON_INTERVAL;
 	static final private String ACTION_CHECK_CONNECTION = "de.szalkowski.adamsbatterysaver.SyncPowerSaver.CHECK_CONNECTION_ACTION";
 	static final private int NETWORK_CHECK_INTERVAL = 10000; 
@@ -71,7 +70,7 @@ public class SyncPowerSaver extends PowerSaver {
 	}
 	
 	protected void setCheckNetWakeup() {
-		Log.d(LOG,"delaying sync (retry "+ this.retries + ")");
+		Logger.debug("delaying sync (retry "+ this.retries + ")");
 		
 		IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_CHECK_CONNECTION);
@@ -93,10 +92,10 @@ public class SyncPowerSaver extends PowerSaver {
 		NetworkInfo net = connManager.getActiveNetworkInfo();
 		
 		if(net != null && net.isConnected()) {
-			Log.v(LOG,net.getTypeName() + " online");
+			Logger.verbose(net.getTypeName() + " online");
 			return true;
 		} else {
-			Log.v(LOG,"network offline");
+			Logger.verbose("network offline");
 			return false;
 		}
 	}

@@ -1,26 +1,24 @@
 package de.szalkowski.adamsbatterysaver.service;
 
-import de.szalkowski.adamsbatterysaver.ui.MainActivity;
+import de.szalkowski.adamsbatterysaver.Constants;
+import de.szalkowski.adamsbatterysaver.Logger;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
-public class AlarmReceiver extends BroadcastReceiver {
-	static private final String LOG = "de.szalkowski.adamsbatterysaver.AlarmReceiver";
-	
+public class AlarmReceiver extends BroadcastReceiver {	
 	@SuppressLint("Wakelock")
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Intent service = new Intent(context,MainService.class);
 
 		if(!MainService.is_running) {
-			Log.e(LOG, "unexpected timer event - service terminated?");
+			Logger.error("unexpected timer event - service terminated?");
 	        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-			if(settings.getBoolean(MainActivity.SETTINGS_START_SERVICE, true)) {
+			if(settings.getBoolean(Constants.SETTINGS_START_SERVICE, true)) {
 				context.startService(service);
 			}
 		}

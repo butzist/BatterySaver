@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.szalkowski.adamsbatterysaver.Logger;
 import de.szalkowski.adamsbatterysaver.R;
-import de.szalkowski.adamsbatterysaver.R.string;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
@@ -19,12 +19,10 @@ import android.preference.CheckBoxPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
-import android.util.Log;
 
 @SuppressLint("NewApi")
 public class WhiteListPreferenceActivity extends PreferenceActivity {
 	protected PreferenceScreen screen;
-	static private final String LOG = "de.szalkowski.adamsbatterysaver.WhiteListPreferenceActivity";
 	
 	@SuppressWarnings("deprecation")
 	@SuppressLint("NewApi")
@@ -56,11 +54,11 @@ public class WhiteListPreferenceActivity extends PreferenceActivity {
 		Set<String> packages = new HashSet<String>();
 		ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
 		List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(100);
-		Log.v(LOG, "currently running:");
+		Logger.verbose("currently running:");
 		for (ActivityManager.RunningTaskInfo task : tasks) {
 			String currentTaskPackage = task.topActivity.getPackageName();
 			String logMsg = String.format(context.getResources().getConfiguration().locale, "%s: (state %s, activities running %d/%d)",currentTaskPackage,task.description,task.numRunning,task.numActivities); 
-			Log.v(LOG, logMsg);
+			Logger.verbose(logMsg);
 
 			if(task.numRunning < 1) continue;
 			packages.add(currentTaskPackage);

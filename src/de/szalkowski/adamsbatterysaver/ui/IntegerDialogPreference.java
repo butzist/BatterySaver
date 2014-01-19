@@ -1,8 +1,6 @@
 package de.szalkowski.adamsbatterysaver.ui;
 
 import de.szalkowski.adamsbatterysaver.R;
-import de.szalkowski.adamsbatterysaver.R.id;
-import de.szalkowski.adamsbatterysaver.R.layout;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;

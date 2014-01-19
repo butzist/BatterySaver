@@ -14,14 +14,12 @@ package org.thirdparty;
 
 import java.lang.reflect.Method;
 
+import de.szalkowski.adamsbatterysaver.Logger;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 public abstract class MobileDataSwitch {
-	static final private String LOG = "de.szalkowski.adamsbatterysaver.thirdparty.MobileDataSwitch";
-
 	public static void setMobileDataEnabled(Context context, boolean enabled) throws Exception {
 		
 		try {
@@ -31,7 +29,7 @@ public abstract class MobileDataSwitch {
 		    setmeth.invoke(conman, enabled);
 		}
 		catch(Exception e) {
-			Log.w(LOG, "setMobileDataEnabled failed -- trying alternative method: "+e.toString());
+			Logger.warning("setMobileDataEnabled failed -- trying alternative method: "+e.toString());
 			
 			try {    
 				Method dataConnSwitchmethod;
@@ -58,7 +56,7 @@ public abstract class MobileDataSwitch {
 				    dataConnSwitchmethod.invoke(ITelephonyStub);
 			}
 			catch(Exception ee) {
-				Log.e(LOG, "setMobileDataEnabled failed: "+e.toString());
+				Logger.error("setMobileDataEnabled failed: "+e.toString());
 			}
 		}
 	}
@@ -73,7 +71,7 @@ public abstract class MobileDataSwitch {
 	        return mobileDataEnabled;
 		}
 		catch(Exception e) {
-			Log.w(LOG,"getMobileDataEnabled failed -- trying alternative method: "+e.toString());
+			Logger.warning("getMobileDataEnabled failed -- trying alternative method: "+e.toString());
 			TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 			return telephonyManager.getDataState() != TelephonyManager.DATA_DISCONNECTED;
 		}

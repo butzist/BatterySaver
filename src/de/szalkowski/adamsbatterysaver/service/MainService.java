@@ -4,6 +4,8 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.szalkowski.adamsbatterysaver.Constants;
+import de.szalkowski.adamsbatterysaver.Logger;
 import de.szalkowski.adamsbatterysaver.R;
 import de.szalkowski.adamsbatterysaver.devices.BluetoothPowerSaver;
 import de.szalkowski.adamsbatterysaver.devices.MobileDataPowerSaver;
@@ -25,10 +27,8 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 public class MainService extends Service {
-	static private final String LOG = "de.szalkowski.adamsbatterysaver.MainService";
 	static public final String ACTION_WAKEUP = "de.szalkowski.adamsbatterysaver.WAKEUP_ACTION"; 
 	static public final String ACTION_WAKEUP_TIMEOUT = "de.szalkowski.adamsbatterysaver.WAKEUP_TIMEOUT_ACTION"; 
 	static public final String ACTION_SCREEN_TIMEOUT = "de.szalkowski.adamsbatterysaver.SCREEN_TIMEOUT_ACTION"; 
@@ -51,7 +51,7 @@ public class MainService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		Log.w(LOG, "Bind");
+		Logger.warning("Bind");
 		
 		return null;
 	}
@@ -59,7 +59,7 @@ public class MainService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Log.d(LOG, "Created");
+		Logger.debug("Created");
 		
 		MainService.is_running = true;
 		
@@ -77,12 +77,12 @@ public class MainService extends Service {
         // check current power state
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         this.screen_on = pm.isScreenOn();
-		Log.d(LOG, "Screen is " + (this.screen_on ? "on" : "off"));
+		Logger.debug("Screen is " + (this.screen_on ? "on" : "off"));
         
         Intent battery_status = this.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         int battery_plugged = battery_status.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
         this.power_on = (battery_plugged == BatteryManager.BATTERY_PLUGGED_USB) || (battery_plugged == BatteryManager.BATTERY_PLUGGED_AC); 
-		Log.d(LOG, "Power is " + (this.power_on ? "on" : "off"));
+		Logger.debug("Power is " + (this.power_on ? "on" : "off"));
 		
 		// set up wake lock
 		if(MainService.wake_lock == null) {
@@ -211,7 +211,7 @@ public class MainService extends Service {
 
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-		int interval = settings.getInt(MainActivity.SETTINGS_TIMEOUT, this.getResources().getInteger(R.integer.pref_timeout_default))*1000;
+		int interval = settings.getInt(Constants.SETTINGS_TIMEOUT, this.getResources().getInteger(R.integer.pref_timeout_default))*1000;
 		Intent intent = new Intent(MainService.ACTION_WAKEUP_TIMEOUT);
 		PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		alarm.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+interval, pending);
@@ -228,7 +228,7 @@ public class MainService extends Service {
 
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-		int interval = settings.getInt(MainActivity.SETTINGS_TIMEOUT, this.getResources().getInteger(R.integer.pref_timeout_default))*1000;
+		int interval = settings.getInt(Constants.SETTINGS_TIMEOUT, this.getResources().getInteger(R.integer.pref_timeout_default))*1000;
 		Intent intent = new Intent(MainService.ACTION_SCREEN_TIMEOUT);
 		PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		alarm.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+interval, pending);
@@ -245,7 +245,7 @@ public class MainService extends Service {
 
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-		int interval = settings.getInt(MainActivity.SETTINGS_TIMEOUT, this.getResources().getInteger(R.integer.pref_timeout_default))*1000;
+		int interval = settings.getInt(Constants.SETTINGS_TIMEOUT, this.getResources().getInteger(R.integer.pref_timeout_default))*1000;
 		Intent intent = new Intent(MainService.ACTION_POWER_TIMEOUT);
 		PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		alarm.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+interval, pending);
@@ -262,8 +262,8 @@ public class MainService extends Service {
 		
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-		int interval = settings.getInt(MainActivity.SETTINGS_INTERVAL, this.getResources().getInteger(R.integer.pref_interval_default)) * 60000;
-		int first_interval = settings.getInt(MainActivity.SETTINGS_INTERVAL_SHORT, this.getResources().getInteger(R.integer.pref_interval_short_default)) * 60000;
+		int interval = settings.getInt(Constants.SETTINGS_INTERVAL, this.getResources().getInteger(R.integer.pref_interval_default)) * 60000;
+		int first_interval = settings.getInt(Constants.SETTINGS_INTERVAL_SHORT, this.getResources().getInteger(R.integer.pref_interval_short_default)) * 60000;
 		if(!short_interval) {
 			first_interval = interval;
 		}
@@ -284,7 +284,7 @@ public class MainService extends Service {
 		
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-		int interval = settings.getInt(MainActivity.SETTINGS_INTERVAL, this.getResources().getInteger(R.integer.pref_interval_default)) * 60000;
+		int interval = settings.getInt(Constants.SETTINGS_INTERVAL, this.getResources().getInteger(R.integer.pref_interval_default)) * 60000;
 		long wakeup_time = getWakeupTime();
 		
 		Intent intent = new Intent(MainService.ACTION_WAKEUP);
@@ -315,7 +315,7 @@ public class MainService extends Service {
 			if((power_saver.flagDisableWithPowerSet() && this.power_on) || (power_saver.flagDisableWithScreenSet() && this.screen_on)) {
 					power_saver.stopPowersave();
 			} else if (power_saver.flagDisabledWhileTrafficSet() && power_saver.hasTraffic()) {
-				Log.d(LOG,"delaying " + power_saver.getName() + " powersave");
+				Logger.debug("delaying " + power_saver.getName() + " powersave");
 				this.setWakeupTimeout();
 			} else {
 				power_saver.startPowersave();
@@ -327,14 +327,14 @@ public class MainService extends Service {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 		
 		Calendar from = Calendar.getInstance();
-		from.set(Calendar.HOUR_OF_DAY, settings.getInt(MainActivity.SETTINGS_NIGHTMODE_FROM_HOUR, this.getResources().getInteger(R.integer.pref_from_hour_default)));
-		from.set(Calendar.MINUTE, settings.getInt(MainActivity.SETTINGS_NIGHTMODE_FROM_MINUTE, 0));
+		from.set(Calendar.HOUR_OF_DAY, settings.getInt(Constants.SETTINGS_NIGHTMODE_FROM_HOUR, this.getResources().getInteger(R.integer.pref_from_hour_default)));
+		from.set(Calendar.MINUTE, settings.getInt(Constants.SETTINGS_NIGHTMODE_FROM_MINUTE, 0));
 		from.set(Calendar.SECOND, 0);
 		from.set(Calendar.MILLISECOND, 0);
 		
 		Calendar to = Calendar.getInstance();
-		to.set(Calendar.HOUR_OF_DAY, settings.getInt(MainActivity.SETTINGS_NIGHTMODE_TO_HOUR, this.getResources().getInteger(R.integer.pref_to_hour_default)));
-		to.set(Calendar.MINUTE, settings.getInt(MainActivity.SETTINGS_NIGHTMODE_TO_MINUTE, 0));
+		to.set(Calendar.HOUR_OF_DAY, settings.getInt(Constants.SETTINGS_NIGHTMODE_TO_HOUR, this.getResources().getInteger(R.integer.pref_to_hour_default)));
+		to.set(Calendar.MINUTE, settings.getInt(Constants.SETTINGS_NIGHTMODE_TO_MINUTE, 0));
 		to.set(Calendar.SECOND, 0);
 		to.set(Calendar.MILLISECOND, 0);
 
@@ -349,7 +349,7 @@ public class MainService extends Service {
 		}
 
 		// add interval time so that first wakeup can not fall into night time
-		now.add(Calendar.MINUTE, settings.getInt(MainActivity.SETTINGS_INTERVAL, this.getResources().getInteger(R.integer.pref_interval_default)));
+		now.add(Calendar.MINUTE, settings.getInt(Constants.SETTINGS_INTERVAL, this.getResources().getInteger(R.integer.pref_interval_default)));
 
 		return (now.after(from) && now.before(to));
 	}
@@ -358,14 +358,14 @@ public class MainService extends Service {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 		
 		Calendar from = Calendar.getInstance();
-		from.set(Calendar.HOUR_OF_DAY, settings.getInt(MainActivity.SETTINGS_NIGHTMODE_FROM_HOUR, this.getResources().getInteger(R.integer.pref_from_hour_default)));
-		from.set(Calendar.MINUTE, settings.getInt(MainActivity.SETTINGS_NIGHTMODE_FROM_MINUTE, 0));
+		from.set(Calendar.HOUR_OF_DAY, settings.getInt(Constants.SETTINGS_NIGHTMODE_FROM_HOUR, this.getResources().getInteger(R.integer.pref_from_hour_default)));
+		from.set(Calendar.MINUTE, settings.getInt(Constants.SETTINGS_NIGHTMODE_FROM_MINUTE, 0));
 		from.set(Calendar.SECOND, 0);
 		from.set(Calendar.MILLISECOND, 0);
 
 		Calendar to = Calendar.getInstance();
-		to.set(Calendar.HOUR_OF_DAY, settings.getInt(MainActivity.SETTINGS_NIGHTMODE_TO_HOUR, this.getResources().getInteger(R.integer.pref_to_hour_default)));
-		to.set(Calendar.MINUTE, settings.getInt(MainActivity.SETTINGS_NIGHTMODE_TO_MINUTE, 0));
+		to.set(Calendar.HOUR_OF_DAY, settings.getInt(Constants.SETTINGS_NIGHTMODE_TO_HOUR, this.getResources().getInteger(R.integer.pref_to_hour_default)));
+		to.set(Calendar.MINUTE, settings.getInt(Constants.SETTINGS_NIGHTMODE_TO_MINUTE, 0));
 		to.set(Calendar.SECOND, 0);
 		to.set(Calendar.MILLISECOND, 0);
 
@@ -384,7 +384,7 @@ public class MainService extends Service {
 	
 	@Override
 	public void onDestroy() {
-		Log.d(LOG, "Destroyed");
+		Logger.debug("Destroyed");
 
 		forceStopPowersave();
 		
@@ -417,20 +417,20 @@ public class MainService extends Service {
 				this.cancelPowerTimeout();
 
 				if(intent.getBooleanExtra("power", false)) {
-					Log.d(LOG, "Power on");
+					Logger.debug("Power on");
 					this.power_on = true;
 				} else {
-					Log.d(LOG, "Power off");
+					Logger.debug("Power off");
 					this.setPowerTimeout();
 				}
 			} else if(intent.hasExtra("screen")) {
 				this.cancelScreenTimeout();
 
 				if(intent.getBooleanExtra("screen", false)) {
-					Log.d(LOG, "Screen on");
+					Logger.debug("Screen on");
 					this.screen_on = true;
 				} else {
-					Log.d(LOG, "Screen off");
+					Logger.debug("Screen off");
 					this.setScreenTimeout();
 					this.setWakeup(true);
 				}
@@ -441,32 +441,32 @@ public class MainService extends Service {
 			this.applyPowersave();
 			
 		} else if(intent.getAction().equals(MainService.ACTION_WAKEUP_TIMEOUT)) {
-			Log.d(LOG, "Timeout");
+			Logger.debug("Timeout");
 			this.wakeup_timeout_active = false;
 			this.applyPowersave();
 			
 			if(isSleepingTime()) {
-				Log.d(LOG, "Sleeping time!");
+				Logger.debug("Sleeping time!");
 				setMorningWakeup();
 			} else if(!this.wakeup_active) {
 				setWakeup(false);
 			}
 		} else if(intent.getAction().equals(MainService.ACTION_SCREEN_TIMEOUT)) {
-			Log.d(LOG, "Screen timeout");
+			Logger.debug("Screen timeout");
 			this.screen_timeout_active = false;
 			this.screen_on = false;
 
 			
 			this.applyPowersave();
 		} else if(intent.getAction().equals(MainService.ACTION_POWER_TIMEOUT)) {
-			Log.d(LOG, "Power timeout");
+			Logger.debug("Power timeout");
 			this.power_timeout_active = false;
 			this.power_on = false;
 
 			
 			this.applyPowersave();
 		} else if(intent.getAction().equals(MainService.ACTION_WAKEUP)) {
-			Log.d(LOG, "Wakeup");
+			Logger.debug("Wakeup");
 			
 			this.cancelWakeupTimeout();
 			this.stopPowersave();
@@ -474,7 +474,7 @@ public class MainService extends Service {
 		} else if(intent.getAction().equals(MainService.ACTION_DISABLE)) {
 	        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 			SharedPreferences.Editor editor = settings.edit();
-			editor.putBoolean(MainActivity.SETTINGS_START_SERVICE, false);
+			editor.putBoolean(Constants.SETTINGS_START_SERVICE, false);
 			editor.commit();
 
 			stopSelf();
@@ -485,8 +485,8 @@ public class MainService extends Service {
 		}
 		
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-        if(!settings.getBoolean(MainActivity.SETTINGS_START_SERVICE, true)) {
-        	Log.w(LOG, "Server should not be running");
+        if(!settings.getBoolean(Constants.SETTINGS_START_SERVICE, true)) {
+        	Logger.warning("Server should not be running");
         	stopSelf();
         }
 

@@ -2,19 +2,17 @@ package de.szalkowski.adamsbatterysaver.devices;
 
 import org.thirdparty.MobileDataSwitch;
 
+import de.szalkowski.adamsbatterysaver.Constants;
+import de.szalkowski.adamsbatterysaver.Logger;
 import de.szalkowski.adamsbatterysaver.R;
-import de.szalkowski.adamsbatterysaver.R.integer;
-import de.szalkowski.adamsbatterysaver.ui.MainActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.TrafficStats;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 public class MobileDataPowerSaver extends PowerSaver {
-	static private final String LOG = "de.szalkowski.adamsbatterysaver.MobileDataPowerSaver";
 	static final public int DEFAULT_FLAGS = FLAG_DISABLE_WITH_SCREEN + FLAG_DISABLE_WITH_POWER + FLAG_DISABLE_ON_INTERVAL + FLAG_SAVE_STATE;
 	private long traffic;
 	private long time;
@@ -50,9 +48,9 @@ public class MobileDataPowerSaver extends PowerSaver {
 			this.traffic = TrafficStats.getMobileRxBytes() + TrafficStats.getMobileTxBytes();
 			
 	        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-			final long traffic_limit = (long)settings.getInt(MainActivity.SETTINGS_TRAFFIC_LIMIT, context.getResources().getInteger(R.integer.pref_traffic_limit_default));
+			final long traffic_limit = (long)settings.getInt(Constants.SETTINGS_TRAFFIC_LIMIT, context.getResources().getInteger(R.integer.pref_traffic_limit_default));
 			final double traffic_per_minute = traffic_diff/(time_diff/60000.0);
-			Log.v(LOG,"mobile traffic: " + traffic_per_minute + " bytes / minute ("+ traffic_diff + "/" + time_diff/1000.0 + "s)");
+			Logger.verbose("mobile traffic: " + traffic_per_minute + " bytes / minute ("+ traffic_diff + "/" + time_diff/1000.0 + "s)");
 			if(traffic_per_minute > traffic_limit) {
 				return true;
 			}
