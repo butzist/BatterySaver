@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -45,11 +46,57 @@ public class MainActivity extends FragmentActivity {
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-        
-        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-        settings = SettingsManager.getSettingsManager(this.getApplicationContext());
-        
-        SeekBar interval = (SeekBar)this.findViewById(R.id.seekInterval);
+		
+        loadSettings();
+        setupWidgets();
+        checkAndStartServiceIfNecessary();
+    }
+
+	private void setupWidgets() {
+		setIntervalSeekBar();
+        setStartStopToggle();
+        setFromTime();
+        setToTime();
+        setFlags();
+	}
+
+	private void checkAndStartServiceIfNecessary() {
+        boolean start_service = settings.getStartService();
+
+		if(start_service != MainService.is_running) {
+        	String text;
+        	if(start_service) {
+        		text = this.getString(R.string.service_not_running);
+        	} else {
+        		text = this.getString(R.string.service_running);
+        	}
+        	Toast.makeText(this.getApplicationContext(), text, Toast.LENGTH_LONG).show();
+        }
+	}
+
+	private void setStartStopToggle() {
+        boolean start_service = settings.getStartService();
+
+		ToggleButton toggle = (ToggleButton)this.findViewById(R.id.toggleButton);
+        toggle.setChecked(MainService.is_running);
+        toggle.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				Intent service = new Intent(MainActivity.this,MainService.class);
+				if(isChecked) {
+					MainActivity.this.startService(service);
+				} else {
+					service.setAction(MainService.ACTION_DISABLE);
+					MainActivity.this.startService(service);
+				}
+			}
+		});
+        toggle.setChecked(start_service);
+	}
+
+	private void setIntervalSeekBar() {
+		SeekBar interval = (SeekBar)this.findViewById(R.id.seekInterval);
         interval.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {}
@@ -72,39 +119,12 @@ public class MainActivity extends FragmentActivity {
         
 		TextView interval_text = (TextView)MainActivity.this.findViewById(R.id.sync_interval);
 		interval_text.setText(MainActivity.this.getString(R.string.sync_interval, interval.getProgress()));
-        
-        ToggleButton toggle = (ToggleButton)this.findViewById(R.id.toggleButton);
-        boolean start_service = settings.getStartService();
-        toggle.setChecked(MainService.is_running);
-        toggle.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				Intent service = new Intent(MainActivity.this,MainService.class);
-				if(isChecked) {
-					MainActivity.this.startService(service);
-				} else {
-					service.setAction(MainService.ACTION_DISABLE);
-					MainActivity.this.startService(service);
-				}
-			}
-		});
-        
-        setFromTime();
-        setToTime();
-        setFlags();
-        
-        toggle.setChecked(start_service);
-        if(start_service != MainService.is_running) {
-        	String text;
-        	if(start_service) {
-        		text = this.getString(R.string.service_not_running);
-        	} else {
-        		text = this.getString(R.string.service_running);
-        	}
-        	Toast.makeText(this.getApplicationContext(), text, Toast.LENGTH_LONG).show();
-        }
-    }
+	}
+
+	private void loadSettings() {
+		PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+        settings = SettingsManager.getSettingsManager(this.getApplicationContext());
+	}
     
 	/**
 	 * Backward-compatible version of {@link ActionBar#getThemedContext()} that
