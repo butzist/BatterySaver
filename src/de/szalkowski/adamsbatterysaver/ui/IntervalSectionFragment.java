@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
@@ -95,7 +94,6 @@ public class IntervalSectionFragment extends Fragment {
 	}
 
 	private void loadSettings() {
-		PreferenceManager.setDefaultValues(getActivity(), R.xml.settings, false);
         settings = SettingsManager.getSettingsManager(getActivity().getApplicationContext());
 	}
 

@@ -23,8 +23,8 @@ import de.szalkowski.adamsbatterysaver.service.MainService;
 
 public class MainActivity extends FragmentActivity {
     private SettingsManager settings;
-    private ViewPager mViewPager;
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager viewPager;
+    private SectionsPagerAdapter pagerAdapter;
 	
     @Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,11 +40,11 @@ public class MainActivity extends FragmentActivity {
     }
 
 	private void setupViewPager() {
-		mSectionsPagerAdapter = new SectionsPagerAdapter(
+		pagerAdapter = new SectionsPagerAdapter(
 				getSupportFragmentManager());
 
-		mViewPager = (ViewPager) findViewById(R.id.pager);
-		mViewPager.setAdapter(mSectionsPagerAdapter);
+		viewPager = (ViewPager) findViewById(R.id.pager);
+		viewPager.setAdapter(pagerAdapter);
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -52,26 +52,25 @@ public class MainActivity extends FragmentActivity {
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-		mViewPager
-				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+		viewPager.setOnPageChangeListener(
+				new ViewPager.SimpleOnPageChangeListener() {
 					@Override
 					public void onPageSelected(int position) {
 						actionBar.setSelectedNavigationItem(position);
 					}
 				});
 
-		for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
+		for(int i=0; i < pagerAdapter.getCount(); i++) {
 			actionBar.addTab(actionBar.newTab()
-					.setText(mSectionsPagerAdapter.getPageTitle(i))
+					.setText(pagerAdapter.getPageTitle(i))
 					.setTabListener(new ActionBar.TabListener() {
-						
 						@Override
 						public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 						}
 						
 						@Override
 						public void onTabSelected(Tab tab, FragmentTransaction ft) {
-							mViewPager.setCurrentItem(tab.getPosition());
+							viewPager.setCurrentItem(tab.getPosition());
 						}
 						
 						@Override

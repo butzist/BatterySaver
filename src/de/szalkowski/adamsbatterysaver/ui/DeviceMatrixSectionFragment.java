@@ -1,7 +1,6 @@
 package de.szalkowski.adamsbatterysaver.ui;
 
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +34,6 @@ public class DeviceMatrixSectionFragment extends Fragment {
 	}
 
 	private void loadSettings() {
-		PreferenceManager.setDefaultValues(getActivity(), R.xml.settings, false);
         settings = SettingsManager.getSettingsManager(getActivity().getApplicationContext());
 	}
 
