@@ -1,8 +1,8 @@
 package de.szalkowski.adamsbatterysaver.devices;
 
-public abstract class PowerConsumer {
+public interface Powersaveable {
 	abstract public void startPowersave() throws Exception;
 	abstract public void stopPowersave() throws Exception;
-	abstract public boolean isActive() throws Exception;
+	abstract public boolean isInPowersave() throws Exception;
 	abstract public boolean hasTraffic() throws Exception;
 }

@@ -1,5 +1,6 @@
 package de.szalkowski.adamsbatterysaver;
 
+import de.szalkowski.adamsbatterysaver.devices.PowerSaver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -197,7 +198,8 @@ public class SettingsManager {
 		setValue(SETTINGS_NIGHTMODE_TO_MINUTE, value);
 	}
 	
-	public int getWifiFlags(int defaultValue) {
+	public int getWifiFlags() {
+		int defaultValue = FLAG_DISABLE_WITH_SCREEN + FLAG_DISABLE_WITH_POWER + FLAG_DISABLE_ON_INTERVAL + FLAG_SAVE_STATE;
 		return preferences.getInt(SETTINGS_WIFI_FLAGS, defaultValue);
 	}
 	
@@ -205,7 +207,8 @@ public class SettingsManager {
 		setValue(SETTINGS_WIFI_FLAGS, flags);
 	}
 	
-	public int getMobileDataFlags(int defaultValue) {
+	public int getMobileDataFlags() {
+		int defaultValue = PowerSaver.FLAG_DISABLE_WITH_SCREEN + PowerSaver.FLAG_DISABLE_WITH_POWER + PowerSaver.FLAG_DISABLE_ON_INTERVAL + PowerSaver.FLAG_SAVE_STATE;
 		return preferences.getInt(SETTINGS_MOBILEDATA_FLAGS, defaultValue);
 	}
 	
@@ -221,7 +224,8 @@ public class SettingsManager {
 		setValue(SETTINGS_SYNC_FLAGS, flags);
 	}
 	
-	public int getBluetoothFlags(int defaultValue) {
+	public int getBluetoothFlags() {
+		int defaultValue = FLAG_DISABLE_WITH_POWER + FLAG_DISABLED_WHILE_TRAFFIC + FLAG_SAVE_STATE;
 		return preferences.getInt(SETTINGS_BLUETOOTH_FLAGS, defaultValue);
 	}
 	

@@ -4,8 +4,7 @@ import de.szalkowski.adamsbatterysaver.SettingsManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 
-public class BluetoothPowerSaver extends PowerSaver {
-	static final public int DEFAULT_FLAGS = FLAG_DISABLE_WITH_POWER + FLAG_DISABLED_WHILE_TRAFFIC + FLAG_SAVE_STATE;
+public class BluetoothPowerSaver implements Powersaveable {
 	private SettingsManager settings;
 
 	public BluetoothPowerSaver(Context context) {

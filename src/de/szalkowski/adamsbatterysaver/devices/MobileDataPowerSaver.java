@@ -9,8 +9,7 @@ import android.net.TrafficStats;
 import android.os.SystemClock;
 import android.telephony.TelephonyManager;
 
-public class MobileDataPowerSaver extends PowerSaver {
-	static final public int DEFAULT_FLAGS = FLAG_DISABLE_WITH_SCREEN + FLAG_DISABLE_WITH_POWER + FLAG_DISABLE_ON_INTERVAL + FLAG_SAVE_STATE;
+public class MobileDataPowerSaver implements Powersaveable {
 	private long traffic;
 	private long time;
 	private SettingsManager settings;
@@ -56,9 +55,4 @@ public class MobileDataPowerSaver extends PowerSaver {
 		}
 		return false;
 	}
-	
-	@Override
-	protected void doUpdateSettings() throws Exception {
-        setFlags(settings.getMobileDataFlags(DEFAULT_FLAGS));
-	}	
 }

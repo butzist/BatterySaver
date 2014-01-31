@@ -17,7 +17,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.SystemClock;
 
-public class SyncPowerSaver extends PowerSaver {
+public class SyncPowerSaver implements Powersaveable {
 	static final public int DEFAULT_FLAGS = FLAG_DISABLE_WITH_SCREEN + FLAG_DISABLE_WITH_POWER + FLAG_DISABLE_ON_INTERVAL;
 	static final private String ACTION_CHECK_CONNECTION = "de.szalkowski.adamsbatterysaver.SyncPowerSaver.CHECK_CONNECTION_ACTION";
 	static final private int NETWORK_CHECK_INTERVAL = 10000; 

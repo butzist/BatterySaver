@@ -20,19 +20,18 @@ public abstract class PowerSaver {
 	static public int FLAG_SAVE_STATE = 0x10;
 	static public int FLAG_DISABLE = 0x100;
 	
-	static final public int DEFAULT_FLAGS = FLAG_DISABLE_WITH_SCREEN + FLAG_DISABLE_WITH_POWER + FLAG_DISABLE_ON_INTERVAL + FLAG_DISABLED_WHILE_TRAFFIC + FLAG_SAVE_STATE;
-
 	protected boolean isEnabled;
 	protected boolean savedState;
 	protected boolean unknownState;
 	protected Context context;
 	protected int flags;
 	private String name;
+	private Powersaveable saveable;
 
-	public PowerSaver(Context context, String name, int flags) {
+	protected PowerSaver(Context context, String name, Powersaveable saveable) {
 		this.context = context;
 		this.name = name;
-		this.flags = flags;
+		this.saveable = saveable;
 		this.unknownState = false;
 		this.savedState = false;
 		
@@ -64,7 +63,7 @@ public abstract class PowerSaver {
 			}
 			
 			try {
-				this.doStartPowersave();
+				saveable.startPowersave();
 				Logger.debug(name + " powersave enabled");
 				this.unknownState = false;
 			}
@@ -84,7 +83,7 @@ public abstract class PowerSaver {
 			
 			if(!this.savedState) {
 				try {
-					this.doStopPowersave();
+					saveable.stopPowersave();
 					Logger.debug(name + " powersave disabled");
 					this.unknownState = false;
 				}
@@ -119,7 +118,7 @@ public abstract class PowerSaver {
 	public boolean isReallyEnabled() {
 		boolean enabled = this.isEnabled;
 		try {
-			enabled = this.doIsEnabled();
+			enabled = saveable.isInPowersave();
 		}
 		catch(Exception e) {
 			Logger.error(name + " " + e.toString());
@@ -139,7 +138,7 @@ public abstract class PowerSaver {
 			return true;
 		
 		try {
-			traffic = this.doHasTraffic();
+			traffic = saveable.hasTraffic();
 		}
 		catch(Exception e) {
 			Logger.error(name + " " + e.toString());
@@ -151,7 +150,6 @@ public abstract class PowerSaver {
 	@SuppressLint("NewApi")
 	public boolean isWhitelisted() {
 		if(android.os.Build.VERSION.SDK_INT >= 11) {
-	        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
 			ActivityManager am = (ActivityManager)this.context.getSystemService(Context.ACTIVITY_SERVICE);
 			Set<String> whiteList = settings.getStringSet(this.name + "_whitelist", new HashSet<String>());
 			if(whiteList.isEmpty())
@@ -200,18 +198,5 @@ public abstract class PowerSaver {
 		return (this.flags & FLAG_DISABLE) != 0;
 	}
 	
-	public void updateSettings() {
-		try {
-			doUpdateSettings();
-		}
-		catch(Exception e) {
-			Logger.error(name + " " + e.toString());
-		}
-	}
-	
-	abstract protected void doStartPowersave() throws Exception;
-	abstract protected void doStopPowersave() throws Exception;
-	abstract protected boolean doIsEnabled() throws Exception;
-	abstract protected boolean doHasTraffic() throws Exception;
-	abstract protected void doUpdateSettings() throws Exception;
+	public abstract void updateSettings();
 }
