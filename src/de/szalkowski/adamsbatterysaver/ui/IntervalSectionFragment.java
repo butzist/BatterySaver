@@ -20,6 +20,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.ToggleButton;
+import de.szalkowski.adamsbatterysaver.AdamsBatterySaverApplication;
 import de.szalkowski.adamsbatterysaver.R;
 import de.szalkowski.adamsbatterysaver.SettingsManager;
 import de.szalkowski.adamsbatterysaver.service.MainService;
@@ -59,6 +60,7 @@ public class IntervalSectionFragment extends Fragment {
 				if(isChecked) {
 					getActivity().startService(service);
 				} else {
+					AdamsBatterySaverApplication.getSettings().setStartService(false);
 					service.setAction(MainService.ACTION_DISABLE);
 					getActivity().startService(service);
 				}

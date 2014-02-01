@@ -17,12 +17,11 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+import de.szalkowski.adamsbatterysaver.AdamsBatterySaverApplication;
 import de.szalkowski.adamsbatterysaver.R;
-import de.szalkowski.adamsbatterysaver.SettingsManager;
 import de.szalkowski.adamsbatterysaver.service.MainService;
 
 public class MainActivity extends FragmentActivity {
-    private SettingsManager settings;
     private ViewPager viewPager;
     private SectionsPagerAdapter pagerAdapter;
 	
@@ -81,7 +80,7 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	private void checkAndStartServiceIfNecessary() {
-        boolean start_service = settings.getStartService();
+        boolean start_service = AdamsBatterySaverApplication.getSettings().getStartService();
 
 		if(start_service != MainService.is_running) {
         	String text;
@@ -96,7 +95,6 @@ public class MainActivity extends FragmentActivity {
 
 	private void loadSettings() {
 		PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-        settings = SettingsManager.getSettingsManager(this.getApplicationContext());
 	}
     
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)

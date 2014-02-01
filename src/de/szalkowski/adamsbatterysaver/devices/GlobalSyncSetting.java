@@ -1,7 +1,5 @@
 package de.szalkowski.adamsbatterysaver.devices;
 
-import de.szalkowski.adamsbatterysaver.Logger;
-import de.szalkowski.adamsbatterysaver.SettingsManager;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
@@ -16,22 +14,19 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.SystemClock;
+import de.szalkowski.adamsbatterysaver.Logger;
 
-public class SyncPowerSaver implements Powersaveable {
-	static final public int DEFAULT_FLAGS = FLAG_DISABLE_WITH_SCREEN + FLAG_DISABLE_WITH_POWER + FLAG_DISABLE_ON_INTERVAL;
+public class GlobalSyncSetting implements Powersaveable {
 	static final private String ACTION_CHECK_CONNECTION = "de.szalkowski.adamsbatterysaver.SyncPowerSaver.CHECK_CONNECTION_ACTION";
 	static final private int NETWORK_CHECK_INTERVAL = 10000; 
 	static final private int NETWORK_CHECK_RETRIES = 4;
 	
 	private BroadcastReceiver alarm_receiver;
 	private int retries = 1;
-	private SettingsManager settings;
+	private Context context;
 	
-	public SyncPowerSaver(Context context) {
-		super(context, "sync", DEFAULT_FLAGS);
-        settings = SettingsManager.getSettingsManager(context.getApplicationContext());
-        setFlags(settings.getSyncFlags(DEFAULT_FLAGS));
-		
+	public GlobalSyncSetting(Context context) {
+		this.context = context;
 		this.alarm_receiver = new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context context, Intent intent) {
@@ -48,12 +43,12 @@ public class SyncPowerSaver implements Powersaveable {
 	}
 
 	@Override
-	protected void doStartPowersave() {
+	public void startPowersave() {
 		ContentResolver.setMasterSyncAutomatically(false);
 	}
 
 	@Override
-	protected void doStopPowersave() {
+	public void stopPowersave() {
 		this.retries = 1;
 		
 		if(isOnline()) {
@@ -63,7 +58,7 @@ public class SyncPowerSaver implements Powersaveable {
 		}
 	}
 	
-	protected void doSync() {
+	private void doSync() {
 		ContentResolver.setMasterSyncAutomatically(true);
 		AccountManager manager = AccountManager.get(context);
 		for(Account a : manager.getAccountsByType("com.android.email")) {
@@ -73,7 +68,7 @@ public class SyncPowerSaver implements Powersaveable {
 		}
 	}
 	
-	protected void setCheckNetWakeup() {
+	private void setCheckNetWakeup() {
 		Logger.debug("delaying sync (retry "+ this.retries + ")");
 		
 		IntentFilter filter = new IntentFilter();
@@ -87,11 +82,11 @@ public class SyncPowerSaver implements Powersaveable {
 	}
 	
 	@Override
-	protected boolean doIsEnabled() {
+	public boolean isInPowersave() {
 		return !ContentResolver.getMasterSyncAutomatically();
 	}
 	
-	protected boolean isOnline() {
+	private boolean isOnline() {
 		ConnectivityManager connManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo net = connManager.getActiveNetworkInfo();
 		
@@ -107,16 +102,11 @@ public class SyncPowerSaver implements Powersaveable {
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	@Override
-	protected boolean doHasTraffic() throws Exception {
+	public boolean hasTraffic() throws Exception {
 		if(android.os.Build.VERSION.SDK_INT >= 11) {
 			return !ContentResolver.getCurrentSyncs().isEmpty();
 		} else {
 			return ContentResolver.getCurrentSync() != null;
 		}
-	}
-	
-	@Override
-	protected void doUpdateSettings() throws Exception {
-        setFlags(settings.getSyncFlags(DEFAULT_FLAGS));
 	}
 }

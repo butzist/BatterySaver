@@ -7,55 +7,30 @@ import android.content.Context;
 
 public class PowerSaverManager {
 	public Collection<PowerSaver> getPowerSavers() {
-		return new Vector<PowerSaver>();
+		Vector<PowerSaver> powerSavers =  new Vector<PowerSaver>(4);
+		powerSavers.add(getWifiPowerSaver());
+		powerSavers.add(getMobileDataPowerSaver());
+		powerSavers.add(getBluetoothPowerSaver());
+		powerSavers.add(getGlobalSyncPowerSaver());
+		
+		return powerSavers;
 	}
 	
-	private PowerSaver getWifiPowerSaver() {
-		return new PowerSaver(context, "wifi", new WifiDevice(context)) {
-			@Override
-			public void updateSettings() {
-			}
-			
-			@Override
-			public int getDefaultFlags() {
-				return FLAG_DISABLE_WITH_SCREEN + FLAG_DISABLE_WITH_POWER + FLAG_DISABLE_ON_INTERVAL + FLAG_SAVE_STATE;
-			}
-		};
+	protected PowerSaver getWifiPowerSaver() {
+		return new PowerSaver(context, "wifi", new WifiDevice(context));
 	}
 	
-	private PowerSaver getMobileDataPowerSaver() {
-		return new PowerSaver(context, "data", new MobileDataDevice(context)) {
-			@Override
-			public void updateSettings() {
-			}
-		};
+	protected PowerSaver getMobileDataPowerSaver() {
+		return new PowerSaver(context, "data", new MobileDataDevice(context));
 	}
 	
-	private PowerSaver getWifiPowerSaver() {
-		return new PowerSaver(context, "wifi", new WifiDevice(context)) {
-			@Override
-			public void updateSettings() {
-			}
-			
-			@Override
-			public int getDefaultFlags() {
-				return FLAG_DISABLE_WITH_SCREEN + FLAG_DISABLE_WITH_POWER + FLAG_DISABLE_ON_INTERVAL + FLAG_SAVE_STATE;
-			}
-		};
+	protected PowerSaver getGlobalSyncPowerSaver() {
+		return new PowerSaver(context, "wifi", new GlobalSyncSetting(context));
 	}
 	
-	private PowerSaver getWifiPowerSaver() {
-		return new PowerSaver(context, "wifi", new WifiDevice(context)) {
-			@Override
-			public void updateSettings() {
-			}
-			
-			@Override
-			public int getDefaultFlags() {
-				return FLAG_DISABLE_WITH_SCREEN + FLAG_DISABLE_WITH_POWER + FLAG_DISABLE_ON_INTERVAL + FLAG_SAVE_STATE;
-			}
-		};
+	protected PowerSaver getBluetoothPowerSaver() {
+		return new PowerSaver(context, "wifi", new BluetoothDevice());
 	}
 	
-	protected Context context;
+	private Context context;
 }

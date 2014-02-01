@@ -2,6 +2,7 @@ package de.szalkowski.adamsbatterysaver.service;
 
 import de.szalkowski.adamsbatterysaver.Logger;
 import de.szalkowski.adamsbatterysaver.SettingsManager;
+import de.szalkowski.adamsbatterysaver.SettingsProvider;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,7 +16,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 		if(!MainService.is_running) {
 			Logger.error("unexpected timer event - service terminated?");
-	        SettingsManager settings = SettingsManager.getSettingsManager(context.getApplicationContext());
+	        SettingsProvider settings = SettingsManager.getSettingsManager(context.getApplicationContext());
 			if(settings.getStartService()) {
 				context.startService(service);
 			}

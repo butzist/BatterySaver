@@ -1,18 +1,8 @@
 package de.szalkowski.adamsbatterysaver.service;
 
 import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Collection;
 
-import de.szalkowski.adamsbatterysaver.Logger;
-import de.szalkowski.adamsbatterysaver.R;
-import de.szalkowski.adamsbatterysaver.SettingsManager;
-import de.szalkowski.adamsbatterysaver.devices.BluetoothPowerSaver;
-import de.szalkowski.adamsbatterysaver.devices.MobileDataPowerSaver;
-import de.szalkowski.adamsbatterysaver.devices.PowerSaver;
-import de.szalkowski.adamsbatterysaver.devices.SyncPowerSaver;
-import de.szalkowski.adamsbatterysaver.devices.WifiPowerSaver;
-import de.szalkowski.adamsbatterysaver.ui.MainActivity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -25,6 +15,12 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
+import de.szalkowski.adamsbatterysaver.AdamsBatterySaverApplication;
+import de.szalkowski.adamsbatterysaver.Logger;
+import de.szalkowski.adamsbatterysaver.R;
+import de.szalkowski.adamsbatterysaver.SettingsProvider;
+import de.szalkowski.adamsbatterysaver.devices.PowerSaver;
+import de.szalkowski.adamsbatterysaver.ui.MainActivity;
 
 public class MainService extends Service {
 	static public final String ACTION_WAKEUP = "de.szalkowski.adamsbatterysaver.WAKEUP_ACTION"; 
@@ -45,8 +41,8 @@ public class MainService extends Service {
 	private boolean power_timeout_active = false;
 	private boolean wakeup_active = false;
 	private boolean in_foreground = false;
-	private List<PowerSaver> power_savers;
-	private SettingsManager settings;
+	private Collection<PowerSaver> power_savers;
+	private SettingsProvider settings;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -88,21 +84,9 @@ public class MainService extends Service {
 			MainService.wake_lock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Alarm received");
 		}
 		
-        settings = SettingsManager.getSettingsManager(this.getApplicationContext());
-		
-		this.power_savers = new LinkedList<PowerSaver>();
+		settings = AdamsBatterySaverApplication.getSettings();
 
-		WifiPowerSaver wifi = new WifiPowerSaver(this);
-		this.power_savers.add(wifi);
-		
-		MobileDataPowerSaver data = new MobileDataPowerSaver(this);
-		this.power_savers.add(data);
-		
-		SyncPowerSaver sync = new SyncPowerSaver(this);
-		this.power_savers.add(sync);
-		
-		BluetoothPowerSaver blue = new BluetoothPowerSaver(this);
-		this.power_savers.add(blue);
+		this.power_savers = AdamsBatterySaverApplication.getPowersavers().getPowerSavers();
 		
 		setWakeupTimeout();
 	}
@@ -130,7 +114,7 @@ public class MainService extends Service {
 	
 	protected void updateSettings() {		
 		for(PowerSaver saver : this.power_savers) {
-			saver.updateSettings();
+			//saver.updateSettings(); FIXME
 		}
 		
 		setWakeup(false);
@@ -441,7 +425,6 @@ public class MainService extends Service {
 			this.stopPowersave();
 			this.setWakeupTimeout();
 		} else if(intent.getAction().equals(MainService.ACTION_DISABLE)) {
-			settings.setStartService(false);
 			stopSelf();
 		}
 		

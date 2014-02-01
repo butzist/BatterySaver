@@ -8,11 +8,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import de.szalkowski.adamsbatterysaver.R;
 import de.szalkowski.adamsbatterysaver.SettingsManager;
-import de.szalkowski.adamsbatterysaver.devices.BluetoothPowerSaver;
-import de.szalkowski.adamsbatterysaver.devices.MobileDataPowerSaver;
 import de.szalkowski.adamsbatterysaver.devices.PowerSaver;
-import de.szalkowski.adamsbatterysaver.devices.SyncPowerSaver;
-import de.szalkowski.adamsbatterysaver.devices.WifiPowerSaver;
 
 public class DeviceMatrixSectionFragment extends Fragment {
     private SettingsManager settings;
@@ -76,7 +72,7 @@ public class DeviceMatrixSectionFragment extends Fragment {
 		final int[] default_flags = {
 				WifiPowerSaver.DEFAULT_FLAGS,
 				MobileDataPowerSaver.DEFAULT_FLAGS,
-				BluetoothPowerSaver.DEFAULT_FLAGS,
+				BluetoothDevice.DEFAULT_FLAGS,
 				SyncPowerSaver.DEFAULT_FLAGS
 		};
 		

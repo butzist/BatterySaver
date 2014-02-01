@@ -4,15 +4,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import de.szalkowski.adamsbatterysaver.Logger;
-import de.szalkowski.adamsbatterysaver.R;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import de.szalkowski.adamsbatterysaver.AdamsBatterySaverApplication;
+import de.szalkowski.adamsbatterysaver.Logger;
 
-public abstract class PowerSaver {
+public class PowerSaver {
 	static public int FLAG_DISABLE_WITH_SCREEN = 0x1;
 	static public int FLAG_DISABLE_WITH_POWER = 0x2;
 	static public int FLAG_DISABLE_ON_INTERVAL = 0x4;
@@ -151,11 +149,11 @@ public abstract class PowerSaver {
 	public boolean isWhitelisted() {
 		if(android.os.Build.VERSION.SDK_INT >= 11) {
 			ActivityManager am = (ActivityManager)this.context.getSystemService(Context.ACTIVITY_SERVICE);
-			Set<String> whiteList = settings.getStringSet(this.name + "_whitelist", new HashSet<String>());
+			Set<String> whiteList = new HashSet<String>(); //FIXME settings.getStringSet(this.name + "_whitelist", new HashSet<String>());
 			if(whiteList.isEmpty())
 				return false;
 			
-			boolean onlyTop = settings.getBoolean("only_top_task", context.getResources().getBoolean(R.bool.pref_only_top_task_default));
+			boolean onlyTop = AdamsBatterySaverApplication.getSettings().getWhitelistOnlyTopTask(); 
 			List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(100);
 			for (ActivityManager.RunningTaskInfo task : tasks) {
 				if(task.numRunning < 1) continue;
@@ -197,6 +195,4 @@ public abstract class PowerSaver {
 	public boolean flagDisable() {
 		return (this.flags & FLAG_DISABLE) != 0;
 	}
-	
-	public abstract void updateSettings();
 }
