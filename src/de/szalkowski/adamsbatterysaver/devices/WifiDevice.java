@@ -10,7 +10,6 @@ import de.szalkowski.adamsbatterysaver.Logger;
 
 public class WifiDevice implements Powersaveable {
 	private long traffic;
-	private long trafficLimit;
 	private long time;
 	private Context context;
 	private WifiManager wifiManager;
@@ -58,27 +57,21 @@ public class WifiDevice implements Powersaveable {
 	}
 
 	@Override
-	public boolean hasTraffic() throws Exception {
+	public float getTraffic() throws Exception {
 		if(wifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLED) {
-			double trafficPerMinute = getTrafficPerMinute();
+			float trafficPerMinute = getTrafficPerMinute();
 			recordTrafficStats();
 			
-			Logger.verbose("wifi traffic: " + trafficPerMinute + " bytes / minute");
-			if(trafficPerMinute > trafficLimit) {
-				return true;
-			}
+			Logger.verbose("wifi traffic: " + trafficPerMinute + " kiB/min");
+			return trafficPerMinute;
 		}
-		return false;
+		return 0;
 	}
 
-	private double getTrafficPerMinute() {
+	private float getTrafficPerMinute() {
 		long time_diff = SystemClock.elapsedRealtime() - this.time;
 		long traffic_diff = getWifiTraffic() - this.traffic;
-		final double traffic_per_minute = traffic_diff/(time_diff/60000.0);
+		final float traffic_per_minute = (traffic_diff/1024f)/(time_diff/60000.0f);
 		return traffic_per_minute;
-	}
-	
-	public void setTrafficLimit(long trafficLimit) {
-		this.trafficLimit = trafficLimit;	
 	}
 }

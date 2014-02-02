@@ -32,10 +32,10 @@ public class BluetoothDevice implements Powersaveable {
 	}
 
 	@Override
-	public boolean hasTraffic() throws Exception {
+	public float getTraffic() throws Exception {
 		if(bluetooth.getState() == BluetoothAdapter.STATE_CONNECTED) {
-			return true;
+			return 1;
 		}
-		return false;
+		return 0;
 	}
 }

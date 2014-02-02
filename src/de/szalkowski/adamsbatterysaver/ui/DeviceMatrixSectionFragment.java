@@ -1,11 +1,13 @@
 package de.szalkowski.adamsbatterysaver.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.TableRow;
 import de.szalkowski.adamsbatterysaver.R;
 import de.szalkowski.adamsbatterysaver.SettingsManager;
 import de.szalkowski.adamsbatterysaver.devices.PowerSaver;
@@ -13,6 +15,14 @@ import de.szalkowski.adamsbatterysaver.devices.PowerSaver;
 public class DeviceMatrixSectionFragment extends Fragment {
     private SettingsManager settings;
     private View rootView;
+    
+    public static class DeviceMatrixDelegateView extends TableRow {
+
+		public DeviceMatrixDelegateView(Context context) {
+			super(context);
+		}
+    	
+    }
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

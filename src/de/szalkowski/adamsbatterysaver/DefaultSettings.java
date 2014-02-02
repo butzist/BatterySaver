@@ -1,5 +1,6 @@
 package de.szalkowski.adamsbatterysaver;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import android.content.Context;
@@ -26,11 +27,6 @@ public class DefaultSettings implements SettingsProvider {
 	@Override
 	public int getTimeout() {
 		return resources.getInteger(R.integer.pref_timeout_default);
-	}
-
-	@Override
-	public int getTrafficLimit() {
-		return resources.getInteger(R.integer.pref_traffic_limit_default);
 	}
 
 	@Override
@@ -85,25 +81,29 @@ public class DefaultSettings implements SettingsProvider {
 
 	@Override
 	public Set<String> getWifiWhitelist() {
-		// TODO Auto-generated method stub
-		return null;
+		return new HashSet<String>();
 	}
 
 	@Override
 	public Set<String> getMobileDataWhitelist() {
-		// TODO Auto-generated method stub
-		return null;
+		return new HashSet<String>();
 	}
 
 	@Override
 	public Set<String> getSyncWhitelist() {
-		// TODO Auto-generated method stub
-		return null;
+		return new HashSet<String>();
 	}
 
 	@Override
 	public Set<String> getBluetoothWhitelist() {
-		// TODO Auto-generated method stub
-		return null;
+		return new HashSet<String>();
+	}
+
+	public int getMobileDataTrafficLimit() {
+		return resources.getInteger(R.integer.pref_data_traffic_limit_default);
+	}
+
+	public int getWifiTrafficLimit() {
+		return resources.getInteger(R.integer.pref_wifi_traffic_limit_default);
 	}
 }

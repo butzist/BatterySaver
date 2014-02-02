@@ -114,7 +114,7 @@ public class MainService extends Service {
 	
 	protected void updateSettings() {		
 		for(PowerSaver saver : this.power_savers) {
-			//saver.updateSettings(); FIXME
+			saver.updateSettings();
 		}
 		
 		setWakeup(false);
@@ -253,7 +253,7 @@ public class MainService extends Service {
 	
 	protected void stopPowersave() {
 		for(PowerSaver power_saver : this.power_savers) {
-			if(!power_saver.flagDisableOnIntervalSet())
+			if(!power_saver.getFlagDisableOnIntervalSet())
 				continue;
 			
 			power_saver.stopPowersave();
@@ -269,9 +269,9 @@ public class MainService extends Service {
 	protected void applyPowersave() {
 		// All timeouts need to update this
 		for(PowerSaver power_saver : this.power_savers) {
-			if((power_saver.flagDisableWithPowerSet() && this.power_on) || (power_saver.flagDisableWithScreenSet() && this.screen_on)) {
+			if((power_saver.getFlagDisableWithPowerSet() && this.power_on) || (power_saver.getFlagDisableWithScreenSet() && this.screen_on)) {
 					power_saver.stopPowersave();
-			} else if (power_saver.flagDisabledWhileTrafficSet() && power_saver.hasTraffic()) {
+			} else if (power_saver.getFlagDisabledWhileTrafficSet() && power_saver.hasTraffic()) {
 				Logger.debug("delaying " + power_saver.getName() + " powersave");
 				this.setWakeupTimeout();
 			} else {

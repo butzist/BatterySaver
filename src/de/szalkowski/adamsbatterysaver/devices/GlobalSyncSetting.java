@@ -102,11 +102,11 @@ public class GlobalSyncSetting implements Powersaveable {
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	@Override
-	public boolean hasTraffic() throws Exception {
+	public float getTraffic() throws Exception {
 		if(android.os.Build.VERSION.SDK_INT >= 11) {
-			return !ContentResolver.getCurrentSyncs().isEmpty();
+			return ContentResolver.getCurrentSyncs().size();
 		} else {
-			return ContentResolver.getCurrentSync() != null;
+			return ContentResolver.getCurrentSync() != null ? 1 : 0;
 		}
 	}
 }

@@ -1,8 +1,6 @@
 package de.szalkowski.adamsbatterysaver;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -15,24 +13,25 @@ import android.preference.PreferenceManager;
 
 
 public class SettingsManager implements SettingsProvider {
-	static final public String SETTINGS_INTERVAL = "interval";
-	static final public String SETTINGS_INTERVAL_SHORT = "interval_short";
-	static final public String SETTINGS_TIMEOUT = "timeout";
-	static final public String SETTINGS_TRAFFIC_LIMIT = "traffic_limit";
-	static final public String SETTINGS_START_SERVICE = "start_service";
-	static final public String SETTINGS_NIGHTMODE_FROM_HOUR = "from_hour";
-	static final public String SETTINGS_NIGHTMODE_FROM_MINUTE = "from_minute";
-	static final public String SETTINGS_NIGHTMODE_TO_HOUR = "to_hour";
-	static final public String SETTINGS_NIGHTMODE_TO_MINUTE = "to_minute";
-	static final public String SETTINGS_WIFI_FLAGS = "wifi_flags";
-	static final public String SETTINGS_MOBILEDATA_FLAGS = "data_flags";
-	static final public String SETTINGS_SYNC_FLAGS = "sync_flags";
-	static final public String SETTINGS_BLUETOOTH_FLAGS = "blue_flags";
-	static final public String SETTINGS_WIFI_WHITELIST = "wifi_whitelist";
-	static final public String SETTINGS_MOBILEDATA_WHITELIST = "data_whitelist";
-	static final public String SETTINGS_SYNC_WHITELIST = "sync_whitelist";
-	static final public String SETTINGS_BLUETOOTH_WHITELIST = "blue_whitelist";
-	static final public String SETTINGS_ONLY_TOP_TASK = "only_top_task";	
+	static final protected String SETTINGS_INTERVAL = "interval";
+	static final protected String SETTINGS_INTERVAL_SHORT = "interval_short";
+	static final protected String SETTINGS_TIMEOUT = "timeout";
+	static final protected String SETTINGS_START_SERVICE = "start_service";
+	static final protected String SETTINGS_NIGHTMODE_FROM_HOUR = "from_hour";
+	static final protected String SETTINGS_NIGHTMODE_FROM_MINUTE = "from_minute";
+	static final protected String SETTINGS_NIGHTMODE_TO_HOUR = "to_hour";
+	static final protected String SETTINGS_NIGHTMODE_TO_MINUTE = "to_minute";
+	static final protected String SETTINGS_WIFI_FLAGS = "wifi_flags";
+	static final protected String SETTINGS_MOBILEDATA_FLAGS = "data_flags";
+	static final protected String SETTINGS_SYNC_FLAGS = "sync_flags";
+	static final protected String SETTINGS_BLUETOOTH_FLAGS = "blue_flags";
+	static final protected String SETTINGS_WIFI_WHITELIST = "wifi_whitelist";
+	static final protected String SETTINGS_MOBILEDATA_WHITELIST = "data_whitelist";
+	static final protected String SETTINGS_SYNC_WHITELIST = "sync_whitelist";
+	static final protected String SETTINGS_BLUETOOTH_WHITELIST = "blue_whitelist";
+	static final protected String SETTINGS_ONLY_TOP_TASK = "only_top_task";	
+	static final protected String SETTINGS_WIFI_TRAFFIC_LIMIT = "wifi_traffic_limit";
+	static final protected String SETTINGS_MOBILEDATA_TRAFFIC_LIMIT = "data_traffic_limit";
 	
 	private SharedPreferences preferences;
 	private SharedPreferences.Editor editor;
@@ -95,6 +94,10 @@ public class SettingsManager implements SettingsProvider {
 		setGenericValue(key, Boolean.valueOf(value));		
 	}
 	
+	private void setValue(String key, float value) {
+		setGenericValue(key, Float.valueOf(value));		
+	}
+	
 	private void setValue(String key, String value) {
 		setGenericValue(key, value);		
 	}
@@ -117,6 +120,8 @@ public class SettingsManager implements SettingsProvider {
 			editor.putInt(key, (Integer)value);
 		} else if(value instanceof Boolean) {
 			editor.putBoolean(key, (Boolean)value);
+		} else if(value instanceof Float) {
+			editor.putFloat(key, (Float)value);
 		} else if(value instanceof Set<?>) {
 			setStringSet(key, (Set<String>) value);
 		} else {
@@ -129,7 +134,7 @@ public class SettingsManager implements SettingsProvider {
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			editor.putStringSet(key, value);
 		} else {
-			editor.putString(key, joinStringSet(value));
+			setValue(key, joinStringSet(value));
 		}
 	}
 	
@@ -161,6 +166,10 @@ public class SettingsManager implements SettingsProvider {
 	
 	private boolean getBoolean(String key, boolean defaultValue) {
 		return preferences.getBoolean(key, defaultValue);
+	}
+	
+	private float getFloat(String key, float defaultValue) {
+		return preferences.getFloat(key, defaultValue);
 	}
 	
 	private String getString(String key, String defaultValue) {
@@ -206,15 +215,6 @@ public class SettingsManager implements SettingsProvider {
 
 	public void setTimeout(int value) {
 		setValue(SETTINGS_TIMEOUT, value);
-	}
-
-	@Override
-	public int getTrafficLimit() {
-		return getInteger(SETTINGS_TRAFFIC_LIMIT, defaults.getTrafficLimit());
-	}
-
-	public void setTrafficLimit(int value) {
-		setValue(SETTINGS_TRAFFIC_LIMIT, value);
 	}
 
 	@Override
@@ -341,5 +341,23 @@ public class SettingsManager implements SettingsProvider {
 	
 	public void setWhitelistOnlyTopTask(boolean value) {
 		setValue(SETTINGS_ONLY_TOP_TASK, value);
+	}
+
+	@Override
+	public int getWifiTrafficLimit() {
+		return getInteger(SETTINGS_WIFI_TRAFFIC_LIMIT, defaults.getWifiTrafficLimit());
+	}
+	
+	public void setWifiTrafficLimit(int value) {
+		setValue(SETTINGS_WIFI_TRAFFIC_LIMIT, value);
+	}
+
+	@Override
+	public int getMobileDataTrafficLimit() {
+		return getInteger(SETTINGS_MOBILEDATA_TRAFFIC_LIMIT, defaults.getMobileDataTrafficLimit());
+	}
+
+	public void setMobileDataTrafficLimit(int value) {
+		setValue(SETTINGS_MOBILEDATA_TRAFFIC_LIMIT, value);
 	}
 }

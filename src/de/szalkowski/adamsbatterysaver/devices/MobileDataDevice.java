@@ -13,7 +13,6 @@ import de.szalkowski.adamsbatterysaver.Logger;
 public class MobileDataDevice implements Powersaveable {
 	private long traffic;
 	private long time;
-	private long trafficLimit;
 	final private Context context;
 	final private TelephonyManager telephonyManager;
 
@@ -52,27 +51,21 @@ public class MobileDataDevice implements Powersaveable {
 	}
 
 	@Override
-	public boolean hasTraffic() throws Exception {
+	public float getTraffic() throws Exception {
 		if(telephonyManager.getDataState() == TelephonyManager.DATA_CONNECTED) {
-			double trafficPerMinute = getTrafficPerMinute();
+			float trafficPerMinute = getTrafficPerMinute();
 			recordTrafficStats();
 			
-			Logger.verbose("mobile data traffic: " + trafficPerMinute + " bytes / minute");
-			if(trafficPerMinute > trafficLimit) {
-				return true;
-			}
+			Logger.verbose("mobile data traffic: " + trafficPerMinute + "  kiB/min");
+			return trafficPerMinute;
 		}
-		return false;
+		return 0;
 	}
 
-	private double getTrafficPerMinute() {
+	private float getTrafficPerMinute() {
 		long time_diff = SystemClock.elapsedRealtime() - this.time;
 		long traffic_diff = getMobileTraffic() - this.traffic;
-		final double traffic_per_minute = traffic_diff/(time_diff/60000.0);
+		final float traffic_per_minute = (traffic_diff/1024f)/(time_diff/60000.0f);
 		return traffic_per_minute;
-	}
-	
-	public void setTrafficLimit(long trafficLimit) {
-		this.trafficLimit = trafficLimit;	
 	}
 }

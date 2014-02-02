@@ -9,8 +9,6 @@ public interface SettingsProvider {
 
 	public abstract int getTimeout();
 
-	public abstract int getTrafficLimit();
-
 	public abstract boolean getStartService();
 
 	public abstract int getNightModeFromHour();
@@ -38,4 +36,8 @@ public interface SettingsProvider {
 	public abstract Set<String> getSyncWhitelist();
 
 	public abstract Set<String> getBluetoothWhitelist();
+
+	public abstract int getMobileDataTrafficLimit();
+
+	public abstract int getWifiTrafficLimit();
 }

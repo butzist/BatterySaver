@@ -1,6 +1,5 @@
 package de.szalkowski.adamsbatterysaver.devices;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -10,7 +9,7 @@ import android.content.Context;
 import de.szalkowski.adamsbatterysaver.AdamsBatterySaverApplication;
 import de.szalkowski.adamsbatterysaver.Logger;
 
-public class PowerSaver {
+public abstract class PowerSaver {
 	static public int FLAG_DISABLE_WITH_SCREEN = 0x1;
 	static public int FLAG_DISABLE_WITH_POWER = 0x2;
 	static public int FLAG_DISABLE_ON_INTERVAL = 0x4;
@@ -18,13 +17,16 @@ public class PowerSaver {
 	static public int FLAG_SAVE_STATE = 0x10;
 	static public int FLAG_DISABLE = 0x100;
 	
-	protected boolean isEnabled;
-	protected boolean savedState;
-	protected boolean unknownState;
-	protected Context context;
-	protected int flags;
+	private boolean inPowersave;
+	private boolean savedState;
+	private boolean unknownState;
+	private Context context;
 	private String name;
 	private Powersaveable saveable;
+
+	protected int flags;
+	protected int trafficLimit;
+	protected Set<String> whiteList;
 
 	protected PowerSaver(Context context, String name, Powersaveable saveable) {
 		this.context = context;
@@ -34,8 +36,8 @@ public class PowerSaver {
 		this.savedState = false;
 		
 		try {
-			this.isEnabled = this.isReallyEnabled();
-			Logger.debug(name + " powersave was " + (this.isEnabled ? "enabled" : "disabled"));
+			this.inPowersave = this.isReallyInPowersave();
+			Logger.debug(name + " powersave was " + (this.inPowersave ? "enabled" : "disabled"));
 		}
 		catch(Exception e) {
 			this.unknownState = true;
@@ -43,20 +45,20 @@ public class PowerSaver {
 		}
 		
 		if((flags & FLAG_SAVE_STATE) != 0) {
-			this.savedState = this.isEnabled;
+			this.savedState = this.inPowersave;
 		}
 	}
 	
 	public void startPowersave() {
-		if(this.flagDisable()) {
+		if(this.getFlagDisable()) {
 			return;
 		}
 		
-		if(!this.isEnabled || this.unknownState) {
-			this.isEnabled = true;
+		if(!this.inPowersave || this.unknownState) {
+			this.inPowersave = true;
 			
 			if((this.flags & FLAG_SAVE_STATE) != 0 && !this.unknownState) {
-				this.savedState = this.isReallyEnabled();
+				this.savedState = this.isReallyInPowersave();
 				Logger.debug(name + " powersave was " + (this.savedState ? "enabled" : "disabled"));
 			}
 			
@@ -72,12 +74,12 @@ public class PowerSaver {
 	}
 
 	public void stopPowersave() {
-		if(flagDisable()) {
+		if(getFlagDisable()) {
 			return;
 		}
 		
-		if(this.isEnabled || this.unknownState) {
-			this.isEnabled = false;
+		if(this.inPowersave || this.unknownState) {
+			this.inPowersave = false;
 			
 			if(!this.savedState) {
 				try {
@@ -95,7 +97,7 @@ public class PowerSaver {
 	public void setFlags(int flags) {
 		if((this.flags & FLAG_SAVE_STATE) != (flags & FLAG_SAVE_STATE)) {
 			if((flags & FLAG_SAVE_STATE) != 0 && !this.unknownState) {
-				this.savedState = this.isReallyEnabled();
+				this.savedState = this.isReallyInPowersave();
 				Logger.debug(name + " powersave was " + (this.savedState ? "enabled" : "disabled"));
 			} else if ((flags & FLAG_SAVE_STATE) == 0) {
 				this.savedState = false;
@@ -105,16 +107,16 @@ public class PowerSaver {
 		this.flags = flags;
 	}
 	
-	public boolean isEnabled() {
-		return this.isEnabled;
+	public boolean isInPowersave() {
+		return this.inPowersave;
 	}
 	
 	public String getName() {
 		return this.name;
 	}
 	
-	public boolean isReallyEnabled() {
-		boolean enabled = this.isEnabled;
+	public boolean isReallyInPowersave() {
+		boolean enabled = this.inPowersave;
 		try {
 			enabled = saveable.isInPowersave();
 		}
@@ -130,26 +132,27 @@ public class PowerSaver {
 	}
 	
 	public boolean hasTraffic() {
-		boolean traffic = false;
+		boolean hasTraffic = false;
+		float trafficValue;
 		
 		if(this.isWhitelisted())
 			return true;
 		
 		try {
-			traffic = saveable.hasTraffic();
+			trafficValue = saveable.getTraffic(); 
+			hasTraffic =  trafficValue >= trafficLimit;
 		}
 		catch(Exception e) {
 			Logger.error(name + " " + e.toString());
 		}
 		
-		return traffic;
+		return hasTraffic;
 	}
 
 	@SuppressLint("NewApi")
 	public boolean isWhitelisted() {
 		if(android.os.Build.VERSION.SDK_INT >= 11) {
 			ActivityManager am = (ActivityManager)this.context.getSystemService(Context.ACTIVITY_SERVICE);
-			Set<String> whiteList = new HashSet<String>(); //FIXME settings.getStringSet(this.name + "_whitelist", new HashSet<String>());
 			if(whiteList.isEmpty())
 				return false;
 			
@@ -172,27 +175,78 @@ public class PowerSaver {
 		return false;
 	}
 	
-	public boolean flagDisableWithScreenSet() {
+	public boolean getFlagDisableWithScreenSet() {
 		return (this.flags & FLAG_DISABLE_WITH_SCREEN) != 0;
 	}
 	
-	public boolean flagDisableWithPowerSet() {
+	public boolean getFlagDisableWithPowerSet() {
 		return (this.flags & FLAG_DISABLE_WITH_POWER) != 0;
 	}
 	
-	public boolean flagDisableOnIntervalSet() {
+	public boolean getFlagDisableOnIntervalSet() {
 		return (this.flags & FLAG_DISABLE_ON_INTERVAL) != 0;
 	}
 	
-	public boolean flagSaveStateSet() {
+	public boolean getFlagSaveStateSet() {
 		return (this.flags & FLAG_SAVE_STATE) != 0;
 	}
 	
-	public boolean flagDisabledWhileTrafficSet() {
+	public boolean getFlagDisabledWhileTrafficSet() {
 		return (this.flags & FLAG_DISABLED_WHILE_TRAFFIC) != 0;
 	}
 	
-	public boolean flagDisable() {
+	public boolean getFlagDisable() {
 		return (this.flags & FLAG_DISABLE) != 0;
+	}	
+	
+	public void setFlagDisableWithScreenSet() {
+		this.flags |= FLAG_DISABLE_WITH_SCREEN;
 	}
+	
+	public void setFlagDisableWithPowerSet() {
+		this.flags |= FLAG_DISABLE_WITH_POWER;
+	}
+	
+	public void setFlagDisableOnIntervalSet() {
+		this.flags |= FLAG_DISABLE_ON_INTERVAL;
+	}
+	
+	public void setFlagSaveStateSet() {
+		this.flags |= FLAG_SAVE_STATE;
+	}
+	
+	public void setFlagDisabledWhileTrafficSet() {
+		this.flags |= FLAG_DISABLED_WHILE_TRAFFIC;
+	}
+	
+	public void setFlagDisable() {
+		this.flags |= FLAG_DISABLE;
+	}
+	
+	public void updateSettings() {
+		readFlags();
+		readWhiteList();
+		readTrafficLimit();
+	}
+	
+	public void saveSettings() {
+		writeFlags();
+		writeWhiteList();
+		writeTrafficLimit();
+	}
+	
+	// FIXME unused!
+	abstract protected void readFlags();
+
+	abstract protected void writeFlags();
+	
+	abstract protected void readWhiteList();
+	
+	abstract protected void writeWhiteList();
+	
+	abstract protected void readTrafficLimit();
+	
+	abstract protected void writeTrafficLimit();
+	
+	abstract public int getCapabilities();
 }
