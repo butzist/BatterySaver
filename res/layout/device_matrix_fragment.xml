@@ -6,13 +6,13 @@
     android:gravity="center_horizontal" >
 
     <TableLayout
+        android:id="@+id/TableViewDeviceMatrix"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
         android:paddingTop="20dp" >
 
         <TableRow
-            android:id="@+id/TableRow03"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 
@@ -68,57 +68,6 @@
                 android:gravity="bottom"
                 android:text="@string/traffic"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/TableRow02"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <ImageView
-                android:id="@+id/ImageView01"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:contentDescription="@string/wifi"
-                android:src="@drawable/device_access_network_wifi" />
-
-            <CheckBox
-                android:id="@+id/CheckBoxWifiDisable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:onClick="onCheckboxDisable" />
-
-            <CheckBox
-                android:id="@+id/CheckBoxWifiScreen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
-
-            <CheckBox
-                android:id="@+id/CheckBoxWifiPower"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
-
-            <CheckBox
-                android:id="@+id/CheckBoxWifiInterval"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
-
-            <CheckBox
-                android:id="@+id/CheckBoxWifiSave"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
-
-            <CheckBox
-                android:id="@+id/CheckBoxWifiTraffic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
         </TableRow>
     </TableLayout>
 </ScrollView>

@@ -7,21 +7,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.TableLayout;
 import android.widget.TableRow;
+import de.szalkowski.adamsbatterysaver.AdamsBatterySaverApplication;
 import de.szalkowski.adamsbatterysaver.R;
 import de.szalkowski.adamsbatterysaver.SettingsManager;
 import de.szalkowski.adamsbatterysaver.devices.PowerSaver;
+import de.szalkowski.adamsbatterysaver.devices.PowerSaverManager;
 
 public class DeviceMatrixSectionFragment extends Fragment {
     private SettingsManager settings;
     private View rootView;
+    private TableLayout deviceMatrix;
     
-    public static class DeviceMatrixDelegateView extends TableRow {
-
-		public DeviceMatrixDelegateView(Context context) {
-			super(context);
-		}
-    	
+    public static interface DeviceMatrixRowAdapter {
+    	public View getView();
     }
 	
     @Override
@@ -36,22 +36,17 @@ public class DeviceMatrixSectionFragment extends Fragment {
     }
 
 	private void setupWidgets() {
-        setFlags();
+		deviceMatrix = (TableLayout)rootView.findViewById(R.id.TableViewDeviceMatrix);
+		for(PowerSaver powersaver : AdamsBatterySaverApplication.getPowersavers().getPowerSavers()) {
+			deviceMatrix.addView(new DeviceMatrixRowPowerSaverAdapter(powersaver, getActivity()).getView());									
+		}
 	}
 
 	private void loadSettings() {
         settings = SettingsManager.getSettingsManager(getActivity().getApplicationContext());
 	}
-
-	@Override
-	public void onDestroyView() {
-		settings.startTransaction();
-        saveFlags();
-        settings.commitTransaction();
-        
-        super.onDestroyView();
-	}
 	
+	/*
 	public void onCheckboxDisable(View v) {
 		for(int i=0; i < CHECKBOX_IDS.length; ++i) {
 			if(v.getId() == CHECKBOX_IDS[i][0]) {
@@ -115,4 +110,5 @@ public class DeviceMatrixSectionFragment extends Fragment {
 			settings.setValue(DEVICES[i]+"_flags", flags);
 		}
 	}
+	*/
 }

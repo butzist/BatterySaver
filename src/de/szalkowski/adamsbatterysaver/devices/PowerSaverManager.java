@@ -8,12 +8,24 @@ import de.szalkowski.adamsbatterysaver.AdamsBatterySaverApplication;
 import android.content.Context;
 
 public class PowerSaverManager {
+	private static PowerSaver wifiPowerSaver; 
+	private static PowerSaver mobilePowerSaver; 
+	private static PowerSaver bluetoothPowerSaver; 
+	private static PowerSaver globalsyncPowerSaver;
+	
+	public PowerSaverManager() {
+		wifiPowerSaver = getWifiPowerSaver();
+		mobilePowerSaver = getMobileDataPowerSaver();
+		bluetoothPowerSaver = getBluetoothPowerSaver();
+		globalsyncPowerSaver = getGlobalSyncPowerSaver();
+	}
+	
 	public Collection<PowerSaver> getPowerSavers() {
 		Vector<PowerSaver> powerSavers =  new Vector<PowerSaver>(4);
-		powerSavers.add(getWifiPowerSaver());
-		powerSavers.add(getMobileDataPowerSaver());
-		powerSavers.add(getBluetoothPowerSaver());
-		powerSavers.add(getGlobalSyncPowerSaver());
+		powerSavers.add(wifiPowerSaver);
+		powerSavers.add(mobilePowerSaver);
+		powerSavers.add(bluetoothPowerSaver);
+		powerSavers.add(globalsyncPowerSaver);
 		
 		return powerSavers;
 	}
