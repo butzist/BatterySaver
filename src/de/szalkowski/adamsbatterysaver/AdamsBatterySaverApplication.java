@@ -7,15 +7,17 @@ public class AdamsBatterySaverApplication {
 	protected AdamsBatterySaverApplication(Context context) {
 		this.context = context;
 		this.settings = new SettingsManager(context);
-		this.powersavers = new PowerSaverManager(); 
+		this.powersavers = new PowerSaverManager(context); 
 	}
 	
 	public static void initApplication(Context context) {
-		instance = new AdamsBatterySaverApplication(context);
+		if(instance == null) {
+			instance = new AdamsBatterySaverApplication(context);
+		}
 	}
 	
 	public static SettingsManager getSettings() {
-		return instance.settings;		
+		return instance.settings;
 	}
 
 	public static PowerSaverManager getPowersavers() {
@@ -26,7 +28,7 @@ public class AdamsBatterySaverApplication {
 		return instance.context;
 	}
 
-	static private AdamsBatterySaverApplication instance;
+	static private AdamsBatterySaverApplication instance = null;
 	
 	private SettingsManager settings;
 	private PowerSaverManager powersavers;

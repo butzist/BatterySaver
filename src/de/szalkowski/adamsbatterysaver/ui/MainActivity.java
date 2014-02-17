@@ -30,6 +30,7 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		AdamsBatterySaverApplication.initApplication(this);
         loadSettings();
         checkAndStartServiceIfNecessary();
 		setupViewPager();

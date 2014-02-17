@@ -41,7 +41,7 @@
         <activity android:name="org.thirdparty.AdvancedSettingsActivity"></activity>
         <activity android:name="de.szalkowski.adamsbatterysaver.ui.WhiteListPreferenceActivity"></activity>
         <service android:name="MainService"></service>
-        <receiver android:name="service.AutoStartReceiver" android:label="@string/app_name">
+        <receiver android:name="de.szalkowski.adamsbatterysaver.service.AutoStartReceiver" android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -55,7 +55,7 @@
                 <data android:scheme="package" android:path="de.szalkowski.adamsbatterysaver"/>
                 </intent-filter>
             </receiver>
-        <receiver android:name="service.PowerStateReceiver" android:label="@string/app_name">
+        <receiver android:name="de.szalkowski.adamsbatterysaver.service.PowerStateReceiver" android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
@@ -63,7 +63,7 @@
                 <action android:name="android.intent.action.SCREEN_OFF"/>
             </intent-filter>
         </receiver>
-        <receiver android:name="service.AlarmReceiver" android:label="@string/app_name">
+        <receiver android:name="de.szalkowski.adamsbatterysaver.service.AlarmReceiver" android:label="@string/app_name">
             <intent-filter>
                 <action android:name="de.szalkowski.adamsbatterysaver.WAKEUP_ACTION"/>
                 <action android:name="de.szalkowski.adamsbatterysaver.WAKEUP_TIMEOUT_ACTION"/>

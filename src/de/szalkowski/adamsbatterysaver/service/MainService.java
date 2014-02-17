@@ -58,6 +58,8 @@ public class MainService extends Service {
 		
 		MainService.is_running = true;
 		
+		AdamsBatterySaverApplication.initApplication(this);
+		
 		// register power state listener
 		IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_POWER_CONNECTED);

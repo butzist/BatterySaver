@@ -26,18 +26,25 @@ public class DeviceMatrixRowPowerSaverAdapter implements DeviceMatrixRowAdapter 
 	public DeviceMatrixRowPowerSaverAdapter(PowerSaver powersaver, Context context) {	
 		this.powerSaver = powersaver;
 		
-		LayoutInflater inflater = (LayoutInflater)context.getSystemService
-			      (Context.LAYOUT_INFLATER_SERVICE);
-		View view = inflater.inflate(R.layout.device_matrix_row, null);
+		initView(context);
 		
-		icon = (ImageView)view.findViewById(R.id.ImageViewDeviceIcon);
-		
+		initIcon();
 		initCheckManual();
 		initCheckScreen();
 		initCheckPower();
 		initCheckInterval();
 		initCheckSave();
 		initCheckTraffic();
+	}
+
+	private void initView(Context context) {
+		LayoutInflater inflater = (LayoutInflater)context.getSystemService
+			      (Context.LAYOUT_INFLATER_SERVICE);
+		view = inflater.inflate(R.layout.device_matrix_row, null);
+	}
+	
+	private void initIcon() {
+		icon = (ImageView)view.findViewById(R.id.ImageViewDeviceIcon);
 	}
 
 	private void initCheckScreen() {

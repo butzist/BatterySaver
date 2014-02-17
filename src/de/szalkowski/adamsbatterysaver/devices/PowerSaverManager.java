@@ -13,7 +13,8 @@ public class PowerSaverManager {
 	private static PowerSaver bluetoothPowerSaver; 
 	private static PowerSaver globalsyncPowerSaver;
 	
-	public PowerSaverManager() {
+	public PowerSaverManager(Context context) {
+		this.context = context;
 		wifiPowerSaver = getWifiPowerSaver();
 		mobilePowerSaver = getMobileDataPowerSaver();
 		bluetoothPowerSaver = getBluetoothPowerSaver();
