@@ -223,6 +223,30 @@ public abstract class PowerSaver {
 		this.flags |= FLAG_DISABLE;
 	}
 	
+	public void unsetFlagDisableWithScreenSet() {
+		this.flags &= ~FLAG_DISABLE_WITH_SCREEN;
+	}
+	
+	public void unsetFlagDisableWithPowerSet() {
+		this.flags &= ~FLAG_DISABLE_WITH_POWER;
+	}
+	
+	public void unsetFlagDisableOnIntervalSet() {
+		this.flags &= ~FLAG_DISABLE_ON_INTERVAL;
+	}
+	
+	public void unsetFlagSaveStateSet() {
+		this.flags &= ~FLAG_SAVE_STATE;
+	}
+	
+	public void unsetFlagDisabledWhileTrafficSet() {
+		this.flags &= ~FLAG_DISABLED_WHILE_TRAFFIC;
+	}
+	
+	public void unsetFlagDisable() {
+		this.flags &= ~FLAG_DISABLE;
+	}
+	
 	public void updateSettings() {
 		readFlags();
 		readWhiteList();

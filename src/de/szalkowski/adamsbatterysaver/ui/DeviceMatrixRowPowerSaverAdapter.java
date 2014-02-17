@@ -30,34 +30,105 @@ public class DeviceMatrixRowPowerSaverAdapter implements DeviceMatrixRowAdapter 
 			      (Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.device_matrix_row, null);
 		
-		ImageView icon = (ImageView)view.findViewById(R.id.ImageViewDeviceIcon);
+		icon = (ImageView)view.findViewById(R.id.ImageViewDeviceIcon);
 		
-		checkManual = (CheckBox)view.findViewById(R.id.CheckBoxManual);
+		initCheckManual();
+		initCheckScreen();
+		initCheckPower();
+		initCheckInterval();
+		initCheckSave();
+		initCheckTraffic();
+	}
+
+	private void initCheckScreen() {
 		checkScreen = (CheckBox)view.findViewById(R.id.CheckBoxScreen);
-		checkPower = (CheckBox)view.findViewById(R.id.CheckBoxPower);
-		checkInterval = (CheckBox)view.findViewById(R.id.CheckBoxInterval);
-		checkSave = (CheckBox)view.findViewById(R.id.CheckBoxSave);
-		checkTraffic = (CheckBox)view.findViewById(R.id.CheckBoxTraffic);
-		
-		checkManual.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				setRowEnabled(!isChecked);
-				
-				if(isChecked) {
-					powerSaver.setFlagDisable();					
-				} else {
-					powerSaver.;					
-				}
-			}
-		});
-		
 		checkScreen.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				powerSaver.setFlagDisableWithScreenSet();
+				if(isChecked) {
+					powerSaver.setFlagDisableWithScreenSet();
+				} else {
+					powerSaver.unsetFlagDisableWithScreenSet();
+				}
 			}
 		});
+	}
+	
+	private void initCheckPower() {
+		checkPower = (CheckBox)view.findViewById(R.id.CheckBoxPower);
+		checkPower.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if(isChecked) {
+					powerSaver.setFlagDisableWithPowerSet();
+				} else {
+					powerSaver.unsetFlagDisableWithPowerSet();
+				}
+			}
+		});
+	}
+	
+	private void initCheckInterval() {
+		checkInterval = (CheckBox)view.findViewById(R.id.CheckBoxInterval);
+		checkInterval.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if(isChecked) {
+					powerSaver.setFlagDisableOnIntervalSet();
+				} else {
+					powerSaver.unsetFlagDisableOnIntervalSet();
+				}
+			}
+		});
+	}
+	
+	private void initCheckSave() {
+		checkSave = (CheckBox)view.findViewById(R.id.CheckBoxSave);
+		checkSave.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if(isChecked) {
+					powerSaver.setFlagSaveStateSet();
+				} else {
+					powerSaver.unsetFlagSaveStateSet();
+				}
+			}
+		});
+	}
+	
+	private void initCheckTraffic() {
+		checkTraffic = (CheckBox)view.findViewById(R.id.CheckBoxTraffic);
+		checkTraffic.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if(isChecked) {
+					powerSaver.setFlagDisabledWhileTrafficSet();
+				} else {
+					powerSaver.unsetFlagDisabledWhileTrafficSet();
+				}
+			}
+		});
+	}
+	
+	private void initCheckManual() {
+		checkManual = (CheckBox)view.findViewById(R.id.CheckBoxManual);
+		checkManual.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				setCheckManual(isChecked);
+			}
+		});
+		
+	}
+	
+	private void setCheckManual(boolean isChecked) {
+		if(isChecked) {
+			setRowDisabled();
+			powerSaver.setFlagDisable();					
+		} else {
+			setRowEnabled();
+			powerSaver.unsetFlagDisable();					
+		}		
 	}
 
 	@Override
@@ -65,7 +136,15 @@ public class DeviceMatrixRowPowerSaverAdapter implements DeviceMatrixRowAdapter 
 		return view;
 	}
 	
-	private void setRowEnabled(boolean enabled) {
+	private void setRowDisabled() {
+		setRowEnabledState(false);
+	}
+	
+	private void setRowEnabled() {
+		setRowEnabledState(true);
+	}
+	
+	private void setRowEnabledState(boolean enabled) {
 		checkScreen.setEnabled(enabled);
 		checkPower.setEnabled(enabled);
 		checkInterval.setEnabled(enabled);
