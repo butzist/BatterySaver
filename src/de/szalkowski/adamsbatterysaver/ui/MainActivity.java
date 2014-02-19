@@ -85,12 +85,15 @@ public class MainActivity extends FragmentActivity {
 
 		if(start_service != MainService.is_running) {
         	String text;
+			Intent service = new Intent(this,MainService.class);
         	if(start_service) {
         		text = this.getString(R.string.service_not_running);
         	} else {
         		text = this.getString(R.string.service_running);
+        		service.setAction(MainService.ACTION_DISABLE);
         	}
         	Toast.makeText(this.getApplicationContext(), text, Toast.LENGTH_LONG).show();
+    		startService(service);
         }
 	}
 

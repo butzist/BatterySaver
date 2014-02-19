@@ -12,7 +12,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 
 
-public class SettingsManager implements SettingsProvider {
+public class SettingsManager implements SettingsStorage {
 	static final protected String SETTINGS_INTERVAL = "interval";
 	static final protected String SETTINGS_INTERVAL_SHORT = "interval_short";
 	static final protected String SETTINGS_TIMEOUT = "timeout";
@@ -51,14 +51,11 @@ public class SettingsManager implements SettingsProvider {
 		editor = null;
 	}
 	
-	public static SettingsManager getSettingsManager(Context context) {
-		return new SettingsManager(context);
-	}
-	
 	private boolean hasPendingTransaction() {
 		return editor != null;
 	}
 	
+	@Override
 	public void startTransaction() {
 		if(!hasPendingTransaction()) {
 			createEditor();
@@ -69,6 +66,7 @@ public class SettingsManager implements SettingsProvider {
 		editor = preferences.edit();
 	}
 	
+	@Override
 	public void commitTransaction() throws TransactionFailed {
 		if(hasPendingTransaction()) {
 			commitEditor();
@@ -195,6 +193,7 @@ public class SettingsManager implements SettingsProvider {
 		return getInteger(SETTINGS_INTERVAL, defaults.getInterval());
 	}
 
+	@Override
 	public void setInterval(int value) {
 		setValue(SETTINGS_INTERVAL, value);
 	}
@@ -204,6 +203,7 @@ public class SettingsManager implements SettingsProvider {
 		return getInteger(SETTINGS_INTERVAL_SHORT, defaults.getShortInterval());
 	}
 
+	@Override
 	public void setShortInterval(int value) {
 		setValue(SETTINGS_INTERVAL_SHORT, value);
 	}
@@ -213,6 +213,7 @@ public class SettingsManager implements SettingsProvider {
 		return getInteger(SETTINGS_TIMEOUT, defaults.getTimeout());
 	}
 
+	@Override
 	public void setTimeout(int value) {
 		setValue(SETTINGS_TIMEOUT, value);
 	}
@@ -222,6 +223,7 @@ public class SettingsManager implements SettingsProvider {
 		return getBoolean(SETTINGS_START_SERVICE, defaults.getStartService());
 	}
 
+	@Override
 	public void setStartService(boolean value) {
 		setValue(SETTINGS_START_SERVICE, value);
 	}
@@ -231,6 +233,7 @@ public class SettingsManager implements SettingsProvider {
 		return getInteger(SETTINGS_NIGHTMODE_FROM_HOUR, defaults.getNightModeFromHour());
 	}
 
+	@Override
 	public void setNightModeFromHour(int value) {
 		setValue(SETTINGS_NIGHTMODE_FROM_HOUR, value);
 	}
@@ -240,6 +243,7 @@ public class SettingsManager implements SettingsProvider {
 		return getInteger(SETTINGS_NIGHTMODE_FROM_MINUTE, defaults.getNightModeFromMinute());
 	}
 
+	@Override
 	public void setNightModeFromMinute(int value) {
 		setValue(SETTINGS_NIGHTMODE_FROM_MINUTE, value);
 	}
@@ -249,6 +253,7 @@ public class SettingsManager implements SettingsProvider {
 		return getInteger(SETTINGS_NIGHTMODE_TO_HOUR, defaults.getNightModeToHour());
 	}
 
+	@Override
 	public void setNightModeToHour(int value) {
 		setValue(SETTINGS_NIGHTMODE_TO_HOUR, value);
 	}
@@ -258,6 +263,7 @@ public class SettingsManager implements SettingsProvider {
 		return getInteger(SETTINGS_NIGHTMODE_TO_MINUTE, defaults.getNightModeToMinute());
 	}
 
+	@Override
 	public void setNightModeToMinute(int value) {
 		setValue(SETTINGS_NIGHTMODE_TO_MINUTE, value);
 	}
@@ -267,6 +273,7 @@ public class SettingsManager implements SettingsProvider {
 		return getInteger(SETTINGS_WIFI_FLAGS, defaults.getWifiFlags());
 	}
 	
+	@Override
 	public void setWifiFlags(int flags) {
 		setValue(SETTINGS_WIFI_FLAGS, flags);
 	}
@@ -276,6 +283,7 @@ public class SettingsManager implements SettingsProvider {
 		return getInteger(SETTINGS_MOBILEDATA_FLAGS, defaults.getMobileDataFlags());
 	}
 	
+	@Override
 	public void setMobileDataFlags(int flags) {
 		setValue(SETTINGS_MOBILEDATA_FLAGS, flags);
 	}
@@ -285,6 +293,7 @@ public class SettingsManager implements SettingsProvider {
 		return getInteger(SETTINGS_SYNC_FLAGS, defaults.getSyncFlags());
 	}
 	
+	@Override
 	public void setSyncFlags(int flags) {
 		setValue(SETTINGS_SYNC_FLAGS, flags);
 	}
@@ -294,6 +303,7 @@ public class SettingsManager implements SettingsProvider {
 		return getInteger(SETTINGS_BLUETOOTH_FLAGS, defaults.getBluetoothFlags());
 	}
 	
+	@Override
 	public void setBluetoothFlags(int flags) {
 		setValue(SETTINGS_BLUETOOTH_FLAGS, flags);
 	}
@@ -303,6 +313,7 @@ public class SettingsManager implements SettingsProvider {
 		return getStringSet(SETTINGS_WIFI_WHITELIST, defaults.getWifiWhitelist());
 	}
 	
+	@Override
 	public void setWifiWhitelist(Set<String> values) {
 		setValue(SETTINGS_WIFI_WHITELIST, values);
 	}
@@ -312,6 +323,7 @@ public class SettingsManager implements SettingsProvider {
 		return getStringSet(SETTINGS_MOBILEDATA_WHITELIST, defaults.getMobileDataWhitelist());
 	}
 	
+	@Override
 	public void setMobileDataWhitelist(Set<String> values) {
 		setValue(SETTINGS_MOBILEDATA_WHITELIST, values);
 	}
@@ -321,6 +333,7 @@ public class SettingsManager implements SettingsProvider {
 		return getStringSet(SETTINGS_SYNC_WHITELIST, defaults.getSyncWhitelist());
 	}
 	
+	@Override
 	public void setSyncWhitelist(Set<String> values) {
 		setValue(SETTINGS_SYNC_WHITELIST, values);
 	}
@@ -330,6 +343,7 @@ public class SettingsManager implements SettingsProvider {
 		return getStringSet(SETTINGS_BLUETOOTH_WHITELIST, defaults.getBluetoothWhitelist());
 	}
 	
+	@Override
 	public void setBluetoothWhitelist(Set<String> values) {
 		setValue(SETTINGS_BLUETOOTH_WHITELIST, values);
 	}
@@ -339,6 +353,7 @@ public class SettingsManager implements SettingsProvider {
 		return getBoolean(SETTINGS_ONLY_TOP_TASK, defaults.getWhitelistOnlyTopTask());
 	}
 	
+	@Override
 	public void setWhitelistOnlyTopTask(boolean value) {
 		setValue(SETTINGS_ONLY_TOP_TASK, value);
 	}
@@ -348,6 +363,7 @@ public class SettingsManager implements SettingsProvider {
 		return getInteger(SETTINGS_WIFI_TRAFFIC_LIMIT, defaults.getWifiTrafficLimit());
 	}
 	
+	@Override
 	public void setWifiTrafficLimit(int value) {
 		setValue(SETTINGS_WIFI_TRAFFIC_LIMIT, value);
 	}
@@ -357,6 +373,7 @@ public class SettingsManager implements SettingsProvider {
 		return getInteger(SETTINGS_MOBILEDATA_TRAFFIC_LIMIT, defaults.getMobileDataTrafficLimit());
 	}
 
+	@Override
 	public void setMobileDataTrafficLimit(int value) {
 		setValue(SETTINGS_MOBILEDATA_TRAFFIC_LIMIT, value);
 	}

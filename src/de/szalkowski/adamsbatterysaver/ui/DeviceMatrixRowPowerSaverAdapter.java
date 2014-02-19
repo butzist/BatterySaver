@@ -9,9 +9,9 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import de.szalkowski.adamsbatterysaver.R;
 import de.szalkowski.adamsbatterysaver.devices.PowerSaver;
-import de.szalkowski.adamsbatterysaver.ui.DeviceMatrixSectionFragment.DeviceMatrixRowAdapter;
+import de.szalkowski.adamsbatterysaver.ui.DeviceMatrixSectionFragment.DeviceMatrixRow;
 
-public class DeviceMatrixRowPowerSaverAdapter implements DeviceMatrixRowAdapter {
+public class DeviceMatrixRowPowerSaverAdapter implements DeviceMatrixRow {
 	private View view;
 	private ImageView icon;
 	private CheckBox checkManual;
@@ -45,17 +45,20 @@ public class DeviceMatrixRowPowerSaverAdapter implements DeviceMatrixRowAdapter 
 	
 	private void initIcon() {
 		icon = (ImageView)view.findViewById(R.id.ImageViewDeviceIcon);
+		icon.setImageResource(powerSaver.getIcon());
 	}
 
 	private void initCheckScreen() {
 		checkScreen = (CheckBox)view.findViewById(R.id.CheckBoxScreen);
+		checkScreen.setChecked(powerSaver.getFlagDisableWithScreen());
+		checkScreen.setEnabled(!checkManual.isChecked());
 		checkScreen.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if(isChecked) {
-					powerSaver.setFlagDisableWithScreenSet();
+					powerSaver.setFlagDisableWithScreen();
 				} else {
-					powerSaver.unsetFlagDisableWithScreenSet();
+					powerSaver.unsetFlagDisableWithScreen();
 				}
 			}
 		});
@@ -63,13 +66,15 @@ public class DeviceMatrixRowPowerSaverAdapter implements DeviceMatrixRowAdapter 
 	
 	private void initCheckPower() {
 		checkPower = (CheckBox)view.findViewById(R.id.CheckBoxPower);
+		checkPower.setChecked(powerSaver.getFlagDisableWithPower());
+		checkPower.setEnabled(!checkManual.isChecked());
 		checkPower.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if(isChecked) {
-					powerSaver.setFlagDisableWithPowerSet();
+					powerSaver.setFlagDisableWithPower();
 				} else {
-					powerSaver.unsetFlagDisableWithPowerSet();
+					powerSaver.unsetFlagDisableWithPower();
 				}
 			}
 		});
@@ -77,13 +82,15 @@ public class DeviceMatrixRowPowerSaverAdapter implements DeviceMatrixRowAdapter 
 	
 	private void initCheckInterval() {
 		checkInterval = (CheckBox)view.findViewById(R.id.CheckBoxInterval);
+		checkInterval.setChecked(powerSaver.getFlagDisableOnInterval());
+		checkInterval.setEnabled(!checkManual.isChecked());
 		checkInterval.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if(isChecked) {
-					powerSaver.setFlagDisableOnIntervalSet();
+					powerSaver.setFlagDisableOnInterval();
 				} else {
-					powerSaver.unsetFlagDisableOnIntervalSet();
+					powerSaver.unsetFlagDisableOnInterval();
 				}
 			}
 		});
@@ -91,13 +98,15 @@ public class DeviceMatrixRowPowerSaverAdapter implements DeviceMatrixRowAdapter 
 	
 	private void initCheckSave() {
 		checkSave = (CheckBox)view.findViewById(R.id.CheckBoxSave);
+		checkSave.setChecked(powerSaver.getFlagSaveState());
+		checkSave.setEnabled(!checkManual.isChecked());
 		checkSave.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if(isChecked) {
-					powerSaver.setFlagSaveStateSet();
+					powerSaver.setFlagSaveState();
 				} else {
-					powerSaver.unsetFlagSaveStateSet();
+					powerSaver.unsetFlagSaveState();
 				}
 			}
 		});
@@ -105,13 +114,15 @@ public class DeviceMatrixRowPowerSaverAdapter implements DeviceMatrixRowAdapter 
 	
 	private void initCheckTraffic() {
 		checkTraffic = (CheckBox)view.findViewById(R.id.CheckBoxTraffic);
+		checkTraffic.setChecked(powerSaver.getFlagDisabledWhileTraffic());
+		checkTraffic.setEnabled(!checkManual.isChecked());
 		checkTraffic.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if(isChecked) {
-					powerSaver.setFlagDisabledWhileTrafficSet();
+					powerSaver.setFlagDisabledWhileTraffic();
 				} else {
-					powerSaver.unsetFlagDisabledWhileTrafficSet();
+					powerSaver.unsetFlagDisabledWhileTraffic();
 				}
 			}
 		});
@@ -119,6 +130,7 @@ public class DeviceMatrixRowPowerSaverAdapter implements DeviceMatrixRowAdapter 
 	
 	private void initCheckManual() {
 		checkManual = (CheckBox)view.findViewById(R.id.CheckBoxManual);
+		checkManual.setChecked(powerSaver.getFlagDisable());
 		checkManual.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -157,5 +169,13 @@ public class DeviceMatrixRowPowerSaverAdapter implements DeviceMatrixRowAdapter 
 		checkInterval.setEnabled(enabled);
 		checkSave.setEnabled(enabled);
 		checkTraffic.setEnabled(enabled);
+	}
+	
+	public void update() {
+		powerSaver.updateSettings();
+	}
+	
+	public void save() {
+		powerSaver.saveSettings();
 	}
 }

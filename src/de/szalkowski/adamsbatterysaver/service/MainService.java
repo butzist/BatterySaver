@@ -75,7 +75,6 @@ public class MainService extends Service {
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         this.screen_on = pm.isScreenOn();
 		Logger.debug("Screen is " + (this.screen_on ? "on" : "off"));
-        
         Intent battery_status = this.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         int battery_plugged = battery_status.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
         this.power_on = (battery_plugged == BatteryManager.BATTERY_PLUGGED_USB) || (battery_plugged == BatteryManager.BATTERY_PLUGGED_AC); 
@@ -88,7 +87,7 @@ public class MainService extends Service {
 		
 		settings = AdamsBatterySaverApplication.getSettings();
 
-		this.power_savers = AdamsBatterySaverApplication.getPowersavers().getPowerSavers();
+		this.power_savers = AdamsBatterySaverApplication.getPowerSavers();
 		
 		setWakeupTimeout();
 	}
@@ -255,7 +254,7 @@ public class MainService extends Service {
 	
 	protected void stopPowersave() {
 		for(PowerSaver power_saver : this.power_savers) {
-			if(!power_saver.getFlagDisableOnIntervalSet())
+			if(!power_saver.getFlagDisableOnInterval())
 				continue;
 			
 			power_saver.stopPowersave();
@@ -271,9 +270,9 @@ public class MainService extends Service {
 	protected void applyPowersave() {
 		// All timeouts need to update this
 		for(PowerSaver power_saver : this.power_savers) {
-			if((power_saver.getFlagDisableWithPowerSet() && this.power_on) || (power_saver.getFlagDisableWithScreenSet() && this.screen_on)) {
+			if((power_saver.getFlagDisableWithPower() && this.power_on) || (power_saver.getFlagDisableWithScreen() && this.screen_on)) {
 					power_saver.stopPowersave();
-			} else if (power_saver.getFlagDisabledWhileTrafficSet() && power_saver.hasTraffic()) {
+			} else if (power_saver.getFlagDisabledWhileTraffic() && power_saver.hasTraffic()) {
 				Logger.debug("delaying " + power_saver.getName() + " powersave");
 				this.setWakeupTimeout();
 			} else {

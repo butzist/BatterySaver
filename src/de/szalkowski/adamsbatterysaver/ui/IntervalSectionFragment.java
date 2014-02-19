@@ -22,11 +22,11 @@ import android.widget.TimePicker;
 import android.widget.ToggleButton;
 import de.szalkowski.adamsbatterysaver.AdamsBatterySaverApplication;
 import de.szalkowski.adamsbatterysaver.R;
-import de.szalkowski.adamsbatterysaver.SettingsManager;
+import de.szalkowski.adamsbatterysaver.SettingsStorage;
 import de.szalkowski.adamsbatterysaver.service.MainService;
 
 public class IntervalSectionFragment extends Fragment {
-    private SettingsManager settings;
+    private SettingsStorage settings;
     private View rootView;
 	
     @Override
@@ -51,13 +51,13 @@ public class IntervalSectionFragment extends Fragment {
         boolean start_service = settings.getStartService();
 
 		ToggleButton toggle = (ToggleButton)rootView.findViewById(R.id.toggleButton);
-        toggle.setChecked(MainService.is_running);
+        toggle.setChecked(start_service);
         toggle.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				Intent service = new Intent(getActivity(),MainService.class);
 				if(isChecked) {
+					AdamsBatterySaverApplication.getSettings().setStartService(true);
 					getActivity().startService(service);
 				} else {
 					AdamsBatterySaverApplication.getSettings().setStartService(false);
@@ -66,7 +66,6 @@ public class IntervalSectionFragment extends Fragment {
 				}
 			}
 		});
-        toggle.setChecked(start_service);
 	}
 
 	private void setIntervalSeekBar() {
@@ -96,7 +95,7 @@ public class IntervalSectionFragment extends Fragment {
 	}
 
 	private void loadSettings() {
-        settings = SettingsManager.getSettingsManager(getActivity().getApplicationContext());
+        settings = AdamsBatterySaverApplication.getSettings();
 	}
 
 	@Override
@@ -130,6 +129,12 @@ public class IntervalSectionFragment extends Fragment {
         
         Button button = (Button)rootView.findViewById(R.id.buttonFrom);
         button.setText(this.getText(R.string.from) + " " + DateFormat.getTimeFormat(getActivity()).format(time.getTime()));
+        button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showFromTimePicker();
+			}
+		});
 	}
 	
 	public void setToTime() {
@@ -142,9 +147,15 @@ public class IntervalSectionFragment extends Fragment {
         
         Button button = (Button)rootView.findViewById(R.id.buttonTo);
         button.setText(this.getText(R.string.to) + " " + DateFormat.getTimeFormat(getActivity()).format(time.getTime()));
+        button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showToTimePicker();
+			}
+		});
 	}
 	
-	public void showFromTimePicker(View v) {
+	public void showFromTimePicker() {
 		class TimePickerFragment_From extends DialogFragment
 		implements TimePickerDialog.OnTimeSetListener {
 
@@ -172,7 +183,7 @@ public class IntervalSectionFragment extends Fragment {
 	    newFragment.show(getChildFragmentManager(), "fromPicker");
 	}
 
-	public void showToTimePicker(View v) {
+	public void showToTimePicker() {
 		class TimePickerFragment_To extends DialogFragment
 		implements TimePickerDialog.OnTimeSetListener {
 
@@ -195,7 +206,6 @@ public class IntervalSectionFragment extends Fragment {
 				setToTime();
 			}
 		}
-		
 		
 		DialogFragment newFragment = new TimePickerFragment_To();
 	    newFragment.show(getChildFragmentManager(), "toPicker");

@@ -79,7 +79,6 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_weight="1"
-	            android:onClick="showFromTimePicker"
 	            android:text="@string/from" />
 	
 	        <Button
@@ -87,7 +86,6 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_weight="1"
-	            android:onClick="showToTimePicker"
 	            android:text="@string/to" />
 	    </LinearLayout>
     </LinearLayout>

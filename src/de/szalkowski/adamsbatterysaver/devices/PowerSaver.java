@@ -22,15 +22,17 @@ public abstract class PowerSaver {
 	private boolean unknownState;
 	private Context context;
 	private String name;
+	private int icon;
 	private Powersaveable saveable;
 
 	protected int flags;
 	protected int trafficLimit;
 	protected Set<String> whiteList;
 
-	protected PowerSaver(Context context, String name, Powersaveable saveable) {
+	protected PowerSaver(Context context, String name, int icon, Powersaveable saveable) {
 		this.context = context;
 		this.name = name;
+		this.icon = icon;
 		this.saveable = saveable;
 		this.unknownState = false;
 		this.savedState = false;
@@ -43,6 +45,8 @@ public abstract class PowerSaver {
 			this.unknownState = true;
 			Logger.error(name + " " + e.toString());
 		}
+		
+		updateSettings();
 		
 		if((flags & FLAG_SAVE_STATE) != 0) {
 			this.savedState = this.inPowersave;
@@ -115,6 +119,10 @@ public abstract class PowerSaver {
 		return this.name;
 	}
 	
+	public int getIcon() {
+		return this.icon;
+	}
+	
 	public boolean isReallyInPowersave() {
 		boolean enabled = this.inPowersave;
 		try {
@@ -175,23 +183,23 @@ public abstract class PowerSaver {
 		return false;
 	}
 	
-	public boolean getFlagDisableWithScreenSet() {
+	public boolean getFlagDisableWithScreen() {
 		return (this.flags & FLAG_DISABLE_WITH_SCREEN) != 0;
 	}
 	
-	public boolean getFlagDisableWithPowerSet() {
+	public boolean getFlagDisableWithPower() {
 		return (this.flags & FLAG_DISABLE_WITH_POWER) != 0;
 	}
 	
-	public boolean getFlagDisableOnIntervalSet() {
+	public boolean getFlagDisableOnInterval() {
 		return (this.flags & FLAG_DISABLE_ON_INTERVAL) != 0;
 	}
 	
-	public boolean getFlagSaveStateSet() {
+	public boolean getFlagSaveState() {
 		return (this.flags & FLAG_SAVE_STATE) != 0;
 	}
 	
-	public boolean getFlagDisabledWhileTrafficSet() {
+	public boolean getFlagDisabledWhileTraffic() {
 		return (this.flags & FLAG_DISABLED_WHILE_TRAFFIC) != 0;
 	}
 	
@@ -199,23 +207,23 @@ public abstract class PowerSaver {
 		return (this.flags & FLAG_DISABLE) != 0;
 	}	
 	
-	public void setFlagDisableWithScreenSet() {
+	public void setFlagDisableWithScreen() {
 		this.flags |= FLAG_DISABLE_WITH_SCREEN;
 	}
 	
-	public void setFlagDisableWithPowerSet() {
+	public void setFlagDisableWithPower() {
 		this.flags |= FLAG_DISABLE_WITH_POWER;
 	}
 	
-	public void setFlagDisableOnIntervalSet() {
+	public void setFlagDisableOnInterval() {
 		this.flags |= FLAG_DISABLE_ON_INTERVAL;
 	}
 	
-	public void setFlagSaveStateSet() {
+	public void setFlagSaveState() {
 		this.flags |= FLAG_SAVE_STATE;
 	}
 	
-	public void setFlagDisabledWhileTrafficSet() {
+	public void setFlagDisabledWhileTraffic() {
 		this.flags |= FLAG_DISABLED_WHILE_TRAFFIC;
 	}
 	
@@ -223,23 +231,23 @@ public abstract class PowerSaver {
 		this.flags |= FLAG_DISABLE;
 	}
 	
-	public void unsetFlagDisableWithScreenSet() {
+	public void unsetFlagDisableWithScreen() {
 		this.flags &= ~FLAG_DISABLE_WITH_SCREEN;
 	}
 	
-	public void unsetFlagDisableWithPowerSet() {
+	public void unsetFlagDisableWithPower() {
 		this.flags &= ~FLAG_DISABLE_WITH_POWER;
 	}
 	
-	public void unsetFlagDisableOnIntervalSet() {
+	public void unsetFlagDisableOnInterval() {
 		this.flags &= ~FLAG_DISABLE_ON_INTERVAL;
 	}
 	
-	public void unsetFlagSaveStateSet() {
+	public void unsetFlagSaveState() {
 		this.flags &= ~FLAG_SAVE_STATE;
 	}
 	
-	public void unsetFlagDisabledWhileTrafficSet() {
+	public void unsetFlagDisabledWhileTraffic() {
 		this.flags &= ~FLAG_DISABLED_WHILE_TRAFFIC;
 	}
 	
@@ -259,7 +267,6 @@ public abstract class PowerSaver {
 		writeTrafficLimit();
 	}
 	
-	// FIXME unused!
 	abstract protected void readFlags();
 
 	abstract protected void writeFlags();

@@ -3,18 +3,21 @@ package de.szalkowski.adamsbatterysaver.devices;
 import java.util.Collection;
 import java.util.Vector;
 
-import de.szalkowski.adamsbatterysaver.AdamsBatterySaverApplication;
-
 import android.content.Context;
+import de.szalkowski.adamsbatterysaver.R;
+import de.szalkowski.adamsbatterysaver.SettingsStorage;
 
 public class PowerSaverManager {
 	private static PowerSaver wifiPowerSaver; 
 	private static PowerSaver mobilePowerSaver; 
 	private static PowerSaver bluetoothPowerSaver; 
 	private static PowerSaver globalsyncPowerSaver;
+	private Context context;
+	private SettingsStorage settings;
 	
-	public PowerSaverManager(Context context) {
+	public PowerSaverManager(Context context, SettingsStorage settings) {
 		this.context = context;
+		this.settings = settings;
 		wifiPowerSaver = getWifiPowerSaver();
 		mobilePowerSaver = getMobileDataPowerSaver();
 		bluetoothPowerSaver = getBluetoothPowerSaver();
@@ -32,35 +35,35 @@ public class PowerSaverManager {
 	}
 	
 	protected PowerSaver getWifiPowerSaver() {
-		return new PowerSaver(context, "wifi", new WifiDevice(context)) {
+		return new PowerSaver(context, "wifi", R.drawable.device_access_network_wifi, new WifiDevice(context)) {
 			@Override
 			protected void readFlags() {
-				flags = AdamsBatterySaverApplication.getSettings().getWifiFlags();
+				flags = settings.getWifiFlags();
 			}
 
 			@Override
 			protected void writeFlags() {
-				AdamsBatterySaverApplication.getSettings().setWifiFlags(flags);
+				settings.setWifiFlags(flags);
 			}
 
 			@Override
 			protected void readWhiteList() {
-				whiteList = AdamsBatterySaverApplication.getSettings().getWifiWhitelist();
+				whiteList = settings.getWifiWhitelist();
 			}
 
 			@Override
 			protected void writeWhiteList() {
-				AdamsBatterySaverApplication.getSettings().setWifiWhitelist(whiteList);
+				settings.setWifiWhitelist(whiteList);
 			}
 
 			@Override
 			protected void readTrafficLimit() {
-				trafficLimit = AdamsBatterySaverApplication.getSettings().getWifiTrafficLimit();
+				trafficLimit = settings.getWifiTrafficLimit();
 			}
 
 			@Override
 			protected void writeTrafficLimit() {
-				AdamsBatterySaverApplication.getSettings().setWifiTrafficLimit(trafficLimit);
+				settings.setWifiTrafficLimit(trafficLimit);
 			}
 
 			@Override
@@ -71,35 +74,35 @@ public class PowerSaverManager {
 	}
 	
 	protected PowerSaver getMobileDataPowerSaver() {
-		return new PowerSaver(context, "data", new MobileDataDevice(context)) {
+		return new PowerSaver(context, "data", R.drawable.device_access_network_cell, new MobileDataDevice(context)) {
 			@Override
 			protected void readFlags() {
-				flags = AdamsBatterySaverApplication.getSettings().getMobileDataFlags();
+				flags = settings.getMobileDataFlags();
 			}
 
 			@Override
 			protected void writeFlags() {
-				AdamsBatterySaverApplication.getSettings().setMobileDataFlags(flags);
+				settings.setMobileDataFlags(flags);
 			}
 
 			@Override
 			protected void readWhiteList() {
-				whiteList = AdamsBatterySaverApplication.getSettings().getMobileDataWhitelist();
+				whiteList = settings.getMobileDataWhitelist();
 			}
 
 			@Override
 			protected void writeWhiteList() {
-				AdamsBatterySaverApplication.getSettings().setMobileDataWhitelist(whiteList);
+				settings.setMobileDataWhitelist(whiteList);
 			}
 
 			@Override
 			protected void readTrafficLimit() {
-				trafficLimit = AdamsBatterySaverApplication.getSettings().getMobileDataTrafficLimit();
+				trafficLimit = settings.getMobileDataTrafficLimit();
 			}
 
 			@Override
 			protected void writeTrafficLimit() {
-				AdamsBatterySaverApplication.getSettings().setMobileDataTrafficLimit(trafficLimit);
+				settings.setMobileDataTrafficLimit(trafficLimit);
 			}
 
 			@Override
@@ -110,25 +113,25 @@ public class PowerSaverManager {
 	}
 	
 	protected PowerSaver getGlobalSyncPowerSaver() {
-		return new PowerSaver(context, "wifi", new GlobalSyncSetting(context)) {
+		return new PowerSaver(context, "sync", R.drawable.navigation_refresh, new GlobalSyncSetting(context)) {
 			@Override
 			protected void readFlags() {
-				flags = AdamsBatterySaverApplication.getSettings().getSyncFlags();
+				flags = settings.getSyncFlags();
 			}
 
 			@Override
 			protected void writeFlags() {
-				AdamsBatterySaverApplication.getSettings().setSyncFlags(flags);
+				settings.setSyncFlags(flags);
 			}
 
 			@Override
 			protected void readWhiteList() {
-				whiteList = AdamsBatterySaverApplication.getSettings().getSyncWhitelist();
+				whiteList = settings.getSyncWhitelist();
 			}
 
 			@Override
 			protected void writeWhiteList() {
-				AdamsBatterySaverApplication.getSettings().setSyncWhitelist(whiteList);
+				settings.setSyncWhitelist(whiteList);
 			}
 
 			@Override
@@ -148,26 +151,26 @@ public class PowerSaverManager {
 	}
 	
 	protected PowerSaver getBluetoothPowerSaver() {
-		return new PowerSaver(context, "wifi", new BluetoothDevice()) {
+		return new PowerSaver(context, "bluetooth", R.drawable.device_access_bluetooth, new BluetoothDevice()) {
 
 			@Override
 			protected void readFlags() {
-				flags = AdamsBatterySaverApplication.getSettings().getBluetoothFlags();
+				flags = settings.getBluetoothFlags();
 			}
 
 			@Override
 			protected void writeFlags() {
-				AdamsBatterySaverApplication.getSettings().setBluetoothFlags(flags);
+				settings.setBluetoothFlags(flags);
 			}
 
 			@Override
 			protected void readWhiteList() {
-				whiteList = AdamsBatterySaverApplication.getSettings().getBluetoothWhitelist();				
+				whiteList = settings.getBluetoothWhitelist();				
 			}
 
 			@Override
 			protected void writeWhiteList() {
-				AdamsBatterySaverApplication.getSettings().setBluetoothWhitelist(whiteList);				
+				settings.setBluetoothWhitelist(whiteList);				
 			}
 
 			@Override
@@ -184,7 +187,5 @@ public class PowerSaverManager {
 				return 0;
 			}			
 		};
-	}
-	
-	private Context context;
+	}	
 }

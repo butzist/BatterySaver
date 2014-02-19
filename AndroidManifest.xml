@@ -40,7 +40,7 @@
         </activity>
         <activity android:name="org.thirdparty.AdvancedSettingsActivity"></activity>
         <activity android:name="de.szalkowski.adamsbatterysaver.ui.WhiteListPreferenceActivity"></activity>
-        <service android:name="MainService"></service>
+        <service android:name="de.szalkowski.adamsbatterysaver.service.MainService"></service>
         <receiver android:name="de.szalkowski.adamsbatterysaver.service.AutoStartReceiver" android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
