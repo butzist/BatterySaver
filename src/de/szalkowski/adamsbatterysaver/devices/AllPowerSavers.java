@@ -7,7 +7,7 @@ import android.content.Context;
 import de.szalkowski.adamsbatterysaver.R;
 import de.szalkowski.adamsbatterysaver.SettingsStorage;
 
-public class PowerSaverManager {
+public class AllPowerSavers {
 	private static PowerSaver wifiPowerSaver; 
 	private static PowerSaver mobilePowerSaver; 
 	private static PowerSaver bluetoothPowerSaver; 
@@ -15,13 +15,13 @@ public class PowerSaverManager {
 	private Context context;
 	private SettingsStorage settings;
 	
-	public PowerSaverManager(Context context, SettingsStorage settings) {
+	protected AllPowerSavers(Context context, SettingsStorage settings) {
 		this.context = context;
 		this.settings = settings;
-		wifiPowerSaver = getWifiPowerSaver();
-		mobilePowerSaver = getMobileDataPowerSaver();
-		bluetoothPowerSaver = getBluetoothPowerSaver();
-		globalsyncPowerSaver = getGlobalSyncPowerSaver();
+		wifiPowerSaver = createWifiPowerSaver();
+		mobilePowerSaver = createMobileDataPowerSaver();
+		bluetoothPowerSaver = createBluetoothPowerSaver();
+		globalsyncPowerSaver = createGlobalSyncPowerSaver();
 	}
 	
 	public Collection<PowerSaver> getPowerSavers() {
@@ -34,7 +34,23 @@ public class PowerSaverManager {
 		return powerSavers;
 	}
 	
-	protected PowerSaver getWifiPowerSaver() {
+	public PowerSaver getWifiPowerSaver() {
+		return wifiPowerSaver;		
+	}
+	
+	public PowerSaver getMobilePowerSaver() {
+		return mobilePowerSaver;		
+	}
+	
+	public PowerSaver getBluetoothPowerSaver() {
+		return bluetoothPowerSaver;		
+	}
+	
+	public PowerSaver getGlobalSyncPowerSaver() {
+		return globalsyncPowerSaver;		
+	}
+	
+	protected PowerSaver createWifiPowerSaver() {
 		return new PowerSaver(context, "wifi", R.drawable.device_access_network_wifi, new WifiDevice(context)) {
 			@Override
 			protected void readFlags() {
@@ -73,7 +89,7 @@ public class PowerSaverManager {
 		};
 	}
 	
-	protected PowerSaver getMobileDataPowerSaver() {
+	protected PowerSaver createMobileDataPowerSaver() {
 		return new PowerSaver(context, "data", R.drawable.device_access_network_cell, new MobileDataDevice(context)) {
 			@Override
 			protected void readFlags() {
@@ -112,7 +128,7 @@ public class PowerSaverManager {
 		};
 	}
 	
-	protected PowerSaver getGlobalSyncPowerSaver() {
+	protected PowerSaver createGlobalSyncPowerSaver() {
 		return new PowerSaver(context, "sync", R.drawable.navigation_refresh, new GlobalSyncSetting(context)) {
 			@Override
 			protected void readFlags() {
@@ -150,7 +166,7 @@ public class PowerSaverManager {
 		};
 	}
 	
-	protected PowerSaver getBluetoothPowerSaver() {
+	protected PowerSaver createBluetoothPowerSaver() {
 		return new PowerSaver(context, "bluetooth", R.drawable.device_access_bluetooth, new BluetoothDevice()) {
 
 			@Override

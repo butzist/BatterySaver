@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import android.content.Context;
 import de.szalkowski.adamsbatterysaver.devices.PowerSaver;
-import de.szalkowski.adamsbatterysaver.devices.PowerSaverManager;
 
 public class AdamsBatterySaverApplication {
 	protected AdamsBatterySaverApplication(Context context) {
@@ -25,6 +24,10 @@ public class AdamsBatterySaverApplication {
 
 	public static Collection<PowerSaver> getPowerSavers() {
 		return instance.powersavers.getPowerSavers();		
+	}
+	
+	public static PowerSaverManager getPowerSaverManager() {
+		return instance.powersavers;		
 	}
 	
 	public static Context getContext() {

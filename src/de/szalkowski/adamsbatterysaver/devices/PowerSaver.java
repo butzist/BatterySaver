@@ -255,6 +255,22 @@ public abstract class PowerSaver {
 		this.flags &= ~FLAG_DISABLE;
 	}
 	
+	public void setWhiteList(Set<String> whiteList) {
+		this.whiteList = whiteList;		
+	}
+	
+	public Set<String> getWhiteList() {
+		return this.whiteList;		
+	}
+	
+	public void setTrafficLimit(int trafficLimit) {
+		this.trafficLimit = trafficLimit;		
+	}
+	
+	public int getTrafficLimit() {
+		return this.trafficLimit;		
+	}
+	
 	public void updateSettings() {
 		readFlags();
 		readWhiteList();

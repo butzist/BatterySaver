@@ -4,13 +4,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.szalkowski.adamsbatterysaver.AdamsBatterySaverApplication;
 import de.szalkowski.adamsbatterysaver.Logger;
 import de.szalkowski.adamsbatterysaver.R;
+import de.szalkowski.adamsbatterysaver.devices.PowerSaver;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -68,7 +69,8 @@ public class WhiteListPreferenceActivity extends PreferenceActivity {
 	}
 	
 	protected void fillWhiteList(PreferenceScreen screen, Context context) {
-		Set<String> currentWhiteList = screen.getSharedPreferences().getStringSet("wifi_whitelist", new HashSet<String>());
+		PowerSaver wifiSaver = AdamsBatterySaverApplication.getPowerSaverManager().getWifiPowerSaver();
+		Set<String> currentWhiteList = wifiSaver.getWhiteList();
 		PackageManager pm = this.getPackageManager();
 		Set<String> runningTasks = this.getRunningTasks(context);
 		
@@ -120,9 +122,8 @@ public class WhiteListPreferenceActivity extends PreferenceActivity {
 				newWhiteList.add(preference.getKey());
 			}
 		}
-		SharedPreferences.Editor edit = this.screen.getSharedPreferences().edit();
-		edit.putStringSet("wifi_whitelist", newWhiteList);
-		edit.commit();
+		PowerSaver wifiSaver = AdamsBatterySaverApplication.getPowerSaverManager().getWifiPowerSaver();
+		wifiSaver.setWhiteList(newWhiteList);
 		
 		super.onDestroy();
 	}
