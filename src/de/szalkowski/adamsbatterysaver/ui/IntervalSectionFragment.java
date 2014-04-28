@@ -2,11 +2,8 @@ package de.szalkowski.adamsbatterysaver.ui;
 
 import java.util.Calendar;
 
-import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -18,7 +15,6 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.ToggleButton;
 import de.szalkowski.adamsbatterysaver.AdamsBatterySaverApplication;
 import de.szalkowski.adamsbatterysaver.R;
@@ -154,42 +150,6 @@ public class IntervalSectionFragment extends Fragment {
 			}
 		});
 	}
-	
-	protected abstract static class TimePickerFragment extends DialogFragment
-	implements TimePickerDialog.OnTimeSetListener {	
-		private IntervalSectionFragment parent;
-		
-		public void setParent(IntervalSectionFragment parent)
-		{
-			this.parent = parent;		
-		}
-		
-		@Override
-		public Dialog onCreateDialog(Bundle savedInstanceState) {
-			SettingsStorage settings = AdamsBatterySaverApplication.getSettings();
-			int hour = this.getHour(settings);
-			int minute = this.getMinute(settings);
-	
-			// Create a new instance of TimePickerDialog and return it
-			return new TimePickerDialog(getActivity(), this, hour, minute,
-					DateFormat.is24HourFormat(getActivity()));
-		}
-	
-		public void onTimeSet(TimePicker view, int hour, int minute) {
-			SettingsStorage settings = AdamsBatterySaverApplication.getSettings();
-			settings.startTransaction();
-			this.setHour(settings,hour);
-			this.setMinute(settings,minute);
-			settings.commitTransaction();
-			
-			parent.setFromTime();
-		}
-		
-		abstract protected void setHour(SettingsStorage settings, int hour);
-		abstract protected void setMinute(SettingsStorage settings, int minute);
-		abstract protected int getHour(SettingsStorage settings);
-		abstract protected int getMinute(SettingsStorage settings);
-	};
 	
 	public static class TimePickerFragment_From extends TimePickerFragment {
 
