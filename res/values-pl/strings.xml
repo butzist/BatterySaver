@@ -30,9 +30,9 @@
   <string name="pref_interval_short_title">Krótki interwał</string>
   <string name="pref_interval_short_summary">Synchronizowanie kont po %d min po raz pierwszy</string>
   <string name="pref_interval_short_message">Czekać tyle minut do sprawdzania kont po raz pierwszy po włączeniu trybu oszczędnościowego</string>
-  <string name="pref_traffic_limit_title">Limit ruchu</string>
-  <string name="pref_traffic_limit_summary">Podtrzymanie WiFi i komórkowe połączenie transmisji danych podczas przekazywania więcej niż %d bajtów/minutę</string>
-  <string name="pref_traffic_limit_message">Limit w bajtach na minutę który hamuje tryb oszczędzania energii</string>
+  <string name="pref_wifi_traffic_limit_title">Limit ruchu</string>
+  <string name="pref_wifi_traffic_limit_summary">Podtrzymanie WiFi i komórkowe połączenie transmisji danych podczas przekazywania więcej niż %d bajtów/minutę</string>
+  <string name="pref_wifi_traffic_limit_message">Limit w bajtach na minutę który hamuje tryb oszczędzania energii</string>
   <string name="pref_wifi_whitelist_title">lista biała WiFi</string>
   <string name="pref_wifi_whitelist_summary">Wybierz aplikacje, które uniemożliwiają wyłączenie automatycznie WiFi</string>
   <string name="pref_only_top_task_title">Tylko ostatni program dla białej listy</string>

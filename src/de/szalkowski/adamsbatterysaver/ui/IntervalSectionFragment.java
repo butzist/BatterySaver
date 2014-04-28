@@ -155,59 +155,99 @@ public class IntervalSectionFragment extends Fragment {
 		});
 	}
 	
-	public void showFromTimePicker() {
-		class TimePickerFragment_From extends DialogFragment
-		implements TimePickerDialog.OnTimeSetListener {
-
-			@Override
-			public Dialog onCreateDialog(Bundle savedInstanceState) {
-				int hour = settings.getNightModeFromHour();
-				int minute = settings.getNightModeFromMinute();
-
-				// Create a new instance of TimePickerDialog and return it
-				return new TimePickerDialog(getActivity(), this, hour, minute,
-						DateFormat.is24HourFormat(getActivity()));
-			}
-
-			public void onTimeSet(TimePicker view, int hour, int minute) {
-				settings.startTransaction();
-				settings.setNightModeFromHour(hour);
-				settings.setNightModeFromMinute(minute);
-				settings.commitTransaction();
-				
-				setFromTime();
-			}
+	protected abstract static class TimePickerFragment extends DialogFragment
+	implements TimePickerDialog.OnTimeSetListener {	
+		private IntervalSectionFragment parent;
+		
+		public void setParent(IntervalSectionFragment parent)
+		{
+			this.parent = parent;		
 		}
 		
-		DialogFragment newFragment = new TimePickerFragment_From();
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			SettingsStorage settings = AdamsBatterySaverApplication.getSettings();
+			int hour = this.getHour(settings);
+			int minute = this.getMinute(settings);
+	
+			// Create a new instance of TimePickerDialog and return it
+			return new TimePickerDialog(getActivity(), this, hour, minute,
+					DateFormat.is24HourFormat(getActivity()));
+		}
+	
+		public void onTimeSet(TimePicker view, int hour, int minute) {
+			SettingsStorage settings = AdamsBatterySaverApplication.getSettings();
+			settings.startTransaction();
+			this.setHour(settings,hour);
+			this.setMinute(settings,minute);
+			settings.commitTransaction();
+			
+			parent.setFromTime();
+		}
+		
+		abstract protected void setHour(SettingsStorage settings, int hour);
+		abstract protected void setMinute(SettingsStorage settings, int minute);
+		abstract protected int getHour(SettingsStorage settings);
+		abstract protected int getMinute(SettingsStorage settings);
+	};
+	
+	public static class TimePickerFragment_From extends TimePickerFragment {
+
+		@Override
+		protected void setHour(SettingsStorage settings, int hour) {
+			settings.setNightModeFromHour(hour);
+		}
+
+		@Override
+		protected void setMinute(SettingsStorage settings, int minute) {
+			settings.setNightModeFromMinute(minute);
+		}
+
+		@Override
+		protected int getHour(SettingsStorage settings) {
+			return settings.getNightModeFromHour();
+		}
+
+		@Override
+		protected int getMinute(SettingsStorage settings) {
+			return settings.getNightModeFromMinute();
+		}
+		
+	};
+	
+	public void showFromTimePicker() {
+		TimePickerFragment_From newFragment = new TimePickerFragment_From();
+		newFragment.setParent(this);
 	    newFragment.show(getChildFragmentManager(), "fromPicker");
 	}
+	
+	public static class TimePickerFragment_To extends TimePickerFragment {
 
-	public void showToTimePicker() {
-		class TimePickerFragment_To extends DialogFragment
-		implements TimePickerDialog.OnTimeSetListener {
+		@Override
+		protected void setHour(SettingsStorage settings, int hour) {
+			settings.setNightModeToHour(hour);
+		}
 
-			@Override
-			public Dialog onCreateDialog(Bundle savedInstanceState) {
-				int hour = settings.getNightModeToHour();
-				int minute = settings.getNightModeToMinute();
+		@Override
+		protected void setMinute(SettingsStorage settings, int minute) {
+			settings.setNightModeToMinute(minute);
+		}
 
-				// Create a new instance of TimePickerDialog and return it
-				return new TimePickerDialog(getActivity(), this, hour, minute,
-						DateFormat.is24HourFormat(getActivity()));
-			}
+		@Override
+		protected int getHour(SettingsStorage settings) {
+			return settings.getNightModeToHour();
+		}
 
-			public void onTimeSet(TimePicker view, int hour, int minute) {
-				settings.startTransaction();
-				settings.setNightModeToHour(hour);
-				settings.setNightModeToMinute(minute);
-				settings.commitTransaction();
-				
-				setToTime();
-			}
+		@Override
+		protected int getMinute(SettingsStorage settings) {
+			return settings.getNightModeToMinute();
 		}
 		
-		DialogFragment newFragment = new TimePickerFragment_To();
+	};
+
+	public void showToTimePicker() {
+		TimePickerFragment_To newFragment = new TimePickerFragment_To();
+		newFragment.setParent(this);		
 	    newFragment.show(getChildFragmentManager(), "toPicker");
 	}
 }
