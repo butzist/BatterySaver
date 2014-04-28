@@ -35,6 +35,8 @@
   <string name="pref_traffic_limit_message">Umbral en bytes/minuto para inhibir el modo ahorro de energía</string>
   <string name="pref_wifi_whitelist_title">Lista blanca de Wi-Fi</string>
   <string name="pref_wifi_whitelist_summary">Selecciona las aplicaciones que no quieres que se desconecten del Wi-Fi automáticamente</string>
+  <string name="pref_only_top_task_title">Lista blanca solo para las tareas superiores</string>
+  <string name="pref_only_top_task_summary_true">Considerar para la lista blanca solo las tareas superiores en ejecución</string>
   <string name="pref_only_top_task_summary_false">Considerar todas las tareas en ejecución para la lista blanca</string>
   <string name="action_settings">Configuración avanzada</string>
   <string name="action_view_source">Ver código fuente</string>
