@@ -5,7 +5,7 @@ import java.util.Vector;
 
 import android.content.Context;
 import de.szalkowski.adamsbatterysaver.R;
-import de.szalkowski.adamsbatterysaver.SettingsStorage;
+import de.szalkowski.adamsbatterysaver.settings.SettingsManager;
 
 public class AllPowerSavers {
 	private static PowerSaver wifiPowerSaver; 
@@ -13,9 +13,9 @@ public class AllPowerSavers {
 	private static PowerSaver bluetoothPowerSaver; 
 	private static PowerSaver globalsyncPowerSaver;
 	private Context context;
-	private SettingsStorage settings;
+	private SettingsManager settings;
 	
-	protected AllPowerSavers(Context context, SettingsStorage settings) {
+	protected AllPowerSavers(Context context, SettingsManager settings) {
 		this.context = context;
 		this.settings = settings;
 		wifiPowerSaver = createWifiPowerSaver();
@@ -54,32 +54,32 @@ public class AllPowerSavers {
 		return new PowerSaver(context, "wifi", R.drawable.device_access_network_wifi, new WifiDevice(context)) {
 			@Override
 			protected void readFlags() {
-				flags = settings.getWifiFlags();
+				flags = settings.wifi_flags.get();
 			}
 
 			@Override
 			protected void writeFlags() {
-				settings.setWifiFlags(flags);
+				settings.wifi_flags.set(flags);
 			}
 
 			@Override
 			protected void readWhiteList() {
-				whiteList = settings.getWifiWhitelist();
+				whiteList = settings.wifi_white_list.get();
 			}
 
 			@Override
 			protected void writeWhiteList() {
-				settings.setWifiWhitelist(whiteList);
+				settings.wifi_white_list.set(whiteList);
 			}
 
 			@Override
 			protected void readTrafficLimit() {
-				trafficLimit = settings.getWifiTrafficLimit();
+				trafficLimit = settings.wifi_traffic_limit.get();
 			}
 
 			@Override
 			protected void writeTrafficLimit() {
-				settings.setWifiTrafficLimit(trafficLimit);
+				settings.wifi_traffic_limit.set(trafficLimit);
 			}
 
 			@Override
@@ -93,32 +93,32 @@ public class AllPowerSavers {
 		return new PowerSaver(context, "data", R.drawable.device_access_network_cell, new MobileDataDevice(context)) {
 			@Override
 			protected void readFlags() {
-				flags = settings.getMobileDataFlags();
+				flags = settings.mobile_data_flags.get();
 			}
 
 			@Override
 			protected void writeFlags() {
-				settings.setMobileDataFlags(flags);
+				settings.mobile_data_flags.set(flags);
 			}
 
 			@Override
 			protected void readWhiteList() {
-				whiteList = settings.getMobileDataWhitelist();
+				whiteList = settings.mobile_data_white_list.get();
 			}
 
 			@Override
 			protected void writeWhiteList() {
-				settings.setMobileDataWhitelist(whiteList);
+				settings.mobile_data_white_list.set(whiteList);
 			}
 
 			@Override
 			protected void readTrafficLimit() {
-				trafficLimit = settings.getMobileDataTrafficLimit();
+				trafficLimit = settings.mobile_data_traffic_limit.get();
 			}
 
 			@Override
 			protected void writeTrafficLimit() {
-				settings.setMobileDataTrafficLimit(trafficLimit);
+				settings.mobile_data_traffic_limit.set(trafficLimit);
 			}
 
 			@Override
@@ -132,22 +132,22 @@ public class AllPowerSavers {
 		return new PowerSaver(context, "sync", R.drawable.navigation_refresh, new GlobalSyncSetting(context)) {
 			@Override
 			protected void readFlags() {
-				flags = settings.getSyncFlags();
+				flags = settings.sync_flags.get();
 			}
 
 			@Override
 			protected void writeFlags() {
-				settings.setSyncFlags(flags);
+				settings.sync_flags.set(flags);
 			}
 
 			@Override
 			protected void readWhiteList() {
-				whiteList = settings.getSyncWhitelist();
+				whiteList = settings.sync_white_list.get();
 			}
 
 			@Override
 			protected void writeWhiteList() {
-				settings.setSyncWhitelist(whiteList);
+				settings.sync_white_list.set(whiteList);
 			}
 
 			@Override
@@ -171,22 +171,22 @@ public class AllPowerSavers {
 
 			@Override
 			protected void readFlags() {
-				flags = settings.getBluetoothFlags();
+				flags = settings.bluetooth_flags.get();
 			}
 
 			@Override
 			protected void writeFlags() {
-				settings.setBluetoothFlags(flags);
+				settings.bluetooth_flags.set(flags);
 			}
 
 			@Override
 			protected void readWhiteList() {
-				whiteList = settings.getBluetoothWhitelist();				
+				whiteList = settings.bluetooth_white_list.get();				
 			}
 
 			@Override
 			protected void writeWhiteList() {
-				settings.setBluetoothWhitelist(whiteList);				
+				settings.bluetooth_white_list.set(whiteList);				
 			}
 
 			@Override

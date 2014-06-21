@@ -18,8 +18,8 @@ import android.support.v4.app.NotificationCompat;
 import de.szalkowski.adamsbatterysaver.AdamsBatterySaverApplication;
 import de.szalkowski.adamsbatterysaver.Logger;
 import de.szalkowski.adamsbatterysaver.R;
-import de.szalkowski.adamsbatterysaver.SettingsProvider;
 import de.szalkowski.adamsbatterysaver.devices.PowerSaver;
+import de.szalkowski.adamsbatterysaver.settings.SettingsManager;
 import de.szalkowski.adamsbatterysaver.ui.MainActivity;
 
 public class MainService extends Service {
@@ -42,7 +42,7 @@ public class MainService extends Service {
 	private boolean wakeup_active = false;
 	private boolean in_foreground = false;
 	private Collection<PowerSaver> power_savers;
-	private SettingsProvider settings;
+	private SettingsManager settings;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -177,7 +177,7 @@ public class MainService extends Service {
 
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-		int interval = settings.getTimeout()*1000;
+		int interval = settings.timeout.get()*1000;
 		Intent intent = new Intent(MainService.ACTION_WAKEUP_TIMEOUT);
 		PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		alarm.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+interval, pending);
@@ -192,7 +192,7 @@ public class MainService extends Service {
 		
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-		int interval = settings.getTimeout()*1000;
+		int interval = settings.timeout.get()*1000;
 		Intent intent = new Intent(MainService.ACTION_SCREEN_TIMEOUT);
 		PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		alarm.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+interval, pending);
@@ -207,7 +207,7 @@ public class MainService extends Service {
 		
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-		int interval = settings.getTimeout()*1000;
+		int interval = settings.timeout.get()*1000;
 		Intent intent = new Intent(MainService.ACTION_POWER_TIMEOUT);
 		PendingIntent pending = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		alarm.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+interval, pending);
@@ -222,8 +222,8 @@ public class MainService extends Service {
 		
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-		int interval = settings.getInterval() * 60000;
-		int first_interval = settings.getShortInterval() * 60000;
+		int interval = settings.interval.get() * 60000;
+		int first_interval = settings.interval_short.get() * 60000;
 		if(!short_interval) {
 			first_interval = interval;
 		}
@@ -242,7 +242,7 @@ public class MainService extends Service {
 		
 		// set up timeout
 		AlarmManager alarm = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-		int interval = settings.getInterval() * 60000;
+		int interval = settings.interval.get() * 60000;
 		long wakeup_time = getWakeupTime();
 		
 		Intent intent = new Intent(MainService.ACTION_WAKEUP);
@@ -283,14 +283,14 @@ public class MainService extends Service {
 
 	protected boolean isSleepingTime() {
 		Calendar from = Calendar.getInstance();
-		from.set(Calendar.HOUR_OF_DAY, settings.getNightModeFromHour());
-		from.set(Calendar.MINUTE, settings.getNightModeFromMinute());
+		from.set(Calendar.HOUR_OF_DAY, settings.nightmode_from_hour.get());
+		from.set(Calendar.MINUTE, settings.nightmode_from_minute.get());
 		from.set(Calendar.SECOND, 0);
 		from.set(Calendar.MILLISECOND, 0);
 		
 		Calendar to = Calendar.getInstance();
-		to.set(Calendar.HOUR_OF_DAY, settings.getNightModeToHour());
-		to.set(Calendar.MINUTE, settings.getNightModeToMinute());
+		to.set(Calendar.HOUR_OF_DAY, settings.nightmode_to_hour.get());
+		to.set(Calendar.MINUTE, settings.nightmode_to_minute.get());
 		to.set(Calendar.SECOND, 0);
 		to.set(Calendar.MILLISECOND, 0);
 
@@ -305,21 +305,21 @@ public class MainService extends Service {
 		}
 
 		// add interval time so that first wakeup can not fall into night time
-		now.add(Calendar.MINUTE, settings.getInterval());
+		now.add(Calendar.MINUTE, settings.interval.get());
 
 		return (now.after(from) && now.before(to));
 	}
 	
 	protected long getWakeupTime() {
 		Calendar from = Calendar.getInstance();
-		from.set(Calendar.HOUR_OF_DAY, settings.getNightModeFromHour());
-		from.set(Calendar.MINUTE, settings.getNightModeFromMinute());
+		from.set(Calendar.HOUR_OF_DAY, settings.nightmode_from_hour.get());
+		from.set(Calendar.MINUTE, settings.nightmode_from_minute.get());
 		from.set(Calendar.SECOND, 0);
 		from.set(Calendar.MILLISECOND, 0);
 
 		Calendar to = Calendar.getInstance();
-		to.set(Calendar.HOUR_OF_DAY, settings.getNightModeToHour());
-		to.set(Calendar.MINUTE, settings.getNightModeToMinute());
+		to.set(Calendar.HOUR_OF_DAY, settings.nightmode_to_hour.get());
+		to.set(Calendar.MINUTE, settings.nightmode_to_minute.get());
 		to.set(Calendar.SECOND, 0);
 		to.set(Calendar.MILLISECOND, 0);
 
@@ -433,7 +433,7 @@ public class MainService extends Service {
 			MainService.wake_lock.release();
 		}
 		
-        if(!settings.getStartService()) {
+        if(!settings.start_service.get()) {
         	Logger.warning("Server should not be running");
         	stopSelf();
         }

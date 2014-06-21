@@ -81,7 +81,7 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	private void checkAndStartServiceIfNecessary() {
-        boolean start_service = AdamsBatterySaverApplication.getSettings().getStartService();
+        boolean start_service = AdamsBatterySaverApplication.getSettings().start_service.get();
 
 		if(start_service != MainService.is_running) {
         	String text;

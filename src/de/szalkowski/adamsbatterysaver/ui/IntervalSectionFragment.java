@@ -18,11 +18,11 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import de.szalkowski.adamsbatterysaver.AdamsBatterySaverApplication;
 import de.szalkowski.adamsbatterysaver.R;
-import de.szalkowski.adamsbatterysaver.SettingsStorage;
 import de.szalkowski.adamsbatterysaver.service.MainService;
+import de.szalkowski.adamsbatterysaver.settings.SettingsManager;
 
 public class IntervalSectionFragment extends Fragment {
-    private SettingsStorage settings;
+    private SettingsManager settings;
     private View rootView;
 	
     @Override
@@ -44,7 +44,7 @@ public class IntervalSectionFragment extends Fragment {
 	}
 
 	private void setStartStopToggle() {
-        boolean start_service = settings.getStartService();
+        boolean start_service = settings.start_service.get();
 
 		ToggleButton toggle = (ToggleButton)rootView.findViewById(R.id.toggleButton);
         toggle.setChecked(start_service);
@@ -53,10 +53,10 @@ public class IntervalSectionFragment extends Fragment {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				Intent service = new Intent(getActivity(),MainService.class);
 				if(isChecked) {
-					AdamsBatterySaverApplication.getSettings().setStartService(true);
+					AdamsBatterySaverApplication.getSettings().start_service.set(true);
 					getActivity().startService(service);
 				} else {
-					AdamsBatterySaverApplication.getSettings().setStartService(false);
+					AdamsBatterySaverApplication.getSettings().start_service.set(false);
 					service.setAction(MainService.ACTION_DISABLE);
 					getActivity().startService(service);
 				}
@@ -84,7 +84,7 @@ public class IntervalSectionFragment extends Fragment {
 				text.setText(getActivity().getString(R.string.sync_interval, seekBar.getProgress()));
 			}
 		});
-        interval.setProgress(settings.getInterval());
+        interval.setProgress(settings.interval.get());
         
 		TextView interval_text = (TextView)rootView.findViewById(R.id.sync_interval);
 		interval_text.setText(getActivity().getString(R.string.sync_interval, interval.getProgress()));
@@ -99,10 +99,10 @@ public class IntervalSectionFragment extends Fragment {
 		settings.startTransaction();
 		
         ToggleButton toggle = (ToggleButton)rootView.findViewById(R.id.toggleButton);
-        settings.setStartService(toggle.isChecked());
+        settings.start_service.set(toggle.isChecked());
         
         SeekBar interval = (SeekBar)rootView.findViewById(R.id.seekInterval);
-        settings.setInterval(interval.getProgress());
+        settings.interval.set(interval.getProgress());
         
         settings.commitTransaction();
         
@@ -116,8 +116,8 @@ public class IntervalSectionFragment extends Fragment {
 	}
 	
 	public void setFromTime() {
-        int hour = settings.getNightModeFromHour();
-        int minute = settings.getNightModeFromMinute();
+        int hour = settings.nightmode_from_hour.get();
+        int minute = settings.nightmode_from_minute.get();
         
         Calendar time = Calendar.getInstance();
         time.set(Calendar.HOUR_OF_DAY, hour);
@@ -134,8 +134,8 @@ public class IntervalSectionFragment extends Fragment {
 	}
 	
 	public void setToTime() {
-        int hour = settings.getNightModeToHour();
-        int minute = settings.getNightModeToMinute();
+        int hour = settings.nightmode_to_hour.get();
+        int minute = settings.nightmode_to_minute.get();
         
         Calendar time = Calendar.getInstance();
         time.set(Calendar.HOUR_OF_DAY, hour);
@@ -154,23 +154,23 @@ public class IntervalSectionFragment extends Fragment {
 	public static class TimePickerFragment_From extends TimePickerFragment {
 
 		@Override
-		protected void setHour(SettingsStorage settings, int hour) {
-			settings.setNightModeFromHour(hour);
+		protected void setHour(SettingsManager settings, int hour) {
+			settings.nightmode_from_hour.set(hour);
 		}
 
 		@Override
-		protected void setMinute(SettingsStorage settings, int minute) {
-			settings.setNightModeFromMinute(minute);
+		protected void setMinute(SettingsManager settings, int minute) {
+			settings.nightmode_from_minute.set(minute);
 		}
 
 		@Override
-		protected int getHour(SettingsStorage settings) {
-			return settings.getNightModeFromHour();
+		protected int getHour(SettingsManager settings) {
+			return settings.nightmode_from_hour.get();
 		}
 
 		@Override
-		protected int getMinute(SettingsStorage settings) {
-			return settings.getNightModeFromMinute();
+		protected int getMinute(SettingsManager settings) {
+			return settings.nightmode_from_minute.get();
 		}
 		
 	};
@@ -184,25 +184,24 @@ public class IntervalSectionFragment extends Fragment {
 	public static class TimePickerFragment_To extends TimePickerFragment {
 
 		@Override
-		protected void setHour(SettingsStorage settings, int hour) {
-			settings.setNightModeToHour(hour);
+		protected void setHour(SettingsManager settings, int hour) {
+			settings.nightmode_to_hour.set(hour);
 		}
 
 		@Override
-		protected void setMinute(SettingsStorage settings, int minute) {
-			settings.setNightModeToMinute(minute);
+		protected void setMinute(SettingsManager settings, int minute) {
+			settings.nightmode_to_minute.set(minute);
 		}
 
 		@Override
-		protected int getHour(SettingsStorage settings) {
-			return settings.getNightModeToHour();
+		protected int getHour(SettingsManager settings) {
+			return settings.nightmode_to_hour.get();
 		}
 
 		@Override
-		protected int getMinute(SettingsStorage settings) {
-			return settings.getNightModeToMinute();
-		}
-		
+		protected int getMinute(SettingsManager settings) {
+			return settings.nightmode_to_minute.get();
+		}	
 	};
 
 	public void showToTimePicker() {

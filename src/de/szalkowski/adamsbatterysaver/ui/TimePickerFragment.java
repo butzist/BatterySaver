@@ -7,7 +7,7 @@ import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
 import android.widget.TimePicker;
 import de.szalkowski.adamsbatterysaver.AdamsBatterySaverApplication;
-import de.szalkowski.adamsbatterysaver.SettingsStorage;
+import de.szalkowski.adamsbatterysaver.settings.SettingsManager;
 
 abstract class TimePickerFragment extends DialogFragment
 implements TimePickerDialog.OnTimeSetListener {	
@@ -20,7 +20,7 @@ implements TimePickerDialog.OnTimeSetListener {
 	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		SettingsStorage settings = AdamsBatterySaverApplication.getSettings();
+		SettingsManager settings = AdamsBatterySaverApplication.getSettings();
 		int hour = this.getHour(settings);
 		int minute = this.getMinute(settings);
 
@@ -30,7 +30,7 @@ implements TimePickerDialog.OnTimeSetListener {
 	}
 
 	public void onTimeSet(TimePicker view, int hour, int minute) {
-		SettingsStorage settings = AdamsBatterySaverApplication.getSettings();
+		SettingsManager settings = AdamsBatterySaverApplication.getSettings();
 		settings.startTransaction();
 		this.setHour(settings,hour);
 		this.setMinute(settings,minute);
@@ -39,8 +39,8 @@ implements TimePickerDialog.OnTimeSetListener {
 		parent.setFromTime();
 	}
 	
-	abstract protected void setHour(SettingsStorage settings, int hour);
-	abstract protected void setMinute(SettingsStorage settings, int minute);
-	abstract protected int getHour(SettingsStorage settings);
-	abstract protected int getMinute(SettingsStorage settings);
+	abstract protected void setHour(SettingsManager settings, int hour);
+	abstract protected void setMinute(SettingsManager settings, int minute);
+	abstract protected int getHour(SettingsManager settings);
+	abstract protected int getMinute(SettingsManager settings);
 }

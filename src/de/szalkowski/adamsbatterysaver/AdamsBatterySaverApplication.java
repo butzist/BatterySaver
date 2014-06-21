@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import android.content.Context;
 import de.szalkowski.adamsbatterysaver.devices.PowerSaver;
+import de.szalkowski.adamsbatterysaver.settings.SettingsManager;
 
 public class AdamsBatterySaverApplication {
 	protected AdamsBatterySaverApplication(Context context) {
@@ -18,7 +19,7 @@ public class AdamsBatterySaverApplication {
 		}
 	}
 	
-	public static SettingsStorage getSettings() {
+	public static SettingsManager getSettings() {
 		return instance.settings;
 	}
 
@@ -34,17 +35,17 @@ public class AdamsBatterySaverApplication {
 		return instance.context;
 	}
 	
-	static protected SettingsStorage getSettingsStorage(Context context) {
-		return new LoggingSettingsManager(context);
+	static protected SettingsManager getSettingsStorage(Context context) {
+		return new SettingsManager(context);
 	}
 
-	static protected PowerSaverManager getPowerSaverManager(Context context, SettingsStorage settings) {
+	static protected PowerSaverManager getPowerSaverManager(Context context, SettingsManager settings) {
 		return new PowerSaverManager(context, settings);
 	}
 
 	static private AdamsBatterySaverApplication instance = null;
 	
-	private SettingsStorage settings;
+	private SettingsManager settings;
 	private PowerSaverManager powersavers;
 	private Context context;
 }

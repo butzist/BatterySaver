@@ -164,7 +164,7 @@ public abstract class PowerSaver {
 			if(whiteList.isEmpty())
 				return false;
 			
-			boolean onlyTop = AdamsBatterySaverApplication.getSettings().getWhitelistOnlyTopTask(); 
+			boolean onlyTop = AdamsBatterySaverApplication.getSettings().only_top_task.get(); 
 			List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(100);
 			for (ActivityManager.RunningTaskInfo task : tasks) {
 				if(task.numRunning < 1) continue;

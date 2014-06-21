@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import de.szalkowski.adamsbatterysaver.AdamsBatterySaverApplication;
 import de.szalkowski.adamsbatterysaver.Logger;
-import de.szalkowski.adamsbatterysaver.SettingsProvider;
+import de.szalkowski.adamsbatterysaver.settings.SettingsManager;
 
 public class AlarmReceiver extends BroadcastReceiver {	
 	@SuppressLint("Wakelock")
@@ -16,8 +16,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 		if(!MainService.is_running) {
 			Logger.error("unexpected timer event - service terminated?");
-	        SettingsProvider settings = AdamsBatterySaverApplication.getSettings();
-			if(settings.getStartService()) {
+	        SettingsManager settings = AdamsBatterySaverApplication.getSettings();
+			if(settings.start_service.get()) {
 				context.startService(service);
 			}
 		}
