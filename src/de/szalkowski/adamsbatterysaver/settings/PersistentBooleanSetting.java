@@ -2,7 +2,7 @@ package de.szalkowski.adamsbatterysaver.settings;
 
 public class PersistentBooleanSetting extends PersistentSetting<Boolean> {
 
-	protected PersistentBooleanSetting(PersistentSettingsStorage storage,
+	public PersistentBooleanSetting(PersistentSettingsStorage storage,
 			String key, Boolean defaultValue) {
 		super(storage, key, defaultValue);
 	}

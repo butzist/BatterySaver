@@ -2,7 +2,7 @@ package de.szalkowski.adamsbatterysaver.settings;
 
 public class PersistentStringSetting extends PersistentSetting<String> {
 
-	protected PersistentStringSetting(PersistentSettingsStorage storage,
+	public PersistentStringSetting(PersistentSettingsStorage storage,
 			String key, String defaultValue) {
 		super(storage, key, defaultValue);
 	}

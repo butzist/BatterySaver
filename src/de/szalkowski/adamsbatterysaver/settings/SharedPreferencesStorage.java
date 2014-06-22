@@ -16,7 +16,7 @@ public class SharedPreferencesStorage implements PersistentSettingsStorage {
 	private SharedPreferences preferences;
 	private SharedPreferences.Editor editor;
 	
-	class TransactionFailed extends RuntimeException {
+	public class TransactionFailed extends RuntimeException {
 		private static final long serialVersionUID = -4552986045852705974L;
 		
 		public TransactionFailed(String message) {

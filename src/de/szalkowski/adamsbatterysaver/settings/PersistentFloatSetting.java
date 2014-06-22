@@ -1,7 +1,7 @@
 package de.szalkowski.adamsbatterysaver.settings;
 
 public class PersistentFloatSetting extends PersistentSetting<Float> {
-		protected PersistentFloatSetting(PersistentSettingsStorage storage,
+		public PersistentFloatSetting(PersistentSettingsStorage storage,
 			String key, Float defaultValue) {
 		super(storage, key, defaultValue);
 	}

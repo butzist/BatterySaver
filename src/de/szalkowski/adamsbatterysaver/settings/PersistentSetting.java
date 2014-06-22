@@ -3,10 +3,11 @@ package de.szalkowski.adamsbatterysaver.settings;
 abstract class PersistentSetting<T> extends Setting<T> {
 	protected PersistentSetting(PersistentSettingsStorage storage, String key, T defaultValue) {
 		super(defaultValue);
-		T value = getPersistedValue(defaultValue);
-		super.set(value);
 		this.storage = storage;
 		this.key = key;
+
+		T value = getPersistedValue(defaultValue);
+		super.set(value);
 	}
 	
 	protected abstract void persistValue();
